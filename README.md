@@ -2,9 +2,9 @@
 #### # ====================================
 #### # App Name:		HaveYouReadIt
 #### # Authors:
-- **Fabricio**  
-  - ID: XXXXXXXXX  
-  - Email: xxxxxx@student.douglascollege.ca
+- **Fabricio Gardin**  
+  - ID: 300380186  
+  - Email: gardinf@student.douglascollege.ca
 - **Victor**  
   - ID: XXXXXXXXX  
   - Email: xxxxxx@student.douglascollege.ca
