@@ -5,7 +5,7 @@
 - **Fabricio Gardin**  
   - ID: 300380186  
   - Email: gardinf@student.douglascollege.ca
-- **Victor**  
+- **Victor Villas-Boas**  
   - ID: 300392525
   - Email: monteirolimaviv@student.douglascollege.ca
 - **William Delmanto**  
