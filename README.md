@@ -6,8 +6,8 @@
   - ID: 300380186  
   - Email: gardinf@student.douglascollege.ca
 - **Victor**  
-  - ID: XXXXXXXXX  
-  - Email: xxxxxx@student.douglascollege.ca
+  - ID: 300392525
+  - Email: monteirolimaviv@student.douglascollege.ca
 - **William Delmanto**  
   - ID: 300375603  
   - Email: rodriguesdelmaw@student.douglascollege.ca
