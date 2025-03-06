@@ -73,6 +73,7 @@ const mockBooks = [
   },
 ];
 
+
 /**
  * Simulates fetching posts from an API.
  * @returns {Promise<Array>}
