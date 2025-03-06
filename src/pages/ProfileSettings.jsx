@@ -1,13 +1,14 @@
+import { Component } from "react";
+
 class ProfileSettings extends Component {
-    state = {};
-    render() {
-      return (
-        <>
-          <h1>Profile Settings</h1>
-        </>
-      );
-    }
+  state = {};
+  render() {
+    return (
+      <>
+        <h1>Profile Settings</h1>
+      </>
+    );
   }
-  
-  export default Home;
-  
+}
+
+export default ProfileSettings;
