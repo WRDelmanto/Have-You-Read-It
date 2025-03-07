@@ -2,11 +2,12 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import BookDetails from "../pages/BookDetails";
 import Home from "../pages/Home";
-import ProfileSettings from "../pages/ProfileSettings";
+import ReaderSettings from "../pages/ReaderSettings";
 import ReaderDetails from "../pages/ReaderDetails";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import NotFound from "../pages/NotFound";
+import Author from "../pages/Author";
 
 const AppRoutes = () => {
   return (
@@ -14,10 +15,11 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/book/:bookId" element={<BookDetails />} />
-        <Route path="/profileSettings" element={<ProfileSettings />} />
+        <Route path="/settings/:readerId" element={<ReaderSettings />} />
         <Route path="/reader/:readerId" element={<ReaderDetails />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/author/:authorId" element={<Author />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

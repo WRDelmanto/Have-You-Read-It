@@ -1,14 +1,14 @@
 import { Component } from "react";
 
-class ProfileSettings extends Component {
+class ReaderSettings extends Component {
   state = {};
   render() {
     return (
       <>
-        <h1>Profile Settings</h1>
+        <h1>Reader Settings</h1>
       </>
     );
   }
 }
 
-export default ProfileSettings;
+export default ReaderSettings;
