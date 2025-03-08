@@ -16,18 +16,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const MainNavbar = () => {
-  const [searchInput, setSearchInput] = useState("");
-
-  const handleSearchChange = (event) => {
-    setSearchInput(event.target.value);
-    console.log(event.target.value);
-  };
-
-  const handleSignOut = () => {
-    console.log("Signing out...");
-  };
-
+const NavBar = ({ handleSearch, handleSignOut }) => {
   return (
     <Navbar className="shadow-sm fixed-top">
       <Container>
@@ -44,8 +33,7 @@ const MainNavbar = () => {
               <Form.Control
                 type="search"
                 placeholder="Search for books, authors, or readers..."
-                value={searchInput}
-                onChange={handleSearchChange}
+                onChange={(event) => handleSearch(event)}
               />
               <Button variant="outline-primary">
                 <FaSearch />
@@ -69,4 +57,4 @@ const MainNavbar = () => {
   );
 };
 
-export default MainNavbar;
+export default NavBar;
