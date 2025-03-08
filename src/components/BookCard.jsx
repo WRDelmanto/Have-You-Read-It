@@ -31,7 +31,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 	};
 
 	return (
-		<Card className="h-100 book-card border-0 shadow-sm">
+		<Card className="h-100 book-card border-0 shadow-lg">
 			<div className="d-flex">
 				{/* Book cover with hover effect */}
 				<Card.Img
@@ -86,7 +86,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						</div>
 
 						{/* Favorite, bookmarked, and completed buttons */}
-						<div className="d-flex flex-row align-items-start">
+						<div className="d-flex flex-row">
 							<button
 								className="btn btn-link p-0 me-2"
 								onClick={() => handleFavorite(book.id)}

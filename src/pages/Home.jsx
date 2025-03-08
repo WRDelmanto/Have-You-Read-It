@@ -75,7 +75,7 @@ const Home = () => {
 
 			{/* Body */}
 			<Container style={{ marginTop: "64px" }}>
-				<Row xs={1} md={1} className="g-4">
+				<Row className="g-4">
 					{filteredBooks.map((book) => (
 						<BookCard
 							key={book.id}
