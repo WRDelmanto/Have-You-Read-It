@@ -1,24 +1,23 @@
-import { useState } from "react";
 import {
-  Button,
   Container,
   Form,
   InputGroup,
   Navbar,
   NavDropdown
 } from "react-bootstrap";
+import { AiFillSetting } from "react-icons/ai";
+
 import {
   FaBook,
   FaBookReader,
-  FaSearch,
   FaSignOutAlt,
-  FaUser,
+  FaUser
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const NavBar = ({ handleSearch, handleSignOut }) => {
   return (
-    <Navbar className="shadow-sm fixed-top">
+    <Navbar className="shadow-sm fixed-top" style={{ backgroundColor: "white" }}>
       <Container>
         {/* Brand */}
         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
@@ -35,16 +34,17 @@ const NavBar = ({ handleSearch, handleSignOut }) => {
                 placeholder="Search for books, authors, or readers..."
                 onChange={(event) => handleSearch(event)}
               />
-              <Button variant="outline-primary">
-                <FaSearch />
-              </Button>
             </InputGroup>
           </Form>
 
           {/* Dropdown Menu */}
           <NavDropdown title={<FaBookReader size={24} />}>
-            <NavDropdown.Item as={Link} to="/profileSettings">
+            <NavDropdown.Item as={Link} to="/reader/1">
               <FaUser className="me-2" /> Profile
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item as={Link} to="/settings/1">
+              <AiFillSetting className="me-2" /> Settings
             </NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={handleSignOut}>

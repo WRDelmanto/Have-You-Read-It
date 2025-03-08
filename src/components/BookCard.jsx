@@ -1,16 +1,53 @@
+import { useState } from "react";
 import { Card } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite, handleBookmark, handleCompleted }) => {
+	const navigate = useNavigate();
+	const [isHovered, setIsHovered] = useState(false);
+	const [iconHovered, setIconHovered] = useState({
+		favorite: false,
+		bookmarked: false,
+		completed: false,
+	});
+	const [textHovered, setTextHovered] = useState({
+		title: false,
+		subtitle: false,
+	});
+
+	const handleIconHover = (icon) => {
+		setIconHovered((prevState) => ({
+			...prevState,
+			[icon]: !prevState[icon],
+		}));
+	};
+
+	const handleTextHover = (text) => {
+		setTextHovered((prevState) => ({
+			...prevState,
+			[text]: !prevState[text],
+		}));
+	};
+
 	return (
 		<Card className="h-100 book-card border-0 shadow-sm">
 			<div className="d-flex">
-				{/* Book cover */}
+				{/* Book cover with hover effect */}
 				<Card.Img
 					src={book.coverImage}
 					alt={book.title}
-					style={{ height: "250px", objectFit: "contain", width: "150px" }}
+					style={{
+						height: "250px",
+						objectFit: "contain",
+						width: "150px",
+						cursor: "pointer",
+						transition: "transform 0.3s ease-in-out",
+						transform: isHovered ? "scale(1.05)" : "scale(1)",
+					}}
+					onClick={() => navigate(`/book/${book.id}`)}
+					onMouseEnter={() => setIsHovered(true)}
+					onMouseLeave={() => setIsHovered(false)}
 				/>
 
 				{/* Body content */}
@@ -19,37 +56,113 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						<div className="d-flex align-items-start flex-column">
 							{/* Title */}
 							<Link to={`/book/${book.id}`} className="text-decoration-none">
-								<Card.Title className="h5 text-dark mt-1 mb-2">{book.title}</Card.Title>
+								<Card.Title
+									className="h5 text-dark mt-1 mb-2"
+									style={{
+										transition: "transform 0.3s ease-in-out",
+										transform: textHovered.title ? "scale(1.01)" : "scale(1)",
+									}}
+									onMouseEnter={() => handleTextHover("title")}
+									onMouseLeave={() => handleTextHover("title")}
+								>
+									{book.title}
+								</Card.Title>
 							</Link>
 
 							{/* Author */}
 							<Link to={`/author/${book.author.id}`} className="text-decoration-none">
-								<Card.Subtitle className="text-muted mb-4">{book.author.name}</Card.Subtitle>
+								<Card.Subtitle
+									className="text-muted mb-4"
+									style={{
+										transition: "transform 0.3s ease-in-out",
+										transform: textHovered.subtitle ? "scale(1.05)" : "scale(1)",
+									}}
+									onMouseEnter={() => handleTextHover("subtitle")}
+									onMouseLeave={() => handleTextHover("subtitle")}
+								>
+									{book.author.name}
+								</Card.Subtitle>
 							</Link>
 						</div>
 
-						{/* Favorite, bookmarked and completed buttons */}
+						{/* Favorite, bookmarked, and completed buttons */}
 						<div className="d-flex flex-row align-items-start">
 							<button
-								className="btn btn-link text-danger p-0 me-2"
+								className="btn btn-link p-0 me-2"
 								onClick={() => handleFavorite(book.id)}
+								onMouseEnter={() => handleIconHover("favorite")}
+								onMouseLeave={() => handleIconHover("favorite")}
 							>
-								{isFavorite ? <FaHeart /> : <FaRegHeart />}
+								{isFavorite ? (
+									<FaHeart
+										size={22}
+										style={{
+											color: "red",
+											transition: "transform 0.3s",
+											transform: iconHovered.favorite ? "scale(1.2)" : "scale(1)",
+										}}
+									/>
+								) : (
+									<FaRegHeart
+										size={22}
+										style={{
+											color: "red",
+											transition: "transform 0.3s",
+											transform: iconHovered.favorite ? "scale(1.2)" : "scale(1)",
+										}}
+									/>
+								)}
 							</button>
 							<button
-								className="btn btn-link text-primary p-0 me-2"
+								className="btn btn-link p-0 me-2"
 								onClick={() => handleBookmark(book.id)}
+								onMouseEnter={() => handleIconHover("bookmarked")}
+								onMouseLeave={() => handleIconHover("bookmarked")}
 							>
-								{isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
+								{isBookmarked ? (
+									<FaBookmark
+										size={22}
+										style={{
+											transition: "transform 0.3s",
+											transform: iconHovered.bookmarked ? "scale(1.2)" : "scale(1)",
+										}}
+									/>
+								) : (
+									<FaRegBookmark
+										size={22}
+										style={{
+											transition: "transform 0.3s",
+											transform: iconHovered.bookmarked ? "scale(1.2)" : "scale(1)",
+										}}
+									/>
+								)}
 							</button>
 							<button
-								className="btn btn-link text-primary p-0"
+								className="btn btn-link p-0"
 								onClick={() => handleCompleted(book.id)}
+								onMouseEnter={() => handleIconHover("completed")}
+								onMouseLeave={() => handleIconHover("completed")}
 							>
 								{isCompleted ? (
-									<FaBook style={{ color: "green" }} />
+									<FaBook
+										size={22}
+										style={{
+											transition: "transform 0.3s",
+											transform: iconHovered.completed ? "scale(1.2)" : "scale(1)",
+											color: "green",
+										}}
+									/>
 								) : (
-									<FaBook style={{ color: "white", stroke: "green", strokeWidth: "30px" }} />
+									<FaBook
+										size={22}
+										style={{
+											transition: "transform 0.3s",
+											transform: iconHovered.completed ? "scale(1.2)" : "scale(1)",
+											color: "white",
+											stroke: "green",
+											strokeWidth: "20px",
+										}}
+									/>
 								)}
 							</button>
 						</div>

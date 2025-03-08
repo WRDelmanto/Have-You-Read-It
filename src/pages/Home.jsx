@@ -74,7 +74,7 @@ const Home = () => {
 			<NavBar handleSearch={handleSearch} handleSignOut={handleSignOut} />
 
 			{/* Body */}
-			<Container>
+			<Container style={{ marginTop: "64px" }}>
 				<Row xs={1} md={1} className="g-4">
 					{filteredBooks.map((book) => (
 						<BookCard
