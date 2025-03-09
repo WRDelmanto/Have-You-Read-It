@@ -3,6 +3,7 @@ import { fetchMockBooks, fetchMockPosts } from "../services/MockAPI.js";
 import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import { FaHeart, FaBookmark, FaBook } from "react-icons/fa";
+import Footer from "../components/Footer.jsx";
 
 const BookDetails = () => {
   const [book, setBook] = useState(null);
@@ -29,6 +30,7 @@ const BookDetails = () => {
   }
 
   return (
+    <>
     <Container >
       <NavBar />
 
@@ -91,6 +93,8 @@ const BookDetails = () => {
         )}
       </Card>
     </Container>
+    <Footer />
+    </>
   );
 };
 

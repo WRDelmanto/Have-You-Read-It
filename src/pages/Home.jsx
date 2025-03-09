@@ -3,6 +3,7 @@ import { Container, Row } from "react-bootstrap";
 import BookCard from "../components/BookCard";
 import NavBar from "../components/NavBar";
 import { fetchMockBooks } from "../services/MockAPI";
+import Footer from "../components/Footer";
 
 const Home = () => {
 	const [books, setBooks] = useState([]);
@@ -90,6 +91,7 @@ const Home = () => {
 					))}
 				</Row>
 			</Container>
+			<Footer />
 		</>
 	);
 };
