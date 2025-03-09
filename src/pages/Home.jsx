@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import BookCard from "../components/BookCard";
-import NavBar from "../components/Navbar";
+import NavBar from "../components/NavBar";
 import { fetchMockBooks } from "../services/MockAPI";
 
 const Home = () => {
