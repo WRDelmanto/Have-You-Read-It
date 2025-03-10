@@ -1,6 +1,6 @@
 import { Component } from "react";
 
-class Author extends Component {
+class AuthorDetails extends Component {
 	state = {};
 	render() {
 		return (
@@ -11,4 +11,4 @@ class Author extends Component {
 	}
 }
 
-export default Author;
+export default AuthorDetails;
