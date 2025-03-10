@@ -83,8 +83,10 @@ const BookDetails = () => {
 
   return (
     <>
+      {/* Navigation Bar */}
       <NavBar />
 
+      {/* Body */}
       <Container >
         <Card className="shadow-sm p-4 bg-white">
           <Row className="align-items-center">

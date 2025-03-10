@@ -66,21 +66,11 @@ export const fetchReaderById = (id) => {
       const reader = mockReaders.find((reader) => reader._Id === id);
       resolve(reader);
     }, 500);
-    setTimeout(() => {
-      const reader = mockReaders.find((reader) => reader._Id === id);
-      resolve(reader);
-    }, 500);
   });
 };
 
 export const fetchReadersByName = (name) => {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      const filteredReaders = mockReaders.filter((reader) =>
-        reader.name.toLowerCase().includes(name.toLowerCase())
-      );
-      resolve(filteredReaders);
-    }, 500);
     setTimeout(() => {
       const filteredReaders = mockReaders.filter((reader) =>
         reader.name.toLowerCase().includes(name.toLowerCase())

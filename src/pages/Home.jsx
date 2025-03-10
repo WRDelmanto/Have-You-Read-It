@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
-import PostCard from "../components/PostCard";
-import Footer from "../components/Footer";
 import NavBar from "../components/Navbar";
+import PostCard from "../components/PostCard";
 import { fetchPosts, fetchReaderById } from "../services/MockAPI";
 
 const Home = () => {
@@ -18,8 +17,6 @@ const Home = () => {
 
 			// console.log("Account reader:", account_reader);
 		};
-
-
 
 		const getposts = async () => {
 			const fetchedposts = await fetchPosts();
@@ -109,7 +106,6 @@ const Home = () => {
 					))}
 				</Row>
 			</Container>
-			<Footer />
 		</>
 	);
 };
