@@ -1,24 +1,33 @@
 import { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
-import BookCard from "../components/BookCard";
-import NavBar from "../components/NavBar";
-import { fetchMockBooks } from "../services/MockAPI";
 import Footer from "../components/Footer";
+import NavBar from "../components/Navbar";
+import PostCard from "../components/PostCard";
+import { fetchPosts, fetchReaderById } from "../services/MockAPI";
 
 const Home = () => {
-	const [books, setBooks] = useState([]);
-	const [filteredBooks, setFilteredBooks] = useState([]);
+	const [account_reader, setReader] = useState([]);
+	const [posts, setposts] = useState([]);
+	const [filteredposts, setFilteredposts] = useState([]);
+	const ACCOUNT_READER_ID = "754368128"; // For testing purposes
 
 	useEffect(() => {
-		const getBooks = async () => {
-			const fetchedBooks = await fetchMockBooks();
-			setBooks(fetchedBooks);
-			setFilteredBooks(fetchedBooks);
+		const getReader = async () => {
+			const account_reader = await fetchReaderById(ACCOUNT_READER_ID);
+			setReader(account_reader);
 
-			console.log("Books:", fetchedBooks);
+			console.log("Account reader:", account_reader);
 		};
 
-		getBooks();
+		const getposts = async () => {
+			const fetchedposts = await fetchPosts();
+			setposts(fetchedposts);
+			setFilteredposts(fetchedposts);
+
+			console.log("posts:", fetchedposts);
+		};
+
+		getReader().then(getposts);
 	}, []);
 
 	const handleSearch = (event) => {
@@ -26,12 +35,12 @@ const Home = () => {
 		console.log("Search input: " + searchInput);
 
 		if (searchInput === "") {
-			setFilteredBooks(books);
+			setFilteredposts(posts);
 		} else {
-			const filtered = books.filter((book) =>
-				book.title.toLowerCase().includes(searchInput)
+			const filtered = posts.filter((post) =>
+				post.book.title.toLowerCase().includes(searchInput)
 			);
-			setFilteredBooks(filtered);
+			setFilteredposts(filtered);
 		}
 	};
 
@@ -40,33 +49,39 @@ const Home = () => {
 	};
 
 	const handleFavorite = (bookID) => {
-		const toggleFavorite = books.map((book) =>
-			book.id === bookID ? { ...book, isFavorite: !book.isFavorite } : book
-		);
+		if (account_reader.favoriteBooks.includes(bookID)) {
+			const index = account_reader.favoriteBooks.indexOf(bookID);
+			account_reader.favoriteBooks.splice(index, 1);
+		} else {
+			account_reader.favoriteBooks.push(bookID);
+		}
 
-		setBooks(toggleFavorite);
-		setFilteredBooks(toggleFavorite);
-		console.log("Updated favorite books:", toggleFavorite);
+		setReader({ ...account_reader });
+		console.log("Updated bookId: " + bookID + " to favorite: " + account_reader.favoriteBooks.includes(bookID));
 	};
 
 	const handleBookmark = (bookID) => {
-		const toggleBookmarked = books.map((book) =>
-			book.id === bookID ? { ...book, isBookmarked: !book.isBookmarked } : book
-		);
+		if (account_reader.bookmarkedBooks.includes(bookID)) {
+			const index = account_reader.bookmarkedBooks.indexOf(bookID);
+			account_reader.bookmarkedBooks.splice(index, 1);
+		} else {
+			account_reader.bookmarkedBooks.push(bookID);
+		}
 
-		setBooks(toggleBookmarked);
-		setFilteredBooks(toggleBookmarked);
-		console.log("Updated bookmarked books:", toggleBookmarked);
+		setReader({ ...account_reader });
+		console.log("Updated bookId: " + bookID + " to bookmarked: " + account_reader.bookmarkedBooks.includes(bookID));
 	};
 
 	const handleCompleted = (bookID) => {
-		const toggleCompleted = books.map((book) =>
-			book.id === bookID ? { ...book, isCompleted: !book.isCompleted } : book
-		);
+		if (account_reader.completedBooks.includes(bookID)) {
+			const index = account_reader.completedBooks.indexOf(bookID);
+			account_reader.completedBooks.splice(index, 1);
+		} else {
+			account_reader.completedBooks.push(bookID);
+		}
 
-		setBooks(toggleCompleted);
-		setFilteredBooks(toggleCompleted);
-		console.log("Updated completed books:", toggleCompleted);
+		setReader({ ...account_reader });
+		console.log("Updated bookId: " + bookID + " to completed: " + account_reader.completedBooks.includes(bookID));
 	};
 
 	return (
@@ -77,13 +92,13 @@ const Home = () => {
 			{/* Body */}
 			<Container style={{ marginTop: "64px" }}>
 				<Row className="g-4">
-					{filteredBooks.map((book) => (
-						<BookCard
-							key={book.id}
-							book={book}
-							isFavorite={book.isFavorite}
-							isBookmarked={book.isBookmarked}
-							isCompleted={book.isCompleted}
+					{filteredposts.map((post) => (
+						<PostCard
+							key={post._Id}
+							book={post.book}
+							isFavorite={account_reader.favoriteBooks.includes(post.book.bookId)}
+							isBookmarked={account_reader.bookmarkedBooks.includes(post.book.bookId)}
+							isCompleted={account_reader.completedBooks.includes(post.book.bookId)}
 							handleFavorite={handleFavorite}
 							handleBookmark={handleBookmark}
 							handleCompleted={handleCompleted}
