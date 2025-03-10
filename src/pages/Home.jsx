@@ -4,14 +4,8 @@ import PostCard from "../components/PostCard";
 import Footer from "../components/Footer";
 import NavBar from "../components/Navbar";
 import { fetchPosts, fetchReaderById } from "../services/MockAPI";
-import PostCard from "../components/PostCard";
-import { fetchPosts, fetchReaderById } from "../services/MockAPI";
 
 const Home = () => {
-	const [posts, setposts] = useState([]);
-	const [filteredposts, setFilteredposts] = useState([]);
-	const [account_reader, setReader] = useState();
-	const ACCOUNT_READER_ID = "754368128"; // For testing purposes
 	const [account_reader, setReader] = useState([]);
 	const [posts, setposts] = useState([]);
 	const [filteredposts, setFilteredposts] = useState([]);
@@ -25,16 +19,7 @@ const Home = () => {
 			// console.log("Account reader:", account_reader);
 		};
 
-		const getposts = async () => {
-			const fetchedposts = await fetchPosts();
-			setposts(fetchedposts);
-			setFilteredposts(fetchedposts);
-		const getReader = async () => {
-			const account_reader = await fetchReaderById(ACCOUNT_READER_ID);
-			setReader(account_reader);
 
-			console.log("Account reader:", account_reader);
-		};
 
 		const getposts = async () => {
 			const fetchedposts = await fetchPosts();
@@ -46,7 +31,6 @@ const Home = () => {
 		};
 
 		getReader().then(getposts);
-		getReader().then(getposts);
 	}, []);
 
 	const handleSearch = (event) => {
@@ -55,14 +39,10 @@ const Home = () => {
 
 		if (searchInput === "") {
 			setFilteredposts(posts);
-			setFilteredposts(posts);
 		} else {
 			const filtered = posts.filter((post) =>
 				post.book.title.toLowerCase().includes(searchInput)
-			const filtered = posts.filter((post) =>
-				post.book.title.toLowerCase().includes(searchInput)
 			);
-			setFilteredposts(filtered);
 			setFilteredposts(filtered);
 		}
 	};
@@ -72,15 +52,6 @@ const Home = () => {
 	};
 
 	const handleFavorite = (bookID) => {
-		if (account_reader.favoriteBooks.includes(bookID)) {
-			const index = account_reader.favoriteBooks.indexOf(bookID);
-			account_reader.favoriteBooks.splice(index, 1);
-		} else {
-			account_reader.favoriteBooks.push(bookID);
-		}
-
-		setReader({ ...account_reader });
-		console.log("Updated bookId: " + bookID + " to favorite: " + account_reader.favoriteBooks.includes(bookID));
 		if (account_reader.favoriteBooks.includes(bookID)) {
 			const index = account_reader.favoriteBooks.indexOf(bookID);
 			account_reader.favoriteBooks.splice(index, 1);
@@ -102,27 +73,9 @@ const Home = () => {
 
 		setReader({ ...account_reader });
 		console.log("Updated bookId: " + bookID + " to bookmarked: " + account_reader.bookmarkedBooks.includes(bookID));
-		if (account_reader.bookmarkedBooks.includes(bookID)) {
-			const index = account_reader.bookmarkedBooks.indexOf(bookID);
-			account_reader.bookmarkedBooks.splice(index, 1);
-		} else {
-			account_reader.bookmarkedBooks.push(bookID);
-		}
-
-		setReader({ ...account_reader });
-		console.log("Updated bookId: " + bookID + " to bookmarked: " + account_reader.bookmarkedBooks.includes(bookID));
 	};
 
 	const handleCompleted = (bookID) => {
-		if (account_reader.completedBooks.includes(bookID)) {
-			const index = account_reader.completedBooks.indexOf(bookID);
-			account_reader.completedBooks.splice(index, 1);
-		} else {
-			account_reader.completedBooks.push(bookID);
-		}
-
-		setReader({ ...account_reader });
-		console.log("Updated bookId: " + bookID + " to completed: " + account_reader.completedBooks.includes(bookID));
 		if (account_reader.completedBooks.includes(bookID)) {
 			const index = account_reader.completedBooks.indexOf(bookID);
 			account_reader.completedBooks.splice(index, 1);
@@ -142,13 +95,6 @@ const Home = () => {
 			{/* Body */}
 			<Container style={{ marginTop: "64px" }}>
 				<Row className="g-4">
-					{filteredposts.map((post) => (
-						<PostCard
-							key={post._Id}
-							book={post.book}
-							isFavorite={account_reader.favoriteBooks.includes(post.book.bookId)}
-							isBookmarked={account_reader.bookmarkedBooks.includes(post.book.bookId)}
-							isCompleted={account_reader.completedBooks.includes(post.book.bookId)}
 					{filteredposts.map((post) => (
 						<PostCard
 							key={post._Id}
