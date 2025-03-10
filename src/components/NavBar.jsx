@@ -16,6 +16,8 @@ import {
 import { Link } from "react-router-dom";
 
 const NavBar = ({ handleSearch, handleSignOut }) => {
+  const ACCOUNT_READER_ID = "754368128"; // For testing purposes
+
   return (
     <Navbar className="shadow-sm fixed-top" style={{ backgroundColor: "white" }}>
       <Container>
@@ -39,11 +41,11 @@ const NavBar = ({ handleSearch, handleSignOut }) => {
 
           {/* Dropdown Menu */}
           <NavDropdown title={<FaBookReader size={24} />}>
-            <NavDropdown.Item as={Link} to="/reader/1">
+            <NavDropdown.Item as={Link} to={`/reader/${ACCOUNT_READER_ID}`}>
               <FaUser className="me-2" /> Profile
             </NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item as={Link} to="/settings/1">
+            <NavDropdown.Item as={Link} to={`/settings/${ACCOUNT_READER_ID}`}>
               <AiFillSetting className="me-2" /> Settings
             </NavDropdown.Item>
             <NavDropdown.Divider />
@@ -53,7 +55,7 @@ const NavBar = ({ handleSearch, handleSignOut }) => {
           </NavDropdown>
         </Navbar.Collapse>
       </Container>
-    </Navbar>
+    </Navbar >
   );
 };
 
