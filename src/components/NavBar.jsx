@@ -27,7 +27,7 @@ const NavBar = ({ handleSearch, handleSignOut }) => {
 
         <Navbar.Collapse id="basic-navbar-nav">
           {/* Search */}
-          <Form className="d-flex mx-auto" style={{ width: "500px" }}>
+          <Form className="d-flex mx-auto" style={{ minWidth: "350px", maxWidth: "750px" }}>
             <InputGroup>
               <Form.Control
                 type="search"
@@ -38,7 +38,7 @@ const NavBar = ({ handleSearch, handleSignOut }) => {
           </Form>
 
           {/* Dropdown Menu */}
-          <NavDropdown title={<FaBookReader size={24} />}>
+          <NavDropdown className="me-2" title={<FaBookReader size={24} />}>
             <NavDropdown.Item as={Link} to="/reader/1">
               <FaUser className="me-2" /> Profile
             </NavDropdown.Item>

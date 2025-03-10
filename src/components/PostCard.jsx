@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite, handleBookmark, handleCompleted }) => {
+const PostCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite, handleBookmark, handleCompleted }) => {
 	const navigate = useNavigate();
 	const [isHovered, setIsHovered] = useState(false);
 	const [iconHovered, setIconHovered] = useState({
@@ -35,7 +35,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 			<div className="d-flex">
 				{/* Book cover with hover effect */}
 				<Card.Img
-					src={book.coverImage}
+					src={book.cover}
 					alt={book.title}
 					style={{
 						height: "250px",
@@ -45,7 +45,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						transition: "transform 0.3s ease-in-out",
 						transform: isHovered ? "scale(1.05)" : "scale(1)",
 					}}
-					onClick={() => navigate(`/book/${book.id}`)}
+					onClick={() => navigate(`/book/${book.bookId}`)}
 					onMouseEnter={() => setIsHovered(true)}
 					onMouseLeave={() => setIsHovered(false)}
 				/>
@@ -70,7 +70,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</Link>
 
 							{/* Author */}
-							<Link to={`/author/${book.author.id}`} className="text-decoration-none">
+							<Link to={`/author/${book.authorId}`} className="text-decoration-none">
 								<Card.Subtitle
 									className="text-muted mb-4"
 									style={{
@@ -80,7 +80,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 									onMouseEnter={() => handleTextHover("subtitle")}
 									onMouseLeave={() => handleTextHover("subtitle")}
 								>
-									{book.author.name}
+									{book.authorName}
 								</Card.Subtitle>
 							</Link>
 						</div>
@@ -89,7 +89,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						<div className="d-flex flex-row">
 							<button
 								className="btn btn-link p-0 me-2"
-								onClick={() => handleFavorite(book.id)}
+								onClick={() => handleFavorite(book.bookId)}
 								onMouseEnter={() => handleIconHover("favorite")}
 								onMouseLeave={() => handleIconHover("favorite")}
 							>
@@ -115,7 +115,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</button>
 							<button
 								className="btn btn-link p-0 me-2"
-								onClick={() => handleBookmark(book.id)}
+								onClick={() => handleBookmark(book.bookId)}
 								onMouseEnter={() => handleIconHover("bookmarked")}
 								onMouseLeave={() => handleIconHover("bookmarked")}
 							>
@@ -139,7 +139,7 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</button>
 							<button
 								className="btn btn-link p-0"
-								onClick={() => handleCompleted(book.id)}
+								onClick={() => handleCompleted(book.bookId)}
 								onMouseEnter={() => handleIconHover("completed")}
 								onMouseLeave={() => handleIconHover("completed")}
 							>
@@ -169,8 +169,8 @@ const BookCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 					</div>
 				</div>
 			</div>
-		</Card>
+		</Card >
 	);
 };
 
-export default BookCard;
+export default PostCard;
