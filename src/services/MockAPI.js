@@ -15,9 +15,9 @@ mockReaders.push({
 mockReaders.push({
   _Id: "754368128",
   name: "William Delmanto",
-  favoriteBooks: ["OL39181496W"],
-  bookmarkedBooks: ["OL42360848W"],
-  completedBooks: ["OL24319394W"]
+  favoriteBooks: ["OL39181496W", "OL35185354W"],
+  bookmarkedBooks: ["OL42360848W", "OL35185354W"],
+  completedBooks: ["OL24319394W", "OL35185354W"]
 });
 
 // Posts
@@ -57,6 +57,31 @@ mockPosts.push({
   comments: [
     { _id: "754368127", text: "I agree! The writing style is fantastic." },
     { _id: "754368128", text: "Didn't like the ending, but overall a great book." }
+  ]
+});
+
+mockPosts.push({
+  _Id: "123497566",
+  bookId: "OL35185354W",
+  readerId: "754368126",
+  title: "Amazing Read!",
+  description: "I just finished it, and it was an emotional rollercoaster! Highly recommend it.",
+  likes: 25,
+  comments: [
+    { _id: "754368127", text: "I agree! The writing style is fantastic." },
+    { _id: "754368128", text: "Didn't like the ending, but overall a great book." }
+  ]
+});
+
+mockPosts.push({
+  _Id: "123497567",
+  bookId: "OL4897446W",
+  readerId: "754368127",
+  title: "Great Book!",
+  description: "I couldn't put it down! The characters are so well developed.",
+  likes: 15,
+  comments: [
+    { _id: "754368126", text: "I loved it too! The plot twists were amazing." }
   ]
 });
 
