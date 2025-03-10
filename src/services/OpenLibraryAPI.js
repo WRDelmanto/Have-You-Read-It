@@ -4,8 +4,8 @@ const OpenLibraryAPI = {
   async getBookById(id) {
     try {
       let dynamicUrl = `${BASE_URL}?q=${id}`;
-      dynamicUrl += "&limit=1";
       dynamicUrl += "&fields=key,author_key,author_name,title,cover_i";
+      dynamicUrl += "&limit=1";
 
       const response = await fetch(dynamicUrl);
 
