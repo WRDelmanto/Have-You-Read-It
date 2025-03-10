@@ -55,7 +55,7 @@ const PostCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 					<div className="d-flex justify-content-between align-items-start">
 						<div className="d-flex align-items-start flex-column">
 							{/* Title */}
-							<Link to={`/book/${book.id}`} className="text-decoration-none">
+							<Link to={`/book/${book.bookId}`} className="text-decoration-none">
 								<Card.Title
 									className="h5 text-dark mt-1 mb-2"
 									style={{
