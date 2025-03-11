@@ -14,6 +14,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 	const [textHovered, setTextHovered] = useState({
 		title: false,
 		subtitle: false,
+		readerName: false,
 	});
 
 	const handleIconHover = (icon) => {
@@ -83,6 +84,27 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 									{post.book.authorName}
 								</Card.Subtitle>
 							</Link>
+
+							{/* Reader */}
+							<Link to={`/reader/${post.reader?._Id}`} className="text-decoration-none">
+								<Card.Title
+									className="h5 text-dark mb-2"
+									style={{
+										transition: "transform 0.3s ease-in-out",
+										transform: textHovered.readerName ? "scale(1.01)" : "scale(1)",
+									}}
+									onMouseEnter={() => handleTextHover("readerName")}
+									onMouseLeave={() => handleTextHover("readerName")}
+								>
+									{post.reader?.name || "Anonymous"}
+								</Card.Title>
+							</Link>
+							<div className="d-flex flex-column align-items-start">
+								{/* Title */}
+								<div className="h6 text-dark mb-1">{post.title}</div>
+								{/* Description */}
+								<div nclassName="h6 text-muted mb-1" > {post.description}</div>
+							</div>
 						</div>
 
 						{/* Favorite, bookmarked, and completed buttons */}
@@ -167,6 +189,17 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</button>
 						</div>
 					</div>
+					{/* Comments */}
+					{post.comments.length > 0 && (
+						<div className="d-flex flex-column mt-4 align-items-start">
+							<Card.Subtitle className="text-muted">Comments:</Card.Subtitle>
+							{post.comments.map((comment) => (
+								<div key={comment._id} className="mb-1 text-muted">
+									{comment.text}
+								</div>
+							))}
+						</div>
+					)}
 				</div>
 			</div>
 		</Card >

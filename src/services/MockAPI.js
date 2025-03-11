@@ -134,7 +134,7 @@ export const fetchPosts = async (id) => {
 
       const posts = await Promise.all(
         postsData.map(async (post) => {
-          const reader = mockReaders.find((reader) => reader._id === post.readerId) || { _id: post.readerId, name: "Unknown" };
+          const reader = mockReaders.find((reader) => reader._Id === post.readerId);
           const book = await OpenLibraryAPI.getBookById(post.bookId);
 
           const { bookId, readerId, ...newPost } = post;
