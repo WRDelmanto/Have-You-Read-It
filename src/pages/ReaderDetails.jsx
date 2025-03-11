@@ -18,19 +18,17 @@ const ReaderDetails = () => {
     getReader();
   }, [readerId]);
 
-  if (!reader) {
-    return <p className="text-center mt-5">Loading reader details...</p>;
-  }
-
   return (
     <>
       {/* Navigation Bar */}
       <NavBar />
 
       {/* Body */}
-      <Container className="">
-        <Card className="shadow-sm  bg-white">
-          <Row>
+      {reader && (
+        <Container className="mt-5">
+          <Card className="shadow-sm p-4 bg-white">
+            <Row>
+            
             {/* <Col md={3} className="text-center">
               <Card.Img
                 src="https://via.placeholder.com/150" // Placeholder to image, if we will put
@@ -62,6 +60,7 @@ const ReaderDetails = () => {
           </Row>
         </Card>
       </Container>
+      )}
       <Footer/>
     </>
   );
