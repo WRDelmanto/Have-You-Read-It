@@ -11,23 +11,32 @@ const NavBar = () => {
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const searchBoxReference = useRef(null);
+  const searchTimeout = useRef(null);
 
-  // Handle input change
   const handleSearch = (event) => {
     const searchInput = event.target.value;
     setSearchQuery(searchInput);
 
-    if (searchInput.length > 0) {
-      const filtered = OpenLibraryAPI.getBooksByTitle(searchInput.replace(" ", "+"));
+    console.log("Search query:", searchInput);
 
-      setResults(filtered);
-      setShowResults(true);
-    } else {
-      setResults([]);
-      setShowResults(false);
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current);
     }
 
-    console.log("Search query:", searchInput);
+    searchTimeout.current = setTimeout(async () => {
+      if (searchInput.length > 0) {
+        const filtered = await OpenLibraryAPI.getBooksByTitle(searchInput.replaceAll(" ", "+")) || [];
+
+        setResults(filtered);
+        setShowResults(filtered.length > 0);
+
+        console.log("Filtered results:", filtered);
+      } else {
+        setResults([]);
+        setShowResults(false);
+      }
+    }, 500);
+
   };
 
   const handleClickOutsideSearchBox = (event) => {
@@ -65,23 +74,23 @@ const NavBar = () => {
             </InputGroup>
 
             {/* Floating Search Results */}
-            {showResults && results.length > 0 && (
+            {showResults && (
               <ListGroup
                 className="position-absolute w-100 bg-white shadow rounded mt-5"
                 style={{ zIndex: 1000 }}
               >
                 {results.map((book) => (
                   <ListGroup.Item
-                    key={book.id}
+                    key={book.bookId}
                     as={Link}
-                    to={`/book/${book.id}`}
+                    to={`/book/${book.bookId}`}
                     className="d-flex align-items-center"
                     action
                   >
-                    <Image src={book.image} rounded width={40} height={60} className="me-3" />
+                    <Image src={book.cover} rounded width={40} height={60} className="me-3" />
                     <div className="d-flex flex-column align-items-start">
                       <strong>{book.title}</strong>
-                      <div className="text-muted" style={{ fontSize: "12px" }}>{book.author}</div>
+                      <div className="text-muted" style={{ fontSize: "12px" }}>{book.authorName}</div>
                     </div>
                   </ListGroup.Item>
                 ))}
