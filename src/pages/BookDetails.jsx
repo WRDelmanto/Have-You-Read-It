@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import Footer from "../components/Footer.jsx";
 import NavBar from "../components/Navbar.jsx";
 import { fetchReaderById } from "../services/MockAPI.js";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
@@ -209,7 +208,6 @@ const BookDetails = () => {
           )}
         </Card>
       </Container>
-      <Footer />
     </>
   );
 };

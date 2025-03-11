@@ -7,7 +7,7 @@ const OpenLibraryAPI = {
       dynamicUrl += "&fields=key,author_key,author_name,title,cover_i";
       dynamicUrl += "&limit=1";
 
-      console.log("Fetching book from Open Library API: ", dynamicUrl);
+      // console.log("Fetching book from Open Library API: ", dynamicUrl);
 
       const response = await fetch(dynamicUrl);
 
@@ -40,9 +40,9 @@ const OpenLibraryAPI = {
     try {
       let dynamicUrl = `${BASE_URL}?title=${title}`;
       dynamicUrl += "&fields=key,author_name,title,cover_i";
-      dynamicUrl += "&limit=10";
+      dynamicUrl += "&limit=5";
 
-      console.log("Fetching books by title: ", dynamicUrl);
+      // console.log("Fetching books by title: ", dynamicUrl);
 
       const response = await fetch(dynamicUrl);
 
@@ -64,6 +64,45 @@ const OpenLibraryAPI = {
       }));
     } catch (error) {
       console.error("Error fetching books: ", error);
+      return null;
+    }
+  },
+
+  async getAuthorByName(name) {
+    try {
+      let dynamicUrl = `${BASE_URL}?author=${name}`;
+      dynamicUrl += "&fields=key,author_name,author_key";
+      dynamicUrl += "&limit=1";
+
+      // console.log("Fetching author by name: ", dynamicUrl);
+
+      const response = await fetch(dynamicUrl);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch author");
+      }
+
+      const data = await response.json();
+
+      if (!data.docs || data.docs.length === 0) {
+        return null;
+      }
+
+      const author = data.docs[0];
+
+      return {
+        authorId: author.key.replace("/works/", "") || '',
+        authorName: author.author_name?.[0] || '',
+        authorImage: author.author_key[0] ? `https://covers.openlibrary.org/a/olid/${author.author_key[0]}-M.jpg` : "https://m.media-amazon.com/images/I/11Bh3jv+xvL.jpg"
+      };
+
+      // return data.docs.map(book => ({
+      //   authorId: book.key.replace("/works/", "") || '',
+      //   authorName: book.author_name?.[0] || '',
+      //   authorImage: authorId ? `https://covers.openlibrary.org/a/olid/${authorId}-M.jpg` : "https://m.media-amazon.com/images/I/11Bh3jv+xvL.jpg"
+      // }));
+    } catch (error) {
+      console.error("Error fetching author: ", error);
       return null;
     }
   }

@@ -8,7 +8,8 @@ import OpenLibraryAPI from "../services/OpenLibraryAPI";
 const NavBar = () => {
   const ACCOUNT_READER_ID = "754368128"; // For testing purposes
   const [searchQuery, setSearchQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [booksResults, setBookResults] = useState([]);
+  const [authorResult, setAuthorResults] = useState("");
   const [showResults, setShowResults] = useState(false);
   const searchBoxReference = useRef(null);
   const searchTimeout = useRef(null);
@@ -25,18 +26,21 @@ const NavBar = () => {
 
     searchTimeout.current = setTimeout(async () => {
       if (searchInput.length > 0) {
-        const filtered = await OpenLibraryAPI.getBooksByTitle(searchInput.replaceAll(" ", "+")) || [];
+        const filteredAuthor = await OpenLibraryAPI.getAuthorByName(searchInput.replaceAll(" ", "+")) || "";
+        setAuthorResults(filteredAuthor);
 
-        setResults(filtered);
-        setShowResults(filtered.length > 0);
+        const filteredBooks = await OpenLibraryAPI.getBooksByTitle(searchInput.replaceAll(" ", "+")) || [];
 
-        console.log("Filtered results:", filtered);
+        setBookResults(filteredBooks);
+        setShowResults(filteredAuthor.length > 0 || filteredBooks.length > 0);
+
+        // console.log("Filtered author:", filteredAuthor);
+        // console.log("Filtered books:", filteredBooks);
       } else {
-        setResults([]);
+        setBookResults([]);
         setShowResults(false);
       }
     }, 500);
-
   };
 
   const handleClickOutsideSearchBox = (event) => {
@@ -79,7 +83,23 @@ const NavBar = () => {
                 className="position-absolute w-100 bg-white shadow rounded mt-5"
                 style={{ zIndex: 1000 }}
               >
-                {results.map((book) => (
+                {
+                  authorResult && (
+                    <ListGroup.Item
+                      key={authorResult.authorId}
+                      as={Link}
+                      to={`/author/${authorResult.authorId}`}
+                      className="d-flex align-items-center"
+                      action
+                    >
+                      <Image src={authorResult.authorImage} roundedCircle width={40} height={40} className="me-3" />
+                      <div className="d-flex flex-column align-items-start">
+                        <strong>{authorResult.authorName}</strong>
+                      </div>
+                    </ListGroup.Item>
+                  )
+                }
+                {booksResults.map((book) => (
                   <ListGroup.Item
                     key={book.bookId}
                     as={Link}
