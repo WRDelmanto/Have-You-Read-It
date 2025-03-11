@@ -86,7 +86,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</Link>
 
 							{/* Reader */}
-							<Link to={`/reader/${post.readerId}`} className="text-decoration-none">
+							<Link to={`/reader/${post.reader?._Id}`} className="text-decoration-none">
 								<Card.Title
 									className="h5 text-dark mb-2"
 									style={{
@@ -99,35 +99,11 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 									{post.reader?.name || "Anonymous"}
 								</Card.Title>
 							</Link>
-							<div flex="1" className="d-flex flex-column align-items-start">
+							<div className="d-flex flex-column align-items-start">
 								{/* Title */}
-								<Link to={`/book/${post.book.bookId}`} className="text-decoration-none">
-									<Card.Text
-										className="h6 text-dark mb-1"
-										style={{
-											transition: "transform 0.3s ease-in-out",
-											transform: textHovered.title ? "scale(1.01)" : "scale(1)",
-										}}
-										onMouseEnter={() => handleTextHover("title")}
-										onMouseLeave={() => handleTextHover("title")}
-									>
-										{post.title}
-									</Card.Text>
-								</Link>
+								<div className="h6 text-dark mb-1">{post.title}</div>
 								{/* Description */}
-								<Link to={`/book/${post.book.bookId}`} className="text-decoration-none">
-									<Card.Text
-										className="h6 text-muted mb-1"
-										style={{
-											transition: "transform 0.3s ease-in-out",
-											transform: textHovered.title ? "scale(1.01)" : "scale(1)",
-										}}
-										onMouseEnter={() => handleTextHover("title")}
-										onMouseLeave={() => handleTextHover("title")}
-									>
-										{post.description}
-									</Card.Text>
-								</Link>
+								<div nclassName="h6 text-muted mb-1" > {post.description}</div>
 							</div>
 						</div>
 
@@ -213,6 +189,17 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</button>
 						</div>
 					</div>
+					{/* Comments */}
+					{post.comments.length > 0 && (
+						<div className="d-flex flex-column mt-4 align-items-start">
+							<Card.Subtitle className="text-muted">Comments:</Card.Subtitle>
+							{post.comments.map((comment) => (
+								<div key={comment._id} className="mb-1 text-muted">
+									{comment.text}
+								</div>
+							))}
+						</div>
+					)}
 				</div>
 			</div>
 		</Card >
