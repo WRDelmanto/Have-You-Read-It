@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-const PostCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite, handleBookmark, handleCompleted }) => {
+const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite, handleBookmark, handleCompleted }) => {
 	const navigate = useNavigate();
 	const [isHovered, setIsHovered] = useState(false);
 	const [iconHovered, setIconHovered] = useState({
@@ -35,8 +35,8 @@ const PostCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 			<div className="d-flex">
 				{/* Book cover with hover effect */}
 				<Card.Img
-					src={book.cover}
-					alt={book.title}
+					src={post.book.cover}
+					alt={post.book.title}
 					style={{
 						height: "250px",
 						objectFit: "contain",
@@ -55,7 +55,7 @@ const PostCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 					<div className="d-flex justify-content-between align-items-start">
 						<div className="d-flex align-items-start flex-column">
 							{/* Title */}
-							<Link to={`/book/${book.bookId}`} className="text-decoration-none">
+							<Link to={`/book/${post.book.bookId}`} className="text-decoration-none">
 								<Card.Title
 									className="h5 text-dark mt-1 mb-2"
 									style={{
@@ -65,12 +65,12 @@ const PostCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 									onMouseEnter={() => handleTextHover("title")}
 									onMouseLeave={() => handleTextHover("title")}
 								>
-									{book.title}
+									{post.book.title}
 								</Card.Title>
 							</Link>
 
 							{/* Author */}
-							<Link to={`/author/${book.authorId}`} className="text-decoration-none">
+							<Link to={`/author/${post.book.authorId}`} className="text-decoration-none">
 								<Card.Subtitle
 									className="text-muted mb-4"
 									style={{
@@ -80,7 +80,7 @@ const PostCard = ({ book, isFavorite, isBookmarked, isCompleted, handleFavorite,
 									onMouseEnter={() => handleTextHover("subtitle")}
 									onMouseLeave={() => handleTextHover("subtitle")}
 								>
-									{book.authorName}
+									{post.book.authorName}
 								</Card.Subtitle>
 							</Link>
 						</div>
