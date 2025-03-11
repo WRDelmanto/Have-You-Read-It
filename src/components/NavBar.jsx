@@ -1,22 +1,46 @@
-import {
-  Container,
-  Form,
-  InputGroup,
-  Navbar,
-  NavDropdown
-} from "react-bootstrap";
+import { useRef, useState } from "react";
+import { Container, Form, Image, InputGroup, ListGroup, Navbar, NavDropdown } from "react-bootstrap";
 import { AiFillSetting } from "react-icons/ai";
-
-import {
-  FaBook,
-  FaBookReader,
-  FaSignOutAlt,
-  FaUser
-} from "react-icons/fa";
+import { FaBook, FaBookReader, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import OpenLibraryAPI from "../services/OpenLibraryAPI";
 
-const NavBar = ({ handleSearch, handleSignOut }) => {
+const NavBar = () => {
   const ACCOUNT_READER_ID = "754368128"; // For testing purposes
+  const [searchQuery, setSearchQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const searchBoxReference = useRef(null);
+
+  // Handle input change
+  const handleSearch = (event) => {
+    const searchInput = event.target.value;
+    setSearchQuery(searchInput);
+
+    if (searchInput.length > 0) {
+      const filtered = OpenLibraryAPI.getBooksByTitle(searchInput.replace(" ", "+"));
+
+      setResults(filtered);
+      setShowResults(true);
+    } else {
+      setResults([]);
+      setShowResults(false);
+    }
+
+    console.log("Search query:", searchInput);
+  };
+
+  const handleClickOutsideSearchBox = (event) => {
+    if (searchBoxReference.current && !searchBoxReference.current.contains(event.target)) {
+      setShowResults(false);
+    }
+  };
+
+  const handleSignOut = () => {
+    console.log("Signing out...");
+  };
+
+  document.addEventListener("mousedown", handleClickOutsideSearchBox);
 
   return (
     <Navbar className="shadow-sm fixed-top" style={{ backgroundColor: "white" }}>
@@ -28,18 +52,44 @@ const NavBar = ({ handleSearch, handleSignOut }) => {
         </Navbar.Brand>
 
         <Navbar.Collapse id="basic-navbar-nav">
-          {/* Search */}
-          <Form className="d-flex mx-auto" style={{ minWidth: "600px", maxWidth: "750px" }}>
+          {/* Search Box */}
+          <Form className="d-flex mx-auto position-relative" style={{ minWidth: "600px", maxWidth: "750px" }} ref={searchBoxReference}>
             <InputGroup>
               <Form.Control
                 type="search"
                 placeholder="Search for books, authors, or readers..."
-                onChange={(event) => handleSearch(event)}
+                value={searchQuery}
+                onChange={handleSearch}
+                onFocus={() => setShowResults(true)}
               />
             </InputGroup>
+
+            {/* Floating Search Results */}
+            {showResults && results.length > 0 && (
+              <ListGroup
+                className="position-absolute w-100 bg-white shadow rounded mt-5"
+                style={{ zIndex: 1000 }}
+              >
+                {results.map((book) => (
+                  <ListGroup.Item
+                    key={book.id}
+                    as={Link}
+                    to={`/book/${book.id}`}
+                    className="d-flex align-items-center"
+                    action
+                  >
+                    <Image src={book.image} rounded width={40} height={60} className="me-3" />
+                    <div className="d-flex flex-column align-items-start">
+                      <strong>{book.title}</strong>
+                      <div className="text-muted" style={{ fontSize: "12px" }}>{book.author}</div>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
           </Form>
 
-          {/* Dropdown Menu */}
+          {/* User Dropdown */}
           <NavDropdown title={<FaBookReader size={24} />}>
             <NavDropdown.Item as={Link} to={`/reader/${ACCOUNT_READER_ID}`}>
               <FaUser className="me-2" /> Profile
@@ -55,7 +105,7 @@ const NavBar = ({ handleSearch, handleSignOut }) => {
           </NavDropdown>
         </Navbar.Collapse>
       </Container>
-    </Navbar >
+    </Navbar>
   );
 };
 

@@ -30,24 +30,6 @@ const Home = () => {
 		getReader().then(getposts);
 	}, []);
 
-	const handleSearch = (event) => {
-		const searchInput = event.target.value.toLowerCase();
-		console.log("Search input: " + searchInput);
-
-		if (searchInput === "") {
-			setFilteredposts(posts);
-		} else {
-			const filtered = posts.filter((post) =>
-				post.book.title.toLowerCase().includes(searchInput)
-			);
-			setFilteredposts(filtered);
-		}
-	};
-
-	const handleSignOut = () => {
-		console.log("Signing out...");
-	};
-
 	const handleFavorite = (bookID) => {
 		if (account_reader.favoriteBooks.includes(bookID)) {
 			const index = account_reader.favoriteBooks.indexOf(bookID);
@@ -87,7 +69,7 @@ const Home = () => {
 	return (
 		<>
 			{/* Navigation Bar */}
-			<NavBar handleSearch={handleSearch} handleSignOut={handleSignOut} />
+			<NavBar />
 
 			{/* Body */}
 			<Container style={{ marginTop: "64px" }}>
