@@ -77,7 +77,7 @@ const Home = () => {
 					{filteredposts.map((post) => (
 						<PostCard
 							key={post._Id}
-							book={post.book}
+							post={post}
 							isFavorite={account_reader.favoriteBooks.includes(post.book.bookId)}
 							isBookmarked={account_reader.bookmarkedBooks.includes(post.book.bookId)}
 							isCompleted={account_reader.completedBooks.includes(post.book.bookId)}
