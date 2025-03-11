@@ -80,15 +80,17 @@ const BookDetails = () => {
     }));
   };
 
+
+
   return (
     <>
       {/* Navigation Bar */}
       <NavBar />
 
       {/* Body */}
-      <Container >
-        <Card className="shadow-sm p-4 bg-white">
-          <Row className="align-items-center">
+      <Container className="mt-5">
+        <Card className="shadow-sm p-4 bg-white ">
+          <Row className="">
             <Col md={3} className="text-center">
               <Card.Img
                 src={book.cover}
@@ -179,11 +181,11 @@ const BookDetails = () => {
                   )}
                 </button>
               </div >
-              <div className="text-start mb-2">
+              <div className="text-start mt-4">
                 <h2 className="fw-bold">{book.title}</h2>
                 <p className="text-muted"><span className="fw-semibold text-primary">{book.authorName}</span></p>
               </div>
-              <div className="text-start" style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}>
+              <div className="text-start mt-5" style={{ borderTop: "1px solid #dcdcdc ", paddingTop: "10px" }}>
                 <h5 className="fw-bold">Description</h5>
                 <p>{book.description || "No description available for this book."}</p>
               </div>
