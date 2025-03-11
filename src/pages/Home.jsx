@@ -19,7 +19,7 @@ const Home = () => {
 		};
 
 		const getposts = async () => {
-			const fetchedposts = await fetchPosts();
+			const fetchedposts = await fetchPosts(ACCOUNT_READER_ID);
 			setposts(fetchedposts);
 			setFilteredposts(fetchedposts);
 
