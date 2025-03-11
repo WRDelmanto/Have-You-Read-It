@@ -14,6 +14,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 	const [textHovered, setTextHovered] = useState({
 		title: false,
 		subtitle: false,
+		readerName: false,
 	});
 
 	const handleIconHover = (icon) => {
@@ -83,6 +84,51 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 									{post.book.authorName}
 								</Card.Subtitle>
 							</Link>
+
+							{/* Reader */}
+							<Link to={`/reader/${post.readerId}`} className="text-decoration-none">
+								<Card.Title
+									className="h5 text-dark mb-2"
+									style={{
+										transition: "transform 0.3s ease-in-out",
+										transform: textHovered.readerName ? "scale(1.01)" : "scale(1)",
+									}}
+									onMouseEnter={() => handleTextHover("readerName")}
+									onMouseLeave={() => handleTextHover("readerName")}
+								>
+									{post.reader?.name || "Anonymous"}
+								</Card.Title>
+							</Link>
+							<div flex="1" className="d-flex flex-column align-items-start">
+								{/* Title */}
+								<Link to={`/book/${post.book.bookId}`} className="text-decoration-none">
+									<Card.Text
+										className="h6 text-dark mb-1"
+										style={{
+											transition: "transform 0.3s ease-in-out",
+											transform: textHovered.title ? "scale(1.01)" : "scale(1)",
+										}}
+										onMouseEnter={() => handleTextHover("title")}
+										onMouseLeave={() => handleTextHover("title")}
+									>
+										{post.title}
+									</Card.Text>
+								</Link>
+								{/* Description */}
+								<Link to={`/book/${post.book.bookId}`} className="text-decoration-none">
+									<Card.Text
+										className="h6 text-muted mb-1"
+										style={{
+											transition: "transform 0.3s ease-in-out",
+											transform: textHovered.title ? "scale(1.01)" : "scale(1)",
+										}}
+										onMouseEnter={() => handleTextHover("title")}
+										onMouseLeave={() => handleTextHover("title")}
+									>
+										{post.description}
+									</Card.Text>
+								</Link>
+							</div>
 						</div>
 
 						{/* Favorite, bookmarked, and completed buttons */}
