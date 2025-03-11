@@ -61,7 +61,6 @@ const ReaderDetails = () => {
         </Card>
       </Container>
       )}
-      <Footer/>
     </>
   );
 };
