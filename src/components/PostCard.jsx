@@ -1,44 +1,9 @@
-import { useState } from "react";
 import { Card } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite, handleBookmark, handleCompleted }) => {
 	const navigate = useNavigate();
-	const [coverHovered, setImageHovered] = useState(false);
-	const [iconHovered, setIconHovered] = useState({
-		favorite: false,
-		bookmarked: false,
-		completed: false,
-	});
-	const [textHovered, setTextHovered] = useState({
-		title: false,
-		subtitle: false,
-		readerName: false,
-	});
-	const [readerHovered, setReaderHovered] = useState(false);
-
-	const handleImageHover = () => {
-		setImageHovered((prevState) => !prevState);
-	};
-
-	const handleIconHover = (icon) => {
-		setIconHovered((prevState) => ({
-			...prevState,
-			[icon]: !prevState[icon],
-		}));
-	};
-
-	const handleTextHover = (text) => {
-		setTextHovered((prevState) => ({
-			...prevState,
-			[text]: !prevState[text],
-		}));
-	};
-
-	const handleReaderHover = () => {
-		setReaderHovered((prevState) => !prevState);
-	};
 
 	return (
 		<Card className="h-100 book-card border-0 shadow-lg">
@@ -52,12 +17,11 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						objectFit: "contain",
 						width: "150px",
 						cursor: "pointer",
-						transition: "transform 0.3s ease-in-out",
-						transform: coverHovered ? "scale(1.05)" : "scale(1)",
+						transition: "transform 0.3s ease-in-out"
 					}}
 					onClick={() => navigate(`/book/${post.book.bookId}`)}
-					onMouseEnter={() => handleImageHover()}
-					onMouseLeave={() => handleImageHover()}
+					onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+					onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 				/>
 
 				{/* Body content */}
@@ -69,11 +33,10 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 								<Card.Title
 									className="h5 text-dark mt-1 mb-2"
 									style={{
-										transition: "transform 0.3s ease-in-out",
-										transform: textHovered.title ? "scale(1.01)" : "scale(1)",
+										transition: "transform 0.3s ease-in-out"
 									}}
-									onMouseEnter={() => handleTextHover("title")}
-									onMouseLeave={() => handleTextHover("title")}
+									onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+									onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 								>
 									{post.book.title}
 								</Card.Title>
@@ -84,11 +47,10 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 								<Card.Subtitle
 									className="text-muted mb-4"
 									style={{
-										transition: "transform 0.3s ease-in-out",
-										transform: textHovered.subtitle ? "scale(1.05)" : "scale(1)",
+										transition: "transform 0.3s ease-in-out"
 									}}
-									onMouseEnter={() => handleTextHover("subtitle")}
-									onMouseLeave={() => handleTextHover("subtitle")}
+									onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+									onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 								>
 									{post.book.authorName}
 								</Card.Subtitle>
@@ -97,12 +59,11 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							{/* Reader */}
 							<div className="d-flex flex-row mb-2"
 								onClick={() => navigate(`/reader/${post.reader._Id}`)}
-								onMouseEnter={() => handleReaderHover()}
-								onMouseLeave={() => handleReaderHover()}
+								onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+								onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 								style={{
 									cursor: "pointer",
-									transition: "transform 0.3s ease-in-out",
-									transform: readerHovered ? "scale(1.01)" : "scale(1)"
+									transition: "transform 0.3s ease-in-out"
 								}}
 							>
 								<Card.Img
@@ -131,16 +92,15 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							<button
 								className="btn btn-link p-0 me-2"
 								onClick={() => handleFavorite(post.book.bookId)}
-								onMouseEnter={() => handleIconHover("favorite")}
-								onMouseLeave={() => handleIconHover("favorite")}
+								onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+								onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 							>
 								{isFavorite ? (
 									<FaHeart
 										size={22}
 										style={{
 											color: "red",
-											transition: "transform 0.3s",
-											transform: iconHovered.favorite ? "scale(1.2)" : "scale(1)",
+											transition: "0.3s"
 										}}
 									/>
 								) : (
@@ -148,8 +108,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 										size={22}
 										style={{
 											color: "red",
-											transition: "transform 0.3s",
-											transform: iconHovered.favorite ? "scale(1.2)" : "scale(1)",
+											transition: "0.3s",
 										}}
 									/>
 								)}
@@ -157,23 +116,21 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							<button
 								className="btn btn-link p-0 me-2"
 								onClick={() => handleBookmark(post.book.bookId)}
-								onMouseEnter={() => handleIconHover("bookmarked")}
-								onMouseLeave={() => handleIconHover("bookmarked")}
+								onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+								onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 							>
 								{isBookmarked ? (
 									<FaBookmark
 										size={22}
 										style={{
-											transition: "transform 0.3s",
-											transform: iconHovered.bookmarked ? "scale(1.2)" : "scale(1)",
+											transition: "0.3s",
 										}}
 									/>
 								) : (
 									<FaRegBookmark
 										size={22}
 										style={{
-											transition: "transform 0.3s",
-											transform: iconHovered.bookmarked ? "scale(1.2)" : "scale(1)",
+											transition: "0.3s"
 										}}
 									/>
 								)}
@@ -181,15 +138,14 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							<button
 								className="btn btn-link p-0"
 								onClick={() => handleCompleted(post.book.bookId)}
-								onMouseEnter={() => handleIconHover("completed")}
-								onMouseLeave={() => handleIconHover("completed")}
+								onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+								onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 							>
 								{isCompleted ? (
 									<FaBook
 										size={22}
 										style={{
-											transition: "transform 0.3s",
-											transform: iconHovered.completed ? "scale(1.2)" : "scale(1)",
+											transition: "0.3s",
 											color: "green",
 										}}
 									/>
@@ -197,8 +153,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 									<FaBook
 										size={22}
 										style={{
-											transition: "transform 0.3s",
-											transform: iconHovered.completed ? "scale(1.2)" : "scale(1)",
+											transition: "0.3s",
 											color: "white",
 											stroke: "green",
 											strokeWidth: "20px",
@@ -218,12 +173,15 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 										src={comment.reader?.picture}
 										alt={comment.reader?.name}
 										onClick={() => navigate(`/reader/${comment.reader._Id}`)}
+										onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+										onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
 										style={{
 											cursor: "pointer",
 											height: "30px",
 											objectFit: "contain",
 											width: "30px",
-											borderRadius: "50%"
+											borderRadius: "50%",
+											transition: "0.3s ease-in-out"
 										}}
 									/>
 									<span className="ms-2">{comment.text}</span>
