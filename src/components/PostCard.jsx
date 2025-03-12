@@ -213,8 +213,20 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						<div className="d-flex flex-column mt-4 align-items-start">
 							<Card.Subtitle className="text-muted">Comments:</Card.Subtitle>
 							{post.comments.map((comment) => (
-								<div key={comment._id} className="mb-1 text-muted">
-									{comment.text}
+								<div key={comment._Id} className="mt-2 text-muted">
+									<Card.Img
+										src={comment.reader?.picture}
+										alt={comment.reader?.name}
+										onClick={() => navigate(`/reader/${comment.reader._Id}`)}
+										style={{
+											cursor: "pointer",
+											height: "30px",
+											objectFit: "contain",
+											width: "30px",
+											borderRadius: "50%"
+										}}
+									/>
+									<span className="ms-2">{comment.text}</span>
 								</div>
 							))}
 						</div>

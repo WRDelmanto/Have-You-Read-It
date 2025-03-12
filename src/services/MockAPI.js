@@ -5,19 +5,19 @@ const mockReaders = [];
 mockReaders.push({
   _Id: "754368126",
   name: "Fabricio Gardin",
-  picture: "https://thispersondoesnotexist.com/"
+  picture: "https://d26oc3sg82pgk3.cloudfront.net/files/media/edit/image/23113/square_thumb%402x.jpg"
 });
 
 mockReaders.push({
   _Id: "754368127",
   name: "Victor Villas-Boas",
-  picture: "https://thispersondoesnotexist.com/"
+  picture: "https://d26oc3sg82pgk3.cloudfront.net/files/media/edit/image/16406/square_thumb%402x.jpg"
 });
 
 mockReaders.push({
   _Id: "754368128",
   name: "William Delmanto",
-  picture: "https://thispersondoesnotexist.com/",
+  picture: "https://d26oc3sg82pgk3.cloudfront.net/files/media/edit/image/26514/square_thumb%402x.jpg",
   favoriteBooks: ["OL39181496W", "OL35185354W"],
   bookmarkedBooks: ["OL42360848W", "OL35185354W"],
   completedBooks: ["OL24319394W", "OL35185354W"],
@@ -39,8 +39,8 @@ mockPosts.push({
   timestamp: new Date("2025-03-10T12:00:00Z"),
   likes: 25,
   comments: [
-    { _id: "754368127", text: "I agree! The writing style is fantastic." },
-    { _id: "754368128", text: "Didn't like the ending, but overall a great book." }
+    { _Id: "754368127", readerId: "754368127", text: "I agree! The writing style is fantastic." },
+    { _Id: "754364128", readerId: "754368128", text: "Didn't like the ending, but overall a great book." }
   ]
 });
 
@@ -53,7 +53,7 @@ mockPosts.push({
   timestamp: new Date("2025-03-09T12:00:00Z"),
   likes: 15,
   comments: [
-    { _id: "754368126", text: "I loved it too! The plot twists were amazing." }
+    { _Id: "754368126", readerId: "754368126", text: "I loved it too! The plot twists were amazing." }
   ]
 });
 
@@ -66,8 +66,8 @@ mockPosts.push({
   timestamp: new Date("2025-03-08T12:00:00Z"),
   likes: 25,
   comments: [
-    { _id: "754368127", text: "I agree! The writing style is fantastic." },
-    { _id: "754368128", text: "Didn't like the ending, but overall a great book." }
+    { _Id: "755678127", readerId: "754368127", text: "I agree! The writing style is fantastic." },
+    { _Id: "755673127", readerId: "754368128", text: "Didn't like the ending, but overall a great book." }
   ]
 });
 
@@ -80,8 +80,8 @@ mockPosts.push({
   timestamp: new Date("2025-03-07T12:00:00Z"),
   likes: 25,
   comments: [
-    { _id: "754368127", text: "I agree! The writing style is fantastic." },
-    { _id: "754368128", text: "Didn't like the ending, but overall a great book." }
+    { _Id: "555678127", readerId: "754368127", text: "I agree! The writing style is fantastic." },
+    { _Id: "759678127", readerId: "754368128", text: "Didn't like the ending, but overall a great book." }
   ]
 });
 
@@ -94,7 +94,7 @@ mockPosts.push({
   timestamp: new Date("2025-03-06T12:00:00Z"),
   likes: 15,
   comments: [
-    { _id: "754368126", text: "I loved it too! The plot twists were amazing." }
+    { _Id: "755778127", readerId: "754368126", text: "I loved it too! The plot twists were amazing." }
   ]
 });
 
@@ -139,9 +139,16 @@ export const fetchPosts = async (id) => {
         postsData.map(async (post) => {
           const reader = mockReaders.find((reader) => reader._Id === post.readerId);
           const book = await OpenLibraryAPI.getBookById(post.bookId);
+          const tempComments = await Promise.all(
+            post.comments.map(async (comment) => {
+              const reader = mockReaders.find((reader) => reader._Id === comment.readerId);
+              const { readerId, ...newComment } = comment;
+              return { ...newComment, reader };
+            })
+          );
 
-          const { bookId, readerId, ...newPost } = post;
-          return { ...newPost, book, reader };
+          const { bookId, readerId, comments, ...newPost } = post;
+          return { ...newPost, book, reader, comments: tempComments };
         })
       );
 
