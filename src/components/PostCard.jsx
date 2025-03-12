@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite, handleBookmark, handleCompleted }) => {
 	const navigate = useNavigate();
-	const [isHovered, setIsHovered] = useState(false);
+	const [coverHovered, setImageHovered] = useState(false);
 	const [iconHovered, setIconHovered] = useState({
 		favorite: false,
 		bookmarked: false,
@@ -16,6 +16,11 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 		subtitle: false,
 		readerName: false,
 	});
+	const [readerHovered, setReaderHovered] = useState(false);
+
+	const handleImageHover = () => {
+		setImageHovered((prevState) => !prevState);
+	};
 
 	const handleIconHover = (icon) => {
 		setIconHovered((prevState) => ({
@@ -31,6 +36,10 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 		}));
 	};
 
+	const handleReaderHover = () => {
+		setReaderHovered((prevState) => !prevState);
+	};
+
 	return (
 		<Card className="h-100 book-card border-0 shadow-lg">
 			<div className="d-flex">
@@ -44,11 +53,11 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						width: "150px",
 						cursor: "pointer",
 						transition: "transform 0.3s ease-in-out",
-						transform: isHovered ? "scale(1.05)" : "scale(1)",
+						transform: coverHovered ? "scale(1.05)" : "scale(1)",
 					}}
-					onClick={() => navigate(`/book/${book.bookId}`)}
-					onMouseEnter={() => setIsHovered(true)}
-					onMouseLeave={() => setIsHovered(false)}
+					onClick={() => navigate(`/book/${post.book.bookId}`)}
+					onMouseEnter={() => handleImageHover()}
+					onMouseLeave={() => handleImageHover()}
 				/>
 
 				{/* Body content */}
@@ -86,24 +95,34 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</Link>
 
 							{/* Reader */}
-							<Link to={`/reader/${post.reader?._Id}`} className="text-decoration-none">
-								<Card.Title
-									className="h5 text-dark mb-2"
+							<div className="d-flex flex-row mb-2"
+								onClick={() => navigate(`/reader/${post.reader._Id}`)}
+								onMouseEnter={() => handleReaderHover()}
+								onMouseLeave={() => handleReaderHover()}
+								style={{
+									cursor: "pointer",
+									transition: "transform 0.3s ease-in-out",
+									transform: readerHovered ? "scale(1.01)" : "scale(1)"
+								}}
+							>
+								<Card.Img
+									src={post.reader?.picture}
+									alt={post.reader?.name}
 									style={{
-										transition: "transform 0.3s ease-in-out",
-										transform: textHovered.readerName ? "scale(1.01)" : "scale(1)",
+										height: "30px",
+										objectFit: "contain",
+										width: "30px",
+										borderRadius: "50%"
 									}}
-									onMouseEnter={() => handleTextHover("readerName")}
-									onMouseLeave={() => handleTextHover("readerName")}
-								>
-									{post.reader?.name || "Anonymous"}
-								</Card.Title>
-							</Link>
+								/>
+								<Card.Title className="h5 text-dark ms-2">{post.reader?.name || "Anonymous"}</Card.Title>
+							</div>
+
 							<div className="d-flex flex-column align-items-start">
 								{/* Title */}
 								<div className="h6 text-dark mb-1">{post.title}</div>
 								{/* Description */}
-								<div nclassName="h6 text-muted mb-1" > {post.description}</div>
+								<div className="h6 text-muted mb-1" > {post.description}</div>
 							</div>
 						</div>
 
@@ -111,7 +130,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 						<div className="d-flex flex-row">
 							<button
 								className="btn btn-link p-0 me-2"
-								onClick={() => handleFavorite(book.bookId)}
+								onClick={() => handleFavorite(post.book.bookId)}
 								onMouseEnter={() => handleIconHover("favorite")}
 								onMouseLeave={() => handleIconHover("favorite")}
 							>
@@ -137,7 +156,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</button>
 							<button
 								className="btn btn-link p-0 me-2"
-								onClick={() => handleBookmark(book.bookId)}
+								onClick={() => handleBookmark(post.book.bookId)}
 								onMouseEnter={() => handleIconHover("bookmarked")}
 								onMouseLeave={() => handleIconHover("bookmarked")}
 							>
@@ -161,7 +180,7 @@ const PostCard = ({ post, isFavorite, isBookmarked, isCompleted, handleFavorite,
 							</button>
 							<button
 								className="btn btn-link p-0"
-								onClick={() => handleCompleted(book.bookId)}
+								onClick={() => handleCompleted(post.book.bookId)}
 								onMouseEnter={() => handleIconHover("completed")}
 								onMouseLeave={() => handleIconHover("completed")}
 							>

@@ -4,17 +4,20 @@ import OpenLibraryAPI from "./OpenLibraryAPI";
 const mockReaders = [];
 mockReaders.push({
   _Id: "754368126",
-  name: "Fabricio Gardin"
+  name: "Fabricio Gardin",
+  picture: "https://thispersondoesnotexist.com/"
 });
 
 mockReaders.push({
   _Id: "754368127",
-  name: "Victor Villas-Boas"
+  name: "Victor Villas-Boas",
+  picture: "https://thispersondoesnotexist.com/"
 });
 
 mockReaders.push({
   _Id: "754368128",
   name: "William Delmanto",
+  picture: "https://thispersondoesnotexist.com/",
   favoriteBooks: ["OL39181496W", "OL35185354W"],
   bookmarkedBooks: ["OL42360848W", "OL35185354W"],
   completedBooks: ["OL24319394W", "OL35185354W"],
