@@ -122,7 +122,6 @@ export const fetchPosts = async (id) => {
   return new Promise(async (resolve) => {
     setTimeout(async () => {
       const reader = mockReaders.find((reader) => reader._Id === id);
-      // console.log("reader", reader);
 
       if (!reader) {
         resolve([]);
@@ -130,7 +129,8 @@ export const fetchPosts = async (id) => {
       }
 
       const postsData = mockPosts.filter(
-        (post) => reader.following?.books.includes(post.bookId) ||
+        (post) =>
+          reader.following?.books.includes(post.bookId) ||
           reader.following?.readers.includes(post.readerId) ||
           post.readerId === id
       );
@@ -151,6 +151,8 @@ export const fetchPosts = async (id) => {
           return { ...newPost, book, reader, comments: tempComments };
         })
       );
+
+      posts.sort((currentPost, nextPost) => new Date(nextPost.timestamp) - new Date(currentPost.timestamp));
 
       resolve(posts);
     }, 500);
