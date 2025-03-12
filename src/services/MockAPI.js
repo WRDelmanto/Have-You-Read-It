@@ -39,8 +39,8 @@ mockPosts.push({
   timestamp: new Date("2025-03-10T12:00:00Z"),
   likes: 25,
   comments: [
-    { _Id: "754368127", readerId: "754368127", text: "I agree! The writing style is fantastic." },
-    { _Id: "754364128", readerId: "754368128", text: "Didn't like the ending, but overall a great book." }
+    { _Id: "754368127", readerId: "754368127", text: "I cried so much reading this that my Kindle now has water damage." },
+    { _Id: "754364128", readerId: "754368128", text: "I threw the book across the room at the ending… then apologized and picked it up." }
   ]
 });
 
@@ -53,7 +53,7 @@ mockPosts.push({
   timestamp: new Date("2025-03-09T12:00:00Z"),
   likes: 15,
   comments: [
-    { _Id: "754368126", readerId: "754368126", text: "I loved it too! The plot twists were amazing." }
+    { _Id: "754368126", readerId: "754368126", text: "I canceled plans just to read this… now I have no friends, but 5-star reviews!" }
   ]
 });
 
@@ -66,8 +66,8 @@ mockPosts.push({
   timestamp: new Date("2025-03-08T12:00:00Z"),
   likes: 25,
   comments: [
-    { _Id: "755678127", readerId: "754368127", text: "I agree! The writing style is fantastic." },
-    { _Id: "755673127", readerId: "754368128", text: "Didn't like the ending, but overall a great book." }
+    { _Id: "755678127", readerId: "754368127", text: "I finished this book at 3 AM and now I have trust issues." },
+    { _Id: "755673127", readerId: "754368128", text: "I gasped so loud at the plot twist, my cat filed a noise complaint." }
   ]
 });
 
@@ -80,8 +80,8 @@ mockPosts.push({
   timestamp: new Date("2025-03-07T12:00:00Z"),
   likes: 25,
   comments: [
-    { _Id: "555678127", readerId: "754368127", text: "I agree! The writing style is fantastic." },
-    { _Id: "759678127", readerId: "754368128", text: "Didn't like the ending, but overall a great book." }
+    { _Id: "555678127", readerId: "754368127", text: "This book made me laugh, cry, and question my life choices—all in one sitting." },
+    { _Id: "759678127", readerId: "754368128", text: "The ending hit me so hard, I need therapy… and a sequel." }
   ]
 });
 
@@ -94,7 +94,7 @@ mockPosts.push({
   timestamp: new Date("2025-03-06T12:00:00Z"),
   likes: 15,
   comments: [
-    { _Id: "755778127", readerId: "754368126", text: "I loved it too! The plot twists were amazing." }
+    { _Id: "755778127", readerId: "754368126", text: "I was late to work because I needed to finish this chapter. Worth it." }
   ]
 });
 
