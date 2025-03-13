@@ -10,6 +10,15 @@ import { FaHeart, FaBookmark, FaBook } from "react-icons/fa";
 const ReaderDetails = () => {
   const { readerId } = useParams();
   const [reader, setReader] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [favoriteBooks, setFavoriteBooks] = useState([]);
+
+  useEffect(() => {
+    const favoriteBooksByReader =
+      JSON.parse(localStorage.getItem("favoriteBooksByReader")) || {};
+    const favoriteBooksTitles = favoriteBooksByReader[readerId] || [];
+    setFavoriteBooks(favoriteBooksTitles);
+  }, [readerId]);
 
   useEffect(() => {
     const getReader = async () => {
@@ -25,14 +34,17 @@ const ReaderDetails = () => {
     navegate(`/settings/${reader._Id}`);
   };
 
+  const handleFollowButton = () => {
+    setIsFollowing(!isFollowing);
+  };
   // Calculating the total of each type icons
 
   const {
-    favoriteBooks = [],
+    favoriteBooks: readerFavoriteBooks = [],
     bookmarkedBooks = [],
     completedBooks = [],
   } = reader || {};
-  const totalFavorites = favoriteBooks.length;
+  const totalFavorites = readerFavoriteBooks.length;
   const totalBookmarked = bookmarkedBooks.length;
   const totalCompleted = completedBooks.length;
 
@@ -115,8 +127,8 @@ const ReaderDetails = () => {
                     </div>
 
                     <div className="mt-2">
-                      <Button variant="primary" onClick={goToReaderSettings}>
-                        Follow
+                      <Button variant="primary" onClick={handleFollowButton}>
+                        {isFollowing ? "Following" : "Follow"}
                       </Button>
                     </div>
                   </div>
@@ -127,11 +139,14 @@ const ReaderDetails = () => {
                   className="mt-4"
                   style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
                 >
-                  <h5 className="fw-bold">Favorite Books</h5>
-                  <p>
-                    {reader.favoriteBooks?.join(", ") ||
-                      "No favorite books listed."}
-                  </p>
+                 <h5 className="fw-bold">Favorite Books</h5>
+                    {favoriteBooks.length > 0 ? (
+                      favoriteBooks.map((title, index) => (
+                        <p key={index}>{title}</p>
+                      ))
+                    ) : (
+                      <p>No favorite books listed.</p>
+                    )}
                 </div>
 
                 {/* Bookmarked Books */}

@@ -30,21 +30,46 @@ const Home = () => {
     getReader().then(getposts);
   }, []);
 
-  const handleFavorite = (bookID) => {
+  //handleFavorite old
+  // const handleFavorite = (bookID) => {
+  //   if (account_reader.favoriteBooks.includes(bookID)) {
+  //     const index = account_reader.favoriteBooks.indexOf(bookID);
+  //     account_reader.favoriteBooks.splice(index, 1);
+  //   } else {
+  //     account_reader.favoriteBooks.push(bookID);
+  //   }
+
+  //   setReader({ ...account_reader });
+  //   console.log(
+  //     "Updated bookId: " +
+  //       bookID +
+  //       " to favorite: " +
+  //       account_reader.favoriteBooks.includes(bookID)
+  //   );
+  // };
+  const handleFavorite = (bookID, bookTitle) => {
+    const readerId = account_reader._Id; // Use _Id para o ID do leitor
+    const favoriteBooksByReader = JSON.parse(localStorage.getItem("favoriteBooksByReader")) || {};
+  
     if (account_reader.favoriteBooks.includes(bookID)) {
       const index = account_reader.favoriteBooks.indexOf(bookID);
       account_reader.favoriteBooks.splice(index, 1);
+      
+      // remove the book title from the localStorage
+      const updatedFavoriteBooksTitles = favoriteBooksByReader[readerId].filter(title => title !== bookTitle);
+      favoriteBooksByReader[readerId] = updatedFavoriteBooksTitles;
     } else {
       account_reader.favoriteBooks.push(bookID);
+      // Add the book title to the localStorage
+      if (!favoriteBooksByReader[readerId]) {
+        favoriteBooksByReader[readerId] = [];
+      }
+      favoriteBooksByReader[readerId].push(bookTitle);
     }
-
+  
+    localStorage.setItem("favoriteBooksByReader", JSON.stringify(favoriteBooksByReader));
     setReader({ ...account_reader });
-    console.log(
-      "Updated bookId: " +
-        bookID +
-        " to favorite: " +
-        account_reader.favoriteBooks.includes(bookID)
-    );
+    console.log("Updated bookId: " + bookID + " to favorite: " + bookTitle);
   };
 
   const handleBookmark = (bookID) => {
