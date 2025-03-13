@@ -5,7 +5,8 @@ const mockReaders = [];
 mockReaders.push({
   _Id: "754368126",
   name: "Fabricio Gardin",
-  picture: "https://d26oc3sg82pgk3.cloudfront.net/files/media/edit/image/23113/square_thumb%402x.jpg"
+  picture: "https://d26oc3sg82pgk3.cloudfront.net/files/media/edit/image/23113/square_thumb%402x.jpg",
+  bookmarkedBooks: ["OL42360848W", "OL35185354W","OL24319394W"],
 });
 
 mockReaders.push({
