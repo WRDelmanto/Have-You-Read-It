@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { FaBook, FaBookmark, FaHeart, FaRegBookmark, FaRegHeart } from "react-icons/fa";
+import {
+  FaBook,
+  FaBookmark,
+  FaHeart,
+  FaRegBookmark,
+  FaRegHeart,
+} from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 import { fetchReaderById } from "../services/MockAPI.js";
@@ -46,7 +52,12 @@ const BookDetails = () => {
     }
 
     setReader({ ...account_reader });
-    console.log("Updated bookId: " + bookID + " to favorite: " + account_reader.favoriteBooks.includes(bookID));
+    console.log(
+      "Updated bookId: " +
+        bookID +
+        " to favorite: " +
+        account_reader.favoriteBooks.includes(bookID)
+    );
   };
 
   const handleBookmark = (bookID) => {
@@ -58,7 +69,12 @@ const BookDetails = () => {
     }
 
     setReader({ ...account_reader });
-    console.log("Updated bookId: " + bookID + " to bookmarked: " + account_reader.bookmarkedBooks.includes(bookID));
+    console.log(
+      "Updated bookId: " +
+        bookID +
+        " to bookmarked: " +
+        account_reader.bookmarkedBooks.includes(bookID)
+    );
   };
 
   const handleCompleted = (bookID) => {
@@ -70,7 +86,12 @@ const BookDetails = () => {
     }
 
     setReader({ ...account_reader });
-    console.log("Updated bookId: " + bookID + " to completed: " + account_reader.completedBooks.includes(bookID));
+    console.log(
+      "Updated bookId: " +
+        bookID +
+        " to completed: " +
+        account_reader.completedBooks.includes(bookID)
+    );
   };
 
   const handleIconHover = (icon) => {
@@ -80,8 +101,6 @@ const BookDetails = () => {
     }));
   };
 
-
-
   return (
     <>
       {/* Navigation Bar */}
@@ -89,14 +108,18 @@ const BookDetails = () => {
 
       {/* Body */}
       <Container className="mt-5">
-        <Card className="shadow-sm p-4 bg-white ">
+        <Card className="shadow-sm p-4 bg-white shadow-lg ">
           <Row className="">
             <Col md={3} className="text-center">
               <Card.Img
                 src={book.cover}
                 alt={book.title}
                 className="img-fluid rounded"
-                style={{ width: "300px", height: "500px", objectFit: "contain", }}
+                style={{
+                  width: "300px",
+                  height: "500px",
+                  objectFit: "contain",
+                }}
               />
             </Col>
 
@@ -114,7 +137,9 @@ const BookDetails = () => {
                       style={{
                         color: "red",
                         transition: "transform 0.3s",
-                        transform: iconHovered.favorite ? "scale(1.2)" : "scale(1)",
+                        transform: iconHovered.favorite
+                          ? "scale(1.2)"
+                          : "scale(1)",
                       }}
                     />
                   ) : (
@@ -123,7 +148,9 @@ const BookDetails = () => {
                       style={{
                         color: "red",
                         transition: "transform 0.3s",
-                        transform: iconHovered.favorite ? "scale(1.2)" : "scale(1)",
+                        transform: iconHovered.favorite
+                          ? "scale(1.2)"
+                          : "scale(1)",
                       }}
                     />
                   )}
@@ -139,7 +166,9 @@ const BookDetails = () => {
                       size={22}
                       style={{
                         transition: "transform 0.3s",
-                        transform: iconHovered.bookmarked ? "scale(1.2)" : "scale(1)",
+                        transform: iconHovered.bookmarked
+                          ? "scale(1.2)"
+                          : "scale(1)",
                       }}
                     />
                   ) : (
@@ -147,7 +176,9 @@ const BookDetails = () => {
                       size={22}
                       style={{
                         transition: "transform 0.3s",
-                        transform: iconHovered.bookmarked ? "scale(1.2)" : "scale(1)",
+                        transform: iconHovered.bookmarked
+                          ? "scale(1.2)"
+                          : "scale(1)",
                       }}
                     />
                   )}
@@ -163,7 +194,9 @@ const BookDetails = () => {
                       size={22}
                       style={{
                         transition: "transform 0.3s",
-                        transform: iconHovered.completed ? "scale(1.2)" : "scale(1)",
+                        transform: iconHovered.completed
+                          ? "scale(1.2)"
+                          : "scale(1)",
                         color: "green",
                       }}
                     />
@@ -172,7 +205,9 @@ const BookDetails = () => {
                       size={22}
                       style={{
                         transition: "transform 0.3s",
-                        transform: iconHovered.completed ? "scale(1.2)" : "scale(1)",
+                        transform: iconHovered.completed
+                          ? "scale(1.2)"
+                          : "scale(1)",
                         color: "white",
                         stroke: "green",
                         strokeWidth: "20px",
@@ -180,14 +215,24 @@ const BookDetails = () => {
                     />
                   )}
                 </button>
-              </div >
+              </div>
               <div className="text-start mt-4">
                 <h2 className="fw-bold">{book.title}</h2>
-                <p className="text-muted"><span className="fw-semibold text-primary">{book.authorName}</span></p>
+                <p className="text-muted">
+                  <span className="fw-semibold text-primary">
+                    {book.authorName}
+                  </span>
+                </p>
               </div>
-              <div className="text-start mt-5" style={{ borderTop: "1px solid #dcdcdc ", paddingTop: "10px" }}>
+              <div
+                className="text-start mt-5"
+                style={{ borderTop: "1px solid #dcdcdc ", paddingTop: "10px" }}
+              >
                 <h5 className="fw-bold">Description</h5>
-                <p>{book.description || "No description available for this book."}</p>
+                <p>
+                  {book.description ||
+                    "No description available for this book."}
+                </p>
               </div>
             </Col>
           </Row>

@@ -56,7 +56,7 @@ const ReaderDetails = () => {
       {/* Body */}
       {reader && (
         <Container>
-          <Card className="shadow-sm p-4 bg-white">
+          <Card className="shadow-sm p-4 bg-white shadow-lg">
             <Row>
               <Col md={3} className="text-center">
                 <Card.Img
@@ -139,14 +139,14 @@ const ReaderDetails = () => {
                   className="mt-4"
                   style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
                 >
-                 <h5 className="fw-bold">Favorite Books</h5>
-                    {favoriteBooks.length > 0 ? (
-                      favoriteBooks.map((title, index) => (
-                        <p key={index}>{title}</p>
-                      ))
-                    ) : (
-                      <p>No favorite books listed.</p>
-                    )}
+                  <h5 className="fw-bold">Favorite Books</h5>
+                  {favoriteBooks.length > 0 ? (
+                    favoriteBooks.map((title, index) => (
+                      <p key={index}>{title}</p>
+                    ))
+                  ) : (
+                    <p>No favorite books listed.</p>
+                  )}
                 </div>
 
                 {/* Bookmarked Books */}
@@ -165,6 +165,14 @@ const ReaderDetails = () => {
                     {reader.completedBooks?.join(", ") ||
                       "No completed books listed."}
                   </p>
+                </div>
+                <div
+                  className="mt-4"
+                  style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
+                >
+                  <h5 className="fw-bold">Posts</h5>
+                  <p>No posts listed.</p>
+                  <p>"show list of posts made by this reader "</p>
                 </div>
               </Col>
             </Row>
