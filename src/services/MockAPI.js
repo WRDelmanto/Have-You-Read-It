@@ -6,7 +6,7 @@ mockReaders.push({
   _Id: "754368126",
   name: "Fabricio Gardin",
   picture: "https://d26oc3sg82pgk3.cloudfront.net/files/media/edit/image/23113/square_thumb%402x.jpg",
-  bookmarkedBooks: ["OL42360848W", "OL35185354W","OL24319394W"],
+  bookmarkedBooks: ["OL42360848W", "OL35185354W", "OL24319394W"],
 });
 
 mockReaders.push({
@@ -119,10 +119,10 @@ export const fetchReadersByName = (name) => {
   });
 };
 
-export const fetchPosts = async (id) => {
+export const fetchPosts = async (accountReaderId) => {
   return new Promise(async (resolve) => {
     setTimeout(async () => {
-      const reader = mockReaders.find((reader) => reader._Id === id);
+      const reader = mockReaders.find((reader) => reader._Id === accountReaderId);
 
       if (!reader) {
         resolve([]);
@@ -133,8 +133,44 @@ export const fetchPosts = async (id) => {
         (post) =>
           reader.following?.books.includes(post.bookId) ||
           reader.following?.readers.includes(post.readerId) ||
-          post.readerId === id
+          post.readerId === accountReaderId
       );
+
+      const posts = await Promise.all(
+        postsData.map(async (post) => {
+          const reader = mockReaders.find((reader) => reader._Id === post.readerId);
+          const book = await OpenLibraryAPI.getBookById(post.bookId);
+          const tempComments = await Promise.all(
+            post.comments.map(async (comment) => {
+              const reader = mockReaders.find((reader) => reader._Id === comment.readerId);
+              const { readerId, ...newComment } = comment;
+              return { ...newComment, reader };
+            })
+          );
+
+          const { bookId, readerId, comments, ...newPost } = post;
+          return { ...newPost, book, reader, comments: tempComments };
+        })
+      );
+
+      posts.sort((currentPost, nextPost) => new Date(nextPost.timestamp) - new Date(currentPost.timestamp));
+
+      resolve(posts);
+    }, 500);
+  });
+};
+
+export const fetchPostsById= async (id) => {
+  return new Promise(async (resolve) => {
+    setTimeout(async () => {
+      const reader = mockReaders.find((reader) => reader._Id === id);
+
+      if (!reader) {
+        resolve([]);
+        return;
+      }
+
+      const postsData = mockPosts.filter((post) => post.readerId === id);
 
       const posts = await Promise.all(
         postsData.map(async (post) => {
@@ -162,6 +198,7 @@ export const fetchPosts = async (id) => {
 
 export default {
   fetchPosts,
+  fetchPostsById,
   fetchReaderById,
   fetchReadersByName,
 };

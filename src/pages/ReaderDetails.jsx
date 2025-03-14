@@ -3,13 +3,14 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 
-import { fetchReaderById } from "../services/MockAPI.js";
 import { Button } from "react-bootstrap";
-import { FaHeart, FaBookmark, FaBook } from "react-icons/fa";
+import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
+import { fetchPostsById, fetchReaderById } from "../services/MockAPI.js";
 
 const ReaderDetails = () => {
   const { readerId } = useParams();
   const [reader, setReader] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [favoriteBooks, setFavoriteBooks] = useState([]);
 
@@ -26,7 +27,14 @@ const ReaderDetails = () => {
       setReader(readerData);
     };
 
-    getReader();
+    const getPosts = async () => {
+      const postsData = await fetchPostsById(readerId);
+      setPosts(postsData);
+
+      console.log("Posts: ", postsData); // This is the list of posts made by the reader
+    };
+
+    getReader().then(getPosts());
   }, [readerId]);
 
   const navegate = useNavigate();
