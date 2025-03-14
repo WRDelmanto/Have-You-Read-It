@@ -8,24 +8,32 @@ import { FaHeart, FaBookmark, FaBook } from "react-icons/fa";
 const AuthorDetails = () => {
   const { authorId } = useParams();
   const [author, setAuthor] = useState(null);
+  const [books, setBooks] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [favoriteBooks, setFavoriteBooks] = useState([]);
-
-  useEffect(() => {
-    const favoriteBooksByAuthor =
-      JSON.parse(localStorage.getItem("favoriteBooksByAuthor")) || {};
-    const favoriteBooksTitles = favoriteBooksByAuthor[authorId] || [];
-    setFavoriteBooks(favoriteBooksTitles);
-  }, [authorId]);
 
   useEffect(() => {
     const getAuthor = async () => {
-      const authorData = await OpenLibraryAPI.getAuthorById(authorId);
-      setAuthor(authorData);
+      const author = await OpenLibraryAPI.getAuthorById(authorId);
+      setAuthor(author);
+
+      console.log("Author:", author);
     };
 
-    getAuthor();
+    getAuthor()
   }, [authorId]);
+
+  useEffect(() => {
+    if (!author?.authorName) return;
+
+    const getBooks = async () => {
+      const booksData = await OpenLibraryAPI.getBooksByAuthorName(author.authorName);
+      setBooks(booksData);
+
+      console.log("Books:", booksData); // This is the list of books by the author
+    };
+
+    getBooks();
+  }, [author?.authorName]);
 
   const navigate = useNavigate();
   const goToAuthorSettings = () => {

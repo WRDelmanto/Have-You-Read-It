@@ -44,7 +44,7 @@ const BookDetails = () => {
       const posts = await fetchPostsByBookId(bookId);
       setPosts(posts);
 
-      console.log("Posts:", posts); // // This is the list of posts for the book
+      console.log("Posts:", posts); // This is the list of posts for the book
     };
 
     getReader().then(getBook).then(getPosts);

@@ -100,6 +100,37 @@ const OpenLibraryAPI = {
       return null;
     }
   },
+  async getBooksByAuthorName(authorName) {
+    try {
+      let dynamicUrl = `${BASE_URL}?author=${authorName.replace(" ", "+")}`;
+      dynamicUrl += "&fields=key,author_name,title,cover_i";
+
+      console.log("Fetching books by author: ", dynamicUrl);
+
+      const response = await fetch(dynamicUrl);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch books");
+      }
+
+      const data = await response.json();
+
+      if (!data.docs || data.docs.length === 0) {
+        return null;
+      }
+
+      return data.docs.map((book) => ({
+        bookId: book.key.replace("/works/", "") || "",
+        title: book.title || "",
+        cover: book.cover_i
+          ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+          : "https://i.imgur.com/J5LVHEL.jpeg",
+      }));
+    } catch (error) {
+      console.error("Error fetching books: ", error);
+      return null;
+    }
+  },
 };
 
 export default OpenLibraryAPI;
