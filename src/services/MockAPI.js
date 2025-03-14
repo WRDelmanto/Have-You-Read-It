@@ -160,7 +160,7 @@ export const fetchPosts = async (accountReaderId) => {
   });
 };
 
-export const fetchPostsById= async (id) => {
+export const fetchPostsByReaderId = async (id) => {
   return new Promise(async (resolve) => {
     setTimeout(async () => {
       const reader = mockReaders.find((reader) => reader._Id === id);
@@ -196,9 +196,39 @@ export const fetchPostsById= async (id) => {
   });
 };
 
+export const fetchPostsByBookId = async (bookId) => {
+  return new Promise(async (resolve) => {
+    setTimeout(async () => {
+      const postsData = mockPosts.filter((post) => post.bookId === bookId);
+
+      const posts = await Promise.all(
+        postsData.map(async (post) => {
+          const reader = mockReaders.find((reader) => reader._Id === post.readerId);
+          const book = await OpenLibraryAPI.getBookById(post.bookId);
+          const tempComments = await Promise.all(
+            post.comments.map(async (comment) => {
+              const reader = mockReaders.find((reader) => reader._Id === comment.readerId);
+              const { readerId, ...newComment } = comment;
+              return { ...newComment, reader };
+            })
+          );
+
+          const { bookId, readerId, comments, ...newPost } = post;
+          return { ...newPost, book, reader, comments: tempComments };
+        })
+      );
+
+      posts.sort((currentPost, nextPost) => new Date(nextPost.timestamp) - new Date(currentPost.timestamp));
+
+      resolve(posts);
+    }, 500);
+  });
+};
+
 export default {
   fetchPosts,
-  fetchPostsById,
+  fetchPostsByReaderId,
+  fetchPostsByBookId,
   fetchReaderById,
   fetchReadersByName,
 };

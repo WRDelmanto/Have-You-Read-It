@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
-import { fetchReaderById } from "../services/MockAPI.js";
+import { fetchPostsByBookId, fetchReaderById } from "../services/MockAPI.js";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const BookDetails = () => {
@@ -40,7 +40,14 @@ const BookDetails = () => {
       // console.log("Book:", book);
     };
 
-    getReader().then(getBook);
+    const getPosts = async () => {
+      const posts = await fetchPostsByBookId(bookId);
+      setPosts(posts);
+
+      console.log("Posts:", posts); // // This is the list of posts for the book
+    };
+
+    getReader().then(getBook).then(getPosts);
   }, []);
 
   const handleFavorite = (bookID) => {
@@ -54,9 +61,9 @@ const BookDetails = () => {
     setReader({ ...account_reader });
     console.log(
       "Updated bookId: " +
-        bookID +
-        " to favorite: " +
-        account_reader.favoriteBooks.includes(bookID)
+      bookID +
+      " to favorite: " +
+      account_reader.favoriteBooks.includes(bookID)
     );
   };
 
@@ -71,9 +78,9 @@ const BookDetails = () => {
     setReader({ ...account_reader });
     console.log(
       "Updated bookId: " +
-        bookID +
-        " to bookmarked: " +
-        account_reader.bookmarkedBooks.includes(bookID)
+      bookID +
+      " to bookmarked: " +
+      account_reader.bookmarkedBooks.includes(bookID)
     );
   };
 
@@ -88,9 +95,9 @@ const BookDetails = () => {
     setReader({ ...account_reader });
     console.log(
       "Updated bookId: " +
-        bookID +
-        " to completed: " +
-        account_reader.completedBooks.includes(bookID)
+      bookID +
+      " to completed: " +
+      account_reader.completedBooks.includes(bookID)
     );
   };
 

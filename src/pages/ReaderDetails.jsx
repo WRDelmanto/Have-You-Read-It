@@ -5,7 +5,7 @@ import NavBar from "../components/Navbar.jsx";
 
 import { Button } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
-import { fetchPostsById, fetchReaderById } from "../services/MockAPI.js";
+import { fetchPostsByReaderId, fetchReaderById } from "../services/MockAPI.js";
 
 const ReaderDetails = () => {
   const { readerId } = useParams();
@@ -28,7 +28,7 @@ const ReaderDetails = () => {
     };
 
     const getPosts = async () => {
-      const postsData = await fetchPostsById(readerId);
+      const postsData = await fetchPostsByReaderId(readerId);
       setPosts(postsData);
 
       console.log("Posts: ", postsData); // This is the list of posts made by the reader
