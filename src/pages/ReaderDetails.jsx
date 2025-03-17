@@ -56,10 +56,10 @@ const ReaderDetails = () => {
     getReader().then(getPosts());
   }, [readerId]);
 
-  const navegate = useNavigate();
-  const goToReaderSettings = () => {
-    navegate(`/settings/${reader._Id}`);
-  };
+  // const navegate = useNavigate();
+  // const goToReaderSettings = () => {
+  //   navegate(`/settings/${reader._Id}`);
+  // };
 
   const handleFollowButton = () => {
     setIsFollowing(!isFollowing);
@@ -192,17 +192,15 @@ const ReaderDetails = () => {
                     </span>
                   </div>
                   <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
-                    <p>
-                      {/* {reader.bookmarkedBooks?.join(", ") ||
+                    {/* {reader.bookmarkedBooks?.join(", ") ||
                         "No bookmarked books listed."} */}
-                      {bookmarkedBooks?.length > 0 ? (
-                        bookmarkedBooks.map((title, index) => (
-                          <p key={index}>{title}</p>
-                        ))
-                      ) : (
-                        <p>No bookmarked books listed.</p>
-                      )}
-                    </p>
+                    {bookmarkedBooks?.length > 0 ? (
+                      bookmarkedBooks.map((title, index) => (
+                        <p key={index}>{title}</p>
+                      ))
+                    ) : (
+                      <p>No bookmarked books listed.</p>
+                    )}
                   </div>
                 </div>
 
@@ -223,17 +221,15 @@ const ReaderDetails = () => {
                     </span>
                   </div>
                   <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
-                    <p>
-                      {/* {reader.completedBooks?.join(", ") ||
+                    {/* {reader.completedBooks?.join(", ") ||
                         "No completed books listed."} */}
-                      {completedBooks?.length > 0 ? (
-                        completedBooks.map((title, index) => (
-                          <p key={index}>{title}</p>
-                        ))
-                      ) : (
-                        <p>No completed books listed.</p>
-                      )}
-                    </p>
+                    {completedBooks?.length > 0 ? (
+                      completedBooks.map((title, index) => (
+                        <p key={index}>{title}</p>
+                      ))
+                    ) : (
+                      <p>No completed books listed.</p>
+                    )}
                   </div>
                 </div>
                 {/* reader posts */}
