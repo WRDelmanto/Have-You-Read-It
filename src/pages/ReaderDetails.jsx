@@ -6,6 +6,7 @@ import NavBar from "../components/Navbar.jsx";
 import { Button } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
 import { fetchPostsByReaderId, fetchReaderById } from "../services/MockAPI.js";
+import PostCard from "../components/PostCard";
 
 const ReaderDetails = () => {
   const { readerId } = useParams();
@@ -13,6 +14,8 @@ const ReaderDetails = () => {
   const [posts, setPosts] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [favoriteBooks, setFavoriteBooks] = useState([]);
+  const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
+  const [completedBooks, setCompletedBooks] = useState([]);
 
   useEffect(() => {
     const favoriteBooksByReader =
@@ -22,9 +25,25 @@ const ReaderDetails = () => {
   }, [readerId]);
 
   useEffect(() => {
+    const bookmarkedBooksByReader =
+      JSON.parse(localStorage.getItem("bookmarkedBooksByReader")) || {};
+    const bookmarkedTitles = bookmarkedBooksByReader[readerId] || [];
+    setBookmarkedBooks(bookmarkedTitles);
+  }, [readerId]);
+
+  useEffect(() => {
+    const completedBooksByReader =
+      JSON.parse(localStorage.getItem("completedBooksByReader")) || {};
+    const completedTitles = completedBooksByReader[readerId] || [];
+    setCompletedBooks(completedTitles);
+  }, [readerId]);
+
+  useEffect(() => {
     const getReader = async () => {
       const readerData = await fetchReaderById(readerId);
       setReader(readerData);
+      // setBookmarkedBooks(readerData.bookmarkedBooks || []);
+      // setCompletedBooks(readerData.completedBooks || []);
     };
 
     const getPosts = async () => {
@@ -49,12 +68,12 @@ const ReaderDetails = () => {
 
   const {
     favoriteBooks: readerFavoriteBooks = [],
-    bookmarkedBooks = [],
-    completedBooks = [],
+    bookmarkedBooks: readerBookmarkedBooks = [],
+    completedBooks: readerCompletedBooks = [],
   } = reader || {};
-  const totalFavorites = readerFavoriteBooks.length;
-  const totalBookmarked = bookmarkedBooks.length;
-  const totalCompleted = completedBooks.length;
+  const totalFavorites = readerFavoriteBooks.length || 0;
+  const totalBookmarked = readerBookmarkedBooks.length || 0;
+  const totalCompleted = readerCompletedBooks.length || 0;
 
   return (
     <>
@@ -63,10 +82,10 @@ const ReaderDetails = () => {
 
       {/* Body */}
       {reader && (
-        <Container>
-          <Card className="shadow-sm p-4 bg-white shadow-lg">
+        <Container style={{ marginTop: "64px" }}>
+          <Card className="shadow-sm p-4 bg-white shadow-lg align-items-center">
             <Row>
-              <Col md={3} className="text-center">
+              {/* <Col md={3} className="text-center">
                 <Card.Img
                   src={reader.picture}
                   alt={reader.name}
@@ -77,37 +96,24 @@ const ReaderDetails = () => {
                     objectFit: "cover",
                   }}
                 />
-              </Col>
+              </Col> */}
 
-              <Col md={9} className="text-start">
-                {/* <div className="d-flex justify-content-between align-items-start">
+              <Col md={12} className="text-start">
+                {/* Reader info */}
+                <div className="d-flex justify-content-between align-items-center mb-4 ml-4 mr-4">
+                  {/* <div className="d-flex justify-content-center align-items-center mb-4 ml-4 mr-4" style={{ gap: "100px" }}> */}
                   <div>
-                    <h2 className="fw-bold">{reader.name}</h2>
-                    <p className="text-muted">ID: {reader._Id}</p>
+                    <Card.Img
+                      src={reader.picture}
+                      alt={reader.name}
+                      className="img-fluid rounded-circle align-items-center"
+                      style={{
+                        width: "150px",
+                        height: "150px",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
-                   {/* icons with totals */}
-                {/* <div className="mt-4 d-flex justify-content-start gap-3"> */}
-                {/* <div className="d-flex gap-3">
-                   <div>
-                    <FaHeart style={{ color: "red", fontSize: "1.5rem" }} />
-                    <span className="ms-2">{totalFavorites}</span>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <FaBookmark style={{ color: "blue", fontSize: "1.5rem" }} />
-                    <span className="ms-2">{totalBookmarked}</span>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <FaBook style={{ color: "green", fontSize: "1.5rem" }} />
-                    <span className="ms-2">{totalCompleted}</span>
-                  </div>
-                </div> */}
-                {/* Follow Button */}
-                {/* </div> */}
-                {/* <div>
-                  <Button variant="primary" onClick={goToReaderSettings}>Follow</Button>
-                  </div>
-                </div> */}
-                <div className="d-flex justify-content-between align-items-start">
                   <div>
                     <h2 className="fw-bold">{reader.name}</h2>
                     {/* <p className="text-muted">ID: {reader._Id}</p> */}
@@ -115,7 +121,7 @@ const ReaderDetails = () => {
 
                   {/* Icons with totals and Follow Button */}
                   <div className="d-flex flex-column align-items-end gap-3">
-                    <div className="d-flex gap-3">
+                    {/* <div className="d-flex gap-3">
                       <div className="d-flex align-items-center">
                         <FaHeart style={{ color: "red", fontSize: "1.5rem" }} />
                         <span className="ms-2">{totalFavorites}</span>
@@ -132,9 +138,9 @@ const ReaderDetails = () => {
                         />
                         <span className="ms-2">{totalCompleted}</span>
                       </div>
-                    </div>
+                    </div> */}
 
-                    <div className="mt-2">
+                    <div className="d-flex justify-content-start mb-3">
                       <Button variant="primary" onClick={handleFollowButton}>
                         {isFollowing ? "Following" : "Follow"}
                       </Button>
@@ -143,11 +149,23 @@ const ReaderDetails = () => {
                 </div>
 
                 {/* Favorite Books */}
-                <div
-                  className="mt-4"
-                  style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
-                >
-                  <h5 className="fw-bold">Favorite Books</h5>
+                <div className="align-items-end gap-3">
+                  <div
+                    className="d-flex gap-3"
+                    style={{
+                      borderTop: "1px solid #dcdcdc",
+                      paddingTop: "10px",
+                    }}
+                  >
+                    <FaHeart style={{ color: "red", fontSize: "1.5rem" }} />
+
+                    <h5 className="fw-bold">Favorite Books</h5>
+                    <span className="ms-2">
+                      (<b> {totalFavorites} </b> )
+                    </span>
+                  </div>
+                </div>
+                <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
                   {favoriteBooks.length > 0 ? (
                     favoriteBooks.map((title, index) => (
                       <p key={index}>{title}</p>
@@ -158,29 +176,90 @@ const ReaderDetails = () => {
                 </div>
 
                 {/* Bookmarked Books */}
-                <div className="mt-4">
-                  <h5 className="fw-bold">Bookmarked Books</h5>
-                  <p>
-                    {reader.bookmarkedBooks?.join(", ") ||
-                      "No bookmarked books listed."}
-                  </p>
+                <div className="align-items-end gap-3">
+                  <div
+                    className="d-flex gap-3"
+                    style={{
+                      borderTop: "1px solid #dcdcdc",
+                      paddingTop: "10px",
+                    }}
+                  >
+                    <FaBookmark style={{ color: "blue", fontSize: "1.5rem" }} />
+
+                    <h5 className="fw-bold">Bookmarked Books</h5>
+                    <span className="ms-2">
+                      (<b> {totalBookmarked} </b>)
+                    </span>
+                  </div>
+                  <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
+                    <p>
+                      {/* {reader.bookmarkedBooks?.join(", ") ||
+                        "No bookmarked books listed."} */}
+                      {bookmarkedBooks?.length > 0 ? (
+                        bookmarkedBooks.map((title, index) => (
+                          <p key={index}>{title}</p>
+                        ))
+                      ) : (
+                        <p>No bookmarked books listed.</p>
+                      )}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Completed Books */}
-                <div className="mt-4">
-                  <h5 className="fw-bold">Completed Books</h5>
-                  <p>
-                    {reader.completedBooks?.join(", ") ||
-                      "No completed books listed."}
-                  </p>
+                <div className="align-items-end gap-3">
+                  <div
+                    className="d-flex gap-3"
+                    style={{
+                      borderTop: "1px solid #dcdcdc",
+                      paddingTop: "10px",
+                    }}
+                  >
+                    <FaBook style={{ color: "green", fontSize: "1.5rem" }} />
+
+                    <h5 className="fw-bold">Completed Books</h5>
+                    <span className="ms-2">
+                      (<b> {totalCompleted} </b>)
+                    </span>
+                  </div>
+                  <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
+                    <p>
+                      {/* {reader.completedBooks?.join(", ") ||
+                        "No completed books listed."} */}
+                      {completedBooks?.length > 0 ? (
+                        completedBooks.map((title, index) => (
+                          <p key={index}>{title}</p>
+                        ))
+                      ) : (
+                        <p>No completed books listed.</p>
+                      )}
+                    </p>
+                  </div>
                 </div>
+                {/* reader posts */}
                 <div
-                  className="mt-4"
+                  className="d-flex flex-column mt-4 gap-3"
                   style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
                 >
                   <h5 className="fw-bold">Posts</h5>
-                  <p>No posts listed.</p>
-                  <p>"show list of posts made by this reader "</p>
+                  {/* {posts?.length > 0 && (
+                    posts.map((post, index) => (
+                      <div key={index} 
+                     >
+                        <h6>{post.title}</h6>
+                        <p>{post.description}</p>
+                        <small>
+                          {new Date(post.timestamp).toLocaleString()}
+                        </small>
+                        <p>👍 {post.likes}</p>
+                      </div>
+                    ))
+                 
+                  )} */}
+                  {posts?.length > 0 &&
+                    posts.map((post, index) => (
+                      <PostCard key={index} post={post} />
+                    ))}
                 </div>
               </Col>
             </Row>

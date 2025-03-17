@@ -6,57 +6,38 @@ import { fetchPosts, fetchReaderById } from "../services/MockAPI";
 
 const Home = () => {
   const [account_reader, setReader] = useState([]);
-  const [posts, setposts] = useState([]);
-  const [filteredposts, setFilteredposts] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const ACCOUNT_READER_ID = "754368128"; // For testing purposes
 
   useEffect(() => {
     const getReader = async () => {
       const account_reader = await fetchReaderById(ACCOUNT_READER_ID);
       setReader(account_reader);
-
-      // console.log("Account reader:", account_reader);
     };
 
-    const getposts = async () => {
-      const fetchedposts = await fetchPosts(ACCOUNT_READER_ID);
-      setposts(fetchedposts);
-      setFilteredposts(fetchedposts);
-
-      // console.log("posts:", fetchedposts);
-      console.log("posts:", fetchedposts);
+    const getPosts = async () => {
+      const fetchedPosts = await fetchPosts(ACCOUNT_READER_ID);
+      setPosts(fetchedPosts);
+      setFilteredPosts(fetchedPosts);
     };
 
-    getReader().then(getposts);
+    getReader().then(getPosts);
   }, []);
 
-  //handleFavorite old
-  // const handleFavorite = (bookID) => {
-  //   if (account_reader.favoriteBooks.includes(bookID)) {
-  //     const index = account_reader.favoriteBooks.indexOf(bookID);
-  //     account_reader.favoriteBooks.splice(index, 1);
-  //   } else {
-  //     account_reader.favoriteBooks.push(bookID);
-  //   }
-
-  //   setReader({ ...account_reader });
-  //   console.log(
-  //     "Updated bookId: " +
-  //       bookID +
-  //       " to favorite: " +
-  //       account_reader.favoriteBooks.includes(bookID)
-  //   );
-  // };
   const handleFavorite = (bookID, bookTitle) => {
-    const readerId = account_reader._Id; // Use _Id para o ID do leitor
-    const favoriteBooksByReader = JSON.parse(localStorage.getItem("favoriteBooksByReader")) || {};
-  
+    const readerId = account_reader._Id;
+    const favoriteBooksByReader =
+      JSON.parse(localStorage.getItem("favoriteBooksByReader")) || {};
+
     if (account_reader.favoriteBooks.includes(bookID)) {
       const index = account_reader.favoriteBooks.indexOf(bookID);
       account_reader.favoriteBooks.splice(index, 1);
-      
-      // remove the book title from the localStorage
-      const updatedFavoriteBooksTitles = favoriteBooksByReader[readerId].filter(title => title !== bookTitle);
+
+      // Remove the book title from the localStorage
+      const updatedFavoriteBooksTitles = favoriteBooksByReader[readerId].filter(
+        (title) => title !== bookTitle
+      );
       favoriteBooksByReader[readerId] = updatedFavoriteBooksTitles;
     } else {
       account_reader.favoriteBooks.push(bookID);
@@ -66,44 +47,79 @@ const Home = () => {
       }
       favoriteBooksByReader[readerId].push(bookTitle);
     }
-  
-    localStorage.setItem("favoriteBooksByReader", JSON.stringify(favoriteBooksByReader));
+
+    localStorage.setItem(
+      "favoriteBooksByReader",
+      JSON.stringify(favoriteBooksByReader)
+    );
     setReader({ ...account_reader });
     console.log("Updated bookId: " + bookID + " to favorite: " + bookTitle);
   };
 
-  const handleBookmark = (bookID) => {
+  const handleBookmark = (bookID, bookTitle) => {
+    const readerId = account_reader._Id;
+    const bookmarkedBooksByReader =
+      JSON.parse(localStorage.getItem("bookmarkedBooksByReader")) || {};
+
     if (account_reader.bookmarkedBooks.includes(bookID)) {
       const index = account_reader.bookmarkedBooks.indexOf(bookID);
       account_reader.bookmarkedBooks.splice(index, 1);
+
+      // Remove the book title from the localStorage
+      const updatedBookmarkedTitles =
+        bookmarkedBooksByReader[readerId]?.filter(
+          (title) => title !== bookTitle
+        ) || [];
+      bookmarkedBooksByReader[readerId] = updatedBookmarkedTitles;
     } else {
       account_reader.bookmarkedBooks.push(bookID);
+
+      // Add the book title to the localStorage
+      if (!bookmarkedBooksByReader[readerId]) {
+        bookmarkedBooksByReader[readerId] = [];
+      }
+      bookmarkedBooksByReader[readerId].push(bookTitle);
     }
 
-    setReader({ ...account_reader });
-    console.log(
-      "Updated bookId: " +
-        bookID +
-        " to bookmarked: " +
-        account_reader.bookmarkedBooks.includes(bookID)
+    localStorage.setItem(
+      "bookmarkedBooksByReader",
+      JSON.stringify(bookmarkedBooksByReader)
     );
+    setReader({ ...account_reader });
+    console.log("Updated bookId: " + bookID + " to bookmarked: " + bookTitle);
   };
 
-  const handleCompleted = (bookID) => {
+  const handleCompleted = (bookID, bookTitle) => {
+    const readerId = account_reader._Id;
+    const completedBooksByReader =
+      JSON.parse(localStorage.getItem("completedBooksByReader")) || {};
+
     if (account_reader.completedBooks.includes(bookID)) {
       const index = account_reader.completedBooks.indexOf(bookID);
       account_reader.completedBooks.splice(index, 1);
+
+      // Remove the book title from the localStorage
+      const updatedCompletedTitles =
+        completedBooksByReader[readerId]?.filter(
+          (title) => title !== bookTitle
+        ) || [];
+      completedBooksByReader[readerId] = updatedCompletedTitles;
     } else {
       account_reader.completedBooks.push(bookID);
+
+      // Add the book title to the localStorage
+      if (!completedBooksByReader[readerId]) {
+        completedBooksByReader[readerId] = [];
+      }
+      completedBooksByReader[readerId].push(bookTitle);
     }
 
-    setReader({ ...account_reader });
-    console.log(
-      "Updated bookId: " +
-        bookID +
-        " to completed: " +
-        account_reader.completedBooks.includes(bookID)
+    localStorage.setItem(
+      "completedBooksByReader",
+      JSON.stringify(completedBooksByReader)
     );
+    setReader({ ...account_reader });
+    console.log("Updated bookId: " + bookID + " to completed: " + bookTitle);
   };
 
   return (
@@ -114,7 +130,7 @@ const Home = () => {
       {/* Body */}
       <Container style={{ marginTop: "64px" }}>
         <Row className="g-4">
-          {filteredposts.map((post) => (
+          {filteredPosts.map((post) => (
             <PostCard
               key={post._Id}
               post={post}
