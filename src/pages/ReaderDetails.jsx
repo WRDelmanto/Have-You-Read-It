@@ -77,7 +77,7 @@ const ReaderDetails = () => {
 
       {/* Main Content */}
       {reader && (
-        <Container style={{ marginTop: "64px" }}>
+        <Container className="d-flex flex-column min-vh-100" style={{ marginTop: "64px", maxWidth: "100%" }}>
           <Card className="shadow-sm p-4 bg-white shadow-lg align-items-center">
             <Row>
               <Col md={12} className="text-start">
