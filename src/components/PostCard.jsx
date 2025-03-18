@@ -19,11 +19,6 @@ const PostCard = ({
 }) => {
   const navigate = useNavigate();
 
-  // // Favorite button click handler to get title and bookId
-  // const onFavoriteClick = () => {
-  // 	handleFavorite(post.book.bookId, post.book.title);
-  //   };
-
   return (
     <Card className="h-100 book-card border-0 shadow-lg">
       <div className="d-flex">
