@@ -143,9 +143,15 @@ const Home = () => {
               isCompleted={account_reader.completedBooks.includes(
                 post.book.bookId
               )}
-              handleFavorite={handleFavorite}
-              handleBookmark={handleBookmark}
-              handleCompleted={handleCompleted}
+              handleFavorite={(bookID) =>
+                handleFavorite(bookID, post.book.title)
+              }
+              handleBookmark={(bookID) =>
+                handleBookmark(bookID, post.book.title)
+              }
+              handleCompleted={(bookID) =>
+                handleCompleted(bookID, post.book.title)
+              }
             />
           ))}
         </Row>

@@ -194,7 +194,7 @@ const ReaderDetails = () => {
                   <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
                     {/* {reader.bookmarkedBooks?.join(", ") ||
                         "No bookmarked books listed."} */}
-                    {bookmarkedBooks?.length > 0 ? (
+                    {bookmarkedBooks.length > 0 ? (
                       bookmarkedBooks.map((title, index) => (
                         <p key={index}>{title}</p>
                       ))
@@ -223,7 +223,7 @@ const ReaderDetails = () => {
                   <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
                     {/* {reader.completedBooks?.join(", ") ||
                         "No completed books listed."} */}
-                    {completedBooks?.length > 0 ? (
+                    {completedBooks.length > 0 ? (
                       completedBooks.map((title, index) => (
                         <p key={index}>{title}</p>
                       ))
