@@ -1,77 +1,74 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
-import { Button } from "react-bootstrap";
-import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
+import PostCard from "../components/PostCard";
 import { fetchPostsByReaderId, fetchReaderById } from "../services/MockAPI.js";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
-import PostCard from "../components/PostCard";
 
 const ReaderDetails = () => {
   const { readerId } = useParams();
+  const [accountReader, setAccountReader] = useState(null);
   const [reader, setReader] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [favoriteBooks, setFavoriteBooks] = useState([]);
+  const [favoritedBooks, setFavoritedBooks] = useState([]);
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
   const [completedBooks, setCompletedBooks] = useState([]);
+  const ACCOUNT_READER_ID = "754368128"; // For testing purposes
 
   useEffect(() => {
-    const getReaderAndBooks = async () => {
-      try {
-        // Fetch reader data
-        const readerData = await fetchReaderById(readerId);
-        setReader(readerData);
+    const fetchData = async () => {
+      const [accountReader, reader, posts] = await Promise.all([
+        fetchReaderById(ACCOUNT_READER_ID),
+        fetchReaderById(readerId),
+        fetchPostsByReaderId(readerId),
+      ]);
 
-        // Fetch favorite books details
-        const favoriteBooksDetails = await Promise.all(
-          readerData.favoriteBooks.map((bookId) =>
-            OpenLibraryAPI.getBookById(bookId)
-          )
-        );
-        setFavoriteBooks(favoriteBooksDetails);
-
-        // Fetch bookmarked books details
-        const bookmarkedBooksDetails = await Promise.all(
-          readerData.bookmarkedBooks.map((bookId) =>
-            OpenLibraryAPI.getBookById(bookId)
-          )
-        );
-        setBookmarkedBooks(bookmarkedBooksDetails);
-
-        // Fetch completed books details
-        const completedBooksDetails = await Promise.all(
-          readerData.completedBooks.map((bookId) =>
-            OpenLibraryAPI.getBookById(bookId)
-          )
-        );
-        setCompletedBooks(completedBooksDetails);
-      } catch (error) {
-        console.error("Error fetching reader or books:", error);
-      }
+      setAccountReader(accountReader);
+      setReader(reader);
+      setPosts(posts);
     };
 
-    const getPosts = async () => {
-      try {
-        const postsData = await fetchPostsByReaderId(readerId);
-        setPosts(postsData);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
+    fetchData();
+  }, []);
 
-    getReaderAndBooks();
-    getPosts();
-  }, [readerId]);
+  useEffect(() => {
+    const fetchBooks = async () => {
+      if (!reader) return;
 
-  const handleFollowButton = () => {
-    setIsFollowing(!isFollowing);
+      // Avoid making unnecessary API calls
+      const favoriteBooks = reader.favoriteBooks ?? [];
+      const bookmarkedBooks = reader.bookmarkedBooks ?? [];
+      const completedBooks = reader.completedBooks ?? [];
+
+      const [favoritedBooksList, bookmarkedBooksList, completedBooksList] = await Promise.all([
+        Promise.all(favoriteBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))),
+        Promise.all(bookmarkedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))),
+        Promise.all(completedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))),
+      ]);
+
+      setFavoritedBooks(favoritedBooksList);
+      setBookmarkedBooks(bookmarkedBooksList);
+      setCompletedBooks(completedBooksList);
+    }
+
+    fetchBooks();
+  }, [reader]);
+
+  const handleFollow = () => {
+    if (!accountReader.following.readers) return;
+
+    if (accountReader.following.readers.includes(reader._Id)) {
+      const index = accountReader.following.readers.indexOf(reader._Id);
+      accountReader.following.readers.splice(index, 1);
+    } else {
+      accountReader.following.readers.push(reader._Id);
+    }
+
+    setAccountReader({ ...accountReader });
+    // console.log("Updated readerId: " + reader._Id + " to favorite: " + accountReader.following.readers.includes(readerId));
   };
-
-  const totalFavorites = favoriteBooks.length || 0;
-  const totalBookmarked = bookmarkedBooks.length || 0;
-  const totalCompleted = completedBooks.length || 0;
 
   return (
     <>
@@ -85,7 +82,7 @@ const ReaderDetails = () => {
             <Row>
               <Col md={12} className="text-start">
                 {/* Reader Info */}
-                <div className="d-flex justify-content-between align-items-center mb-4 ml-4 mr-4">
+                <div className="d-flex align-items-center gap-4 mb-4">
                   <div>
                     <Card.Img
                       src={reader.picture}
@@ -101,14 +98,13 @@ const ReaderDetails = () => {
                   <div>
                     <h2 className="fw-bold">{reader.name}</h2>
                   </div>
-
-                  {/* Follow Button */}
-                  <div className="d-flex flex-column align-items-end gap-3">
-                    <Button variant="primary" onClick={handleFollowButton}>
-                      {isFollowing ? "Following" : "Follow"}
+                  <div className="ms-auto">
+                    <Button variant="primary" onClick={handleFollow}>
+                      {accountReader.following.readers.includes(reader._Id) ? "Following" : "Follow"}
                     </Button>
                   </div>
                 </div>
+
 
                 {/* Favorite Books */}
                 <div className="align-items-end gap-3">
@@ -120,20 +116,16 @@ const ReaderDetails = () => {
                     }}
                   >
                     <FaHeart style={{ color: "red", fontSize: "1.5rem" }} />
-                    <h5 className="fw-bold">Favorite Books</h5>
-                    <span className="ms-2">
-                      (<b>{totalFavorites}</b>)
-                    </span>
+                    <h5 className="fw-bold">
+                      Favorite
+                      ( {(reader?.favoriteBooks ?? []).length} )
+                    </h5>
                   </div>
-                </div>
-                <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
-                  {favoriteBooks.length > 0 ? (
-                    favoriteBooks.map((book) => (
-                      <p key={book.bookId}>{book.title}</p>
-                    ))
-                  ) : (
-                    <p>No favorite books listed.</p>
-                  )}
+                  {favoritedBooks.map((book) => (
+                    <div key={book.bookId} style={{ paddingTop: "6px", paddingLeft: "40px" }}>
+                      {book.title}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Bookmarked Books */}
@@ -146,20 +138,16 @@ const ReaderDetails = () => {
                     }}
                   >
                     <FaBookmark style={{ color: "blue", fontSize: "1.5rem" }} />
-                    <h5 className="fw-bold">Bookmarked Books</h5>
-                    <span className="ms-2">
-                      (<b>{totalBookmarked}</b>)
-                    </span>
+                    <h5 className="fw-bold">
+                      Bookmarked
+                      ( {(reader?.bookmarkedBooks ?? []).length} )
+                    </h5>
                   </div>
-                  <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
-                    {bookmarkedBooks.length > 0 ? (
-                      bookmarkedBooks.map((book) => (
-                        <p key={book.bookId}>{book.title}</p>
-                      ))
-                    ) : (
-                      <p>No bookmarked books listed.</p>
-                    )}
-                  </div>
+                  {bookmarkedBooks.map((book) => (
+                    <div key={book.bookId} style={{ paddingTop: "6px", paddingLeft: "40px" }}>
+                      {book.title}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Completed Books */}
@@ -172,37 +160,43 @@ const ReaderDetails = () => {
                     }}
                   >
                     <FaBook style={{ color: "green", fontSize: "1.5rem" }} />
-                    <h5 className="fw-bold">Completed Books</h5>
-                    <span className="ms-2">
-                      (<b>{totalCompleted}</b>)
-                    </span>
+                    <h5 className="fw-bold">
+                      Completed
+                      ( {(reader?.completedBooks ?? []).length} )
+                    </h5>
                   </div>
-                  <div style={{ paddingTop: "10px", paddingLeft: "40px" }}>
-                    {completedBooks.length > 0 ? (
-                      completedBooks.map((book) => (
-                        <p key={book.bookId}>{book.title}</p>
-                      ))
-                    ) : (
-                      <p>No completed books listed.</p>
-                    )}
-                  </div>
+                  {completedBooks.map((book) => (
+                    <div key={book.bookId} style={{ paddingTop: "6px", paddingLeft: "40px" }}>
+                      {book.title}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Reader Posts */}
-                <div
-                  className="d-flex flex-column mt-4 gap-3"
-                  style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
-                >
-                  <h5 className="fw-bold">Posts</h5>
-                  {posts?.length > 0 &&
-                    posts.map((post, index) => (
-                      <PostCard key={index} post={post} />
+                {posts.length > 0 && accountReader && (
+                  <div
+                    className="d-flex flex-column mt-1 gap-3"
+                    style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
+                  >
+                    <h5 className="fw-bold">Posts</h5>
+                    {posts.map((post) => (
+                      <PostCard
+                        key={post._Id}
+                        post={post}
+                        isFavorite={accountReader.favoriteBooks.includes(post.book.bookId)}
+                        isBookmarked={accountReader.bookmarkedBooks.includes(post.book.bookId)}
+                        isCompleted={accountReader.completedBooks.includes(post.book.bookId)}
+                        handleFavorite={(bookID) => handleFavorite(bookID, post.book.title)}
+                        handleBookmark={(bookID) => handleBookmark(bookID, post.book.title)}
+                        handleCompleted={(bookID) => handleCompleted(bookID, post.book.title)}
+                      />
                     ))}
-                </div>
+                  </div>
+                )}
               </Col>
             </Row>
           </Card>
-        </Container>
+        </Container >
       )}
     </>
   );
