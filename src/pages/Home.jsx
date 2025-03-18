@@ -32,7 +32,7 @@ const Home = () => {
     }
 
     setAccountReader({ ...accountReader });
-    console.log("Updated bookId: " + bookID + " to favorite: " + accountReader.favoriteBooks.includes(bookID));
+    // console.log("Updated bookId: " + bookID + " to favorite: " + accountReader.favoriteBooks.includes(bookID));
   };
 
   const handleBookmark = (bookID) => {
@@ -44,7 +44,7 @@ const Home = () => {
     }
 
     setAccountReader({ ...accountReader });
-    console.log("Updated bookId: " + bookID + " to bookmarked: " + accountReader.bookmarkedBooks.includes(bookID));
+    // console.log("Updated bookId: " + bookID + " to bookmarked: " + accountReader.bookmarkedBooks.includes(bookID));
   };
 
   const handleCompleted = (bookID) => {
@@ -56,7 +56,7 @@ const Home = () => {
     }
 
     setAccountReader({ ...accountReader });
-    console.log("Updated bookId: " + bookID + " to completed: " + accountReader.completedBooks.includes(bookID));
+    // console.log("Updated bookId: " + bookID + " to completed: " + accountReader.completedBooks.includes(bookID));
   };
 
   return (
