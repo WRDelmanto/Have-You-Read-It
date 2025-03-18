@@ -5,7 +5,7 @@ import PostCard from "../components/PostCard";
 import { fetchPosts, fetchReaderById } from "../services/MockAPI";
 
 const Home = () => {
-  const [accountReader, setAccountReader] = useState([]);
+  const [accountReader, setAccountReader] = useState(null);
   const [posts, setPosts] = useState([]);
   const ACCOUNT_READER_ID = "754368128"; // For testing purposes
 
