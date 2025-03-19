@@ -6,6 +6,7 @@ import NavBar from "../components/Navbar.jsx";
 import PostCard from "../components/PostCard";
 import { fetchPostsByReaderId, fetchReaderById } from "../services/MockAPI.js";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
+import { Link, useNavigate } from "react-router-dom";
 
 const ReaderDetails = () => {
   const { readerId } = useParams();
@@ -16,6 +17,7 @@ const ReaderDetails = () => {
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
   const [completedBooks, setCompletedBooks] = useState([]);
   const ACCOUNT_READER_ID = "754368128"; // For testing purposes
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,16 +44,23 @@ const ReaderDetails = () => {
       const bookmarkedBooks = reader.bookmarkedBooks ?? [];
       const completedBooks = reader.completedBooks ?? [];
 
-      const [favoritedBooksList, bookmarkedBooksList, completedBooksList] = await Promise.all([
-        Promise.all(favoriteBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))),
-        Promise.all(bookmarkedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))),
-        Promise.all(completedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))),
-      ]);
+      const [favoritedBooksList, bookmarkedBooksList, completedBooksList] =
+        await Promise.all([
+          Promise.all(
+            favoriteBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
+          ),
+          Promise.all(
+            bookmarkedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
+          ),
+          Promise.all(
+            completedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
+          ),
+        ]);
 
       setFavoritedBooks(favoritedBooksList);
       setBookmarkedBooks(bookmarkedBooksList);
       setCompletedBooks(completedBooksList);
-    }
+    };
 
     fetchBooks();
   }, [reader]);
@@ -77,7 +86,10 @@ const ReaderDetails = () => {
 
       {/* Main Content */}
       {reader && (
-        <Container className="d-flex flex-column min-vh-100" style={{ marginTop: "64px", maxWidth: "100%" }}>
+        <Container
+          className="d-flex flex-column min-vh-100"
+          style={{ marginTop: "64px", maxWidth: "100%" }}
+        >
           <Card className="shadow-sm p-4 bg-white shadow-lg align-items-center">
             <Row>
               <Col md={12} className="text-start">
@@ -100,11 +112,12 @@ const ReaderDetails = () => {
                   </div>
                   <div className="ms-auto">
                     <Button variant="primary" onClick={handleFollow}>
-                      {accountReader.following.readers.includes(reader._Id) ? "Following" : "Follow"}
+                      {accountReader.following.readers.includes(reader._Id)
+                        ? "Following"
+                        : "Follow"}
                     </Button>
                   </div>
                 </div>
-
 
                 {/* Favorite Books */}
                 <div className="align-items-end gap-3">
@@ -117,15 +130,33 @@ const ReaderDetails = () => {
                   >
                     <FaHeart style={{ color: "red", fontSize: "1.5rem" }} />
                     <h5 className="fw-bold">
-                      Favorite
-                      ( {(reader?.favoriteBooks ?? []).length} )
+                      Favorite ( {(reader?.favoriteBooks ?? []).length} )
                     </h5>
                   </div>
-                  {favoritedBooks.map((book) => (
-                    <div key={book.bookId} style={{ paddingTop: "6px", paddingLeft: "40px" }}>
-                      {book.title}
-                    </div>
-                  ))}
+                  <div style={{ paddingBottom: "10px" }}>
+                    {favoritedBooks.map((book) => (
+                      <div
+                        key={book.bookId}
+                        style={{ paddingTop: "6px", paddingLeft: "40px" }}
+                      >
+                        <div
+                          onClick={() => navigate(`/book/${book.bookId}`)}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.05)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                          style={{
+                            cursor: "pointer",
+                            transition: "transform 0.3s ease-in-out",
+                          }}
+                        >
+                          {book.title}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Bookmarked Books */}
@@ -139,15 +170,33 @@ const ReaderDetails = () => {
                   >
                     <FaBookmark style={{ color: "blue", fontSize: "1.5rem" }} />
                     <h5 className="fw-bold">
-                      Bookmarked
-                      ( {(reader?.bookmarkedBooks ?? []).length} )
+                      Bookmarked ( {(reader?.bookmarkedBooks ?? []).length} )
                     </h5>
                   </div>
-                  {bookmarkedBooks.map((book) => (
-                    <div key={book.bookId} style={{ paddingTop: "6px", paddingLeft: "40px" }}>
-                      {book.title}
-                    </div>
-                  ))}
+                  <div style={{ paddingBottom: "10px" }}>
+                    {bookmarkedBooks.map((book) => (
+                      <div
+                        key={book.bookId}
+                        style={{ paddingTop: "6px", paddingLeft: "40px" }}
+                      >
+                        <div
+                          onClick={() => navigate(`/book/${book.bookId}`)}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.05)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                          style={{
+                            cursor: "pointer",
+                            transition: "transform 0.3s ease-in-out",
+                          }}
+                        >
+                          {book.title}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Completed Books */}
@@ -161,34 +210,67 @@ const ReaderDetails = () => {
                   >
                     <FaBook style={{ color: "green", fontSize: "1.5rem" }} />
                     <h5 className="fw-bold">
-                      Completed
-                      ( {(reader?.completedBooks ?? []).length} )
+                      Completed ( {(reader?.completedBooks ?? []).length} )
                     </h5>
                   </div>
-                  {completedBooks.map((book) => (
-                    <div key={book.bookId} style={{ paddingTop: "6px", paddingLeft: "40px" }}>
-                      {book.title}
-                    </div>
-                  ))}
+                  <div style={{ paddingBottom: "10px" }}>
+                    {completedBooks.map((book) => (
+                      <div
+                        key={book.bookId}
+                        style={{ paddingTop: "6px", paddingLeft: "40px" }}
+                      >
+                        <div
+                          onClick={() => navigate(`/book/${book.bookId}`)}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.05)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                          style={{
+                            cursor: "pointer",
+                            transition: "transform 0.3s ease-in-out",
+                          }}
+                        >
+                          {book.title}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Reader Posts */}
                 {posts.length > 0 && accountReader && (
                   <div
                     className="d-flex flex-column mt-1 gap-3"
-                    style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
+                    style={{
+                      borderTop: "1px solid #dcdcdc",
+                      paddingTop: "10px",
+                    }}
                   >
                     <h5 className="fw-bold">Posts</h5>
                     {posts.map((post) => (
                       <PostCard
                         key={post._Id}
                         post={post}
-                        isFavorite={accountReader.favoriteBooks.includes(post.book.bookId)}
-                        isBookmarked={accountReader.bookmarkedBooks.includes(post.book.bookId)}
-                        isCompleted={accountReader.completedBooks.includes(post.book.bookId)}
-                        handleFavorite={(bookID) => handleFavorite(bookID, post.book.title)}
-                        handleBookmark={(bookID) => handleBookmark(bookID, post.book.title)}
-                        handleCompleted={(bookID) => handleCompleted(bookID, post.book.title)}
+                        isFavorite={accountReader.favoriteBooks.includes(
+                          post.book.bookId
+                        )}
+                        isBookmarked={accountReader.bookmarkedBooks.includes(
+                          post.book.bookId
+                        )}
+                        isCompleted={accountReader.completedBooks.includes(
+                          post.book.bookId
+                        )}
+                        handleFavorite={(bookID) =>
+                          handleFavorite(bookID, post.book.title)
+                        }
+                        handleBookmark={(bookID) =>
+                          handleBookmark(bookID, post.book.title)
+                        }
+                        handleCompleted={(bookID) =>
+                          handleCompleted(bookID, post.book.title)
+                        }
                       />
                     ))}
                   </div>
@@ -196,7 +278,7 @@ const ReaderDetails = () => {
               </Col>
             </Row>
           </Card>
-        </Container >
+        </Container>
       )}
     </>
   );
