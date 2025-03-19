@@ -133,30 +133,21 @@ const ReaderDetails = () => {
                       Favorite ( {(reader?.favoriteBooks ?? []).length} )
                     </h5>
                   </div>
-                  <div style={{ paddingBottom: "10px" }}>
-                    {favoritedBooks.map((book) => (
-                      <div
-                        key={book.bookId}
-                        style={{ paddingTop: "6px", paddingLeft: "40px" }}
-                      >
-                        <div
-                          onClick={() => navigate(`/book/${book.bookId}`)}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.transform = "scale(1.05)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.transform = "scale(1)")
-                          }
-                          style={{
-                            cursor: "pointer",
-                            transition: "transform 0.3s ease-in-out",
-                          }}
-                        >
-                          {book.title}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  {favoritedBooks.map((book) => (
+                    <div
+                      key={book.bookId}
+                      onClick={() => navigate(`/book/${book.bookId}`)}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      style={{
+                        paddingTop: "6px",
+                        paddingLeft: "40px",
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease-in-out",
+                      }}>
+                      {book.title}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Bookmarked Books */}
@@ -173,30 +164,21 @@ const ReaderDetails = () => {
                       Bookmarked ( {(reader?.bookmarkedBooks ?? []).length} )
                     </h5>
                   </div>
-                  <div style={{ paddingBottom: "10px" }}>
-                    {bookmarkedBooks.map((book) => (
-                      <div
-                        key={book.bookId}
-                        style={{ paddingTop: "6px", paddingLeft: "40px" }}
-                      >
-                        <div
-                          onClick={() => navigate(`/book/${book.bookId}`)}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.transform = "scale(1.05)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.transform = "scale(1)")
-                          }
-                          style={{
-                            cursor: "pointer",
-                            transition: "transform 0.3s ease-in-out",
-                          }}
-                        >
-                          {book.title}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  {bookmarkedBooks.map((book) => (
+                    <div
+                      key={book.bookId}
+                      onClick={() => navigate(`/book/${book.bookId}`)}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      style={{
+                        paddingTop: "6px",
+                        paddingLeft: "40px",
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease-in-out",
+                      }}>
+                      {book.title}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Completed Books */}
@@ -213,30 +195,21 @@ const ReaderDetails = () => {
                       Completed ( {(reader?.completedBooks ?? []).length} )
                     </h5>
                   </div>
-                  <div style={{ paddingBottom: "10px" }}>
-                    {completedBooks.map((book) => (
-                      <div
-                        key={book.bookId}
-                        style={{ paddingTop: "6px", paddingLeft: "40px" }}
-                      >
-                        <div
-                          onClick={() => navigate(`/book/${book.bookId}`)}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.transform = "scale(1.05)")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.transform = "scale(1)")
-                          }
-                          style={{
-                            cursor: "pointer",
-                            transition: "transform 0.3s ease-in-out",
-                          }}
-                        >
-                          {book.title}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  {completedBooks.map((book) => (
+                    <div
+                      key={book.bookId}
+                      onClick={() => navigate(`/book/${book.bookId}`)}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      style={{
+                        paddingTop: "6px",
+                        paddingLeft: "40px",
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease-in-out",
+                      }}>
+                      {book.title}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Reader Posts */}
