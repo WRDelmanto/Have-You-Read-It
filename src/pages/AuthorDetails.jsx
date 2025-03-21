@@ -19,14 +19,16 @@ const AuthorDetails = () => {
       console.log("Author:", author);
     };
 
-    getAuthor()
+    getAuthor();
   }, [authorId]);
 
   useEffect(() => {
     if (!author?.authorName) return;
 
     const getBooks = async () => {
-      const booksData = await OpenLibraryAPI.getBooksByAuthorName(author.authorName);
+      const booksData = await OpenLibraryAPI.getBooksByAuthorName(
+        author.authorName
+      );
       setBooks(booksData);
 
       console.log("Books:", booksData); // This is the list of books by the author
@@ -36,23 +38,23 @@ const AuthorDetails = () => {
   }, [author?.authorName]);
 
   const navigate = useNavigate();
-  const goToAuthorSettings = () => {
-    navigate(`/settings/${author.authorId}`);
-  };
+  // const goToAuthorSettings = () => {
+  //   navigate(`/settings/${author.authorId}`);
+  // };
 
   const handleFollowButton = () => {
     setIsFollowing(!isFollowing);
   };
 
   // Calculating the total of each type icons
-  const {
-    favoriteBooks: authorFavoriteBooks = [],
-    bookmarkedBooks = [],
-    completedBooks = [],
-  } = author || {};
-  const totalFavorites = authorFavoriteBooks.length;
-  const totalBookmarked = bookmarkedBooks.length;
-  const totalCompleted = completedBooks.length;
+  // const {
+  //   favoriteBooks: authorFavoriteBooks = [],
+  //   bookmarkedBooks = [],
+  //   completedBooks = [],
+  // } = author || {};
+  // const totalFavorites = authorFavoriteBooks.length;
+  // const totalBookmarked = bookmarkedBooks.length;
+  // const totalCompleted = completedBooks.length;
 
   return (
     <>
@@ -61,14 +63,16 @@ const AuthorDetails = () => {
 
       {/* Body */}
       {author && (
-        <Container style={{ marginTop: "64px" }}>
+        <Container
+          className="d-flex flex-column min-vh-100"
+          style={{ marginTop: "64px", maxWidth: "100%" }}
+        >
           <Card className="shadow-sm p-4 bg-white shadow-lg">
-            <Row>
+            <Row className="align-items-center mb-2">
+              {/* Author imagem */}
               <Col md={3} className="text-center">
                 <Card.Img
-                  src={
-                    "https://m.media-amazon.com/images/S/amzn-author-media-prod/j8f9hc58pp4lhvjctnb7luoicd._SY450_CR0%2C0%2C450%2C450_.jpg"
-                  }
+                  src={author.authorImage}
                   alt={author.authorName}
                   className="img-fluid rounded-circle"
                   style={{
@@ -79,43 +83,20 @@ const AuthorDetails = () => {
                 />
               </Col>
 
-              <Col md={9} className="text-start">
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <h2 className="fw-bold">{author.authorName}</h2>
-                  </div>
+              {/* Author name */}
+              <Col md={6} className="text-start">
+                <h2 className="fw-bold">{author.authorName}</h2>
+              </Col>
 
-                  {/* Icons with totals and Follow Button */}
-                  <div className="d-flex flex-column align-items-end gap-3">
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center">
-                        <FaHeart style={{ color: "red", fontSize: "1.5rem" }} />
-                        <span className="ms-2">{totalFavorites}</span>
-                      </div>
-                      <div className="d-flex align-items-center">
-                        <FaBookmark
-                          style={{ color: "blue", fontSize: "1.5rem" }}
-                        />
-                        <span className="ms-2">{totalBookmarked}</span>
-                      </div>
-                      <div className="d-flex align-items-center">
-                        <FaBook
-                          style={{ color: "green", fontSize: "1.5rem" }}
-                        />
-                        <span className="ms-2">{totalCompleted}</span>
-                      </div>
-                    </div>
+              {/* Button follow */}
+              <Col md={3} className="text-center">
+                <Button variant="primary" onClick={handleFollowButton}>
+                  {isFollowing ? "Following" : "Follow"}
+                </Button>
+              </Col>
+            </Row>
 
-                    <div className="mt-2">
-                      <Button variant="primary" onClick={handleFollowButton}>
-                        {isFollowing ? "Following" : "Follow"}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Favorite Books */}
-                <div
+            {/* <div
                   className="mt-4"
                   style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
                 >
@@ -144,14 +125,16 @@ const AuthorDetails = () => {
                     <em>The 5 Second Rule</em>, <em>The High 5 Habit</em>, and
                     seven #1 audiobook releases on Audible.
                   </p>
-                </div>
-
+                </div> */}
+            {/* Author Books */}
+            <Row>
+              <Col>
                 <div
                   className="mt-4"
                   style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
                 >
                   <h5 className="fw-bold">All Books</h5>
-                  <p>No books listed.</p>
+
                   <p>"show list of bookswritten by this author "</p>
                 </div>
               </Col>
