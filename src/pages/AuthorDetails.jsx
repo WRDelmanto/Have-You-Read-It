@@ -186,11 +186,11 @@ const AuthorDetails = () => {
                           />
                         </Col>
                         <Col md={8}>
-                          <Card.Body>
+                          <Card.Body className="text-start">
                             <Card.Title>{book.title}</Card.Title>
                             <Card.Text>
                               <strong>Autor:</strong>{" "}
-                              {author?.authorName || "Desconhecido"}
+                              {author?.authorName || "unknown"}
                             </Card.Text>
                           </Card.Body>
                         </Col>
