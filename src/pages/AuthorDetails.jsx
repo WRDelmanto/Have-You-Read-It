@@ -3,13 +3,17 @@ import { Card, Col, Container, Row, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
-import { FaHeart, FaBookmark, FaBook } from "react-icons/fa";
+import { fetchPostsByBookId } from "../services/MockAPI.js";
+import PostCard from "../components/PostCard.jsx";
 
 const AuthorDetails = () => {
   const { authorId } = useParams();
   const [author, setAuthor] = useState(null);
   const [books, setBooks] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
     const getAuthor = async () => {
@@ -37,7 +41,30 @@ const AuthorDetails = () => {
     getBooks();
   }, [author?.authorName]);
 
-  const navigate = useNavigate();
+  // new   by Fabricio
+  // useEffect(() => {
+  //   const getPosts = async () => {
+  //     const allPosts = await fetchPostsByBookId(); // get all posts
+  //     setPosts(allPosts);
+  //     console.log("All posts:", allPosts);
+  //   };
+
+  //   getPosts();
+  // }, []);
+
+  // useEffect(() => {
+  //   if (books.length === 0 || posts.length === 0) return;
+
+  //   // filter posts by books written by the author
+  //   const filteredPosts = posts.filter((post) => {
+  //     return books.some((book) => book.title === post.book.title); // check if the book is written by the author
+  //   });
+
+  //   setFilteredPosts(filteredPosts); // set the filtered posts
+  // }, [books, posts]);
+
+  // end new by fabricio
+
   // const goToAuthorSettings = () => {
   //   navigate(`/settings/${author.authorId}`);
   // };
@@ -45,6 +72,8 @@ const AuthorDetails = () => {
   const handleFollowButton = () => {
     setIsFollowing(!isFollowing);
   };
+
+  const visibleBooks = books.slice(0, visibleCount);
 
   // Calculating the total of each type icons
   // const {
@@ -128,14 +157,65 @@ const AuthorDetails = () => {
                 </div> */}
             {/* Author Books */}
             <Row>
-              <Col>
+              <Col className="text-start">
                 <div
-                  className="mt-4"
-                  style={{ borderTop: "1px solid #dcdcdc", paddingTop: "10px" }}
+                  className="mt-4 p-4"
+                  style={{
+                    borderTop: "1px solid #dcdcdc",
+                    paddingTop: "10px",
+                    paddingLeft: "20px",
+                  }}
                 >
-                  <h5 className="fw-bold">All Books</h5>
+                  <h5 className="fw-bold">Author's Books</h5>
+                  {visibleBooks.map((book) => (
+                    <Card key={book.bookId} className="shadow-sm mb-3">
+                      <Row className="g-0">
+                        <Col md={4}>
+                          <Card.Img
+                            src={
+                              book.cover || "https://via.placeholder.com/150"
+                            }
+                            alt={book.title}
+                            className="img-fluid"
+                            style={{
+                              height: "250px",
+                              objectFit: "contain",
+                              width: "150px",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </Col>
+                        <Col md={8}>
+                          <Card.Body>
+                            <Card.Title>{book.title}</Card.Title>
+                            <Card.Text>
+                              <strong>Autor:</strong>{" "}
+                              {author?.authorName || "Desconhecido"}
+                            </Card.Text>
+                          </Card.Body>
+                        </Col>
+                      </Row>
+                    </Card>
+                  ))}
 
-                  <p>"show list of bookswritten by this author "</p>
+                  {/* Button"Read More" */}
+                  {visibleCount < books.length && (
+                    <div className="text-center mt-3">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setVisibleCount(visibleCount + 6)}
+                      >
+                        Read More
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* <h5 className="fw-bold">Posts about this author</h5>
+                  {filteredPosts.length > 0 &&
+                    filteredPosts.map((post) => (
+                      <PostCard key={post._id} post={post} />
+                    ))} */}
+                  {/* <p>"show list of bookswritten by this author "</p> */}
                 </div>
               </Col>
             </Row>
