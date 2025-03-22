@@ -202,7 +202,7 @@ const AuthorDetails = () => {
                   {visibleCount < books.length && (
                     <div className="text-center mt-3">
                       <Button
-                        variant="secondary"
+                        variant="info"
                         onClick={() => setVisibleCount(visibleCount + 6)}
                       >
                         Read More
