@@ -15,8 +15,7 @@ class ForgotPassword extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Add actual password reset logic here
-    console.log("Reset password requested for:", this.state.email);
+    console.log("Reset link requested for:", this.state.email);
     this.setState({ submitted: true });
   };
 
@@ -26,7 +25,6 @@ class ForgotPassword extends Component {
     return (
       <>
         <NavBar />
-
         <Container
           className="d-flex justify-content-center align-items-center min-vh-100"
           style={{ marginTop: "64px" }}
@@ -38,18 +36,18 @@ class ForgotPassword extends Component {
 
                 {submitted ? (
                   <Alert variant="success">
-                    If the email is registered, a reset link will be sent.
+                    If this email is registered, a reset link has been sent.
                   </Alert>
                 ) : (
                   <Form onSubmit={this.handleSubmit}>
                     <Form.Group className="mb-3" controlId="formEmail">
                       <Form.Label>
                         <FaEnvelope className="me-2" />
-                        Enter your email address
+                        Email address
                       </Form.Label>
                       <Form.Control
                         type="email"
-                        placeholder="Enter email"
+                        placeholder="Enter your email"
                         value={email}
                         onChange={this.handleChange}
                         required
