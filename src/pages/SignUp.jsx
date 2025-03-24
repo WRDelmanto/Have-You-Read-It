@@ -1,7 +1,7 @@
 import { Component } from "react";
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
-import NavBar from "../components/Navbar.jsx";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import NavBarSimplified from "../components/NavBarSimplified.jsx";
 
 class SignUp extends Component {
   state = {
@@ -34,7 +34,7 @@ class SignUp extends Component {
 
     return (
       <>
-        <NavBar />
+        <NavBarSimplified />
 
         <Container
           className="d-flex justify-content-center align-items-center min-vh-100"

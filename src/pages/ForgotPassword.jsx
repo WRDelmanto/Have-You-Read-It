@@ -1,7 +1,7 @@
 import { Component } from "react";
-import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { FaEnvelope } from "react-icons/fa";
-import NavBar from "../components/Navbar.jsx";
+import NavBarSimplified from "../components/NavBarSimplified.jsx";
 
 class ForgotPassword extends Component {
   state = {
@@ -24,7 +24,8 @@ class ForgotPassword extends Component {
 
     return (
       <>
-        <NavBar />
+        <NavBarSimplified />
+
         <Container
           className="d-flex justify-content-center align-items-center min-vh-100"
           style={{ marginTop: "64px" }}

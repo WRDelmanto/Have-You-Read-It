@@ -1,8 +1,8 @@
 import { Component } from "react";
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
-import { FaUser, FaLock } from "react-icons/fa";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { FaLock, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import NavBar from "../components/Navbar.jsx";
+import NavbarSimplified from "../components/NavBarSimplified.jsx";
 
 class SignIn extends Component {
   state = {
@@ -26,8 +26,8 @@ class SignIn extends Component {
 
     return (
       <>
-        {/* Navigation Bar */}
-        <NavBar />
+        {/* NavBarSimplified */}
+        <NavbarSimplified />
 
         {/* Sign-In Form */}
         <Container
