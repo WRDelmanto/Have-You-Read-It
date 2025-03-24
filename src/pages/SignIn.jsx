@@ -1,7 +1,8 @@
 import { Component } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { FaUser, FaLock } from "react-icons/fa";
-import NavBar from "../components/Navbar.jsx"; // assuming same location as in ReaderDetails
+import { Link } from "react-router-dom";
+import NavBar from "../components/Navbar.jsx";
 
 class SignIn extends Component {
   state = {
@@ -29,14 +30,20 @@ class SignIn extends Component {
         <NavBar />
 
         {/* Sign-In Form */}
-        <Container className="d-flex justify-content-center align-items-center min-vh-100" style={{ marginTop: "64px" }}>
+        <Container
+          className="d-flex justify-content-center align-items-center min-vh-100"
+          style={{ marginTop: "64px" }}
+        >
           <Row className="w-100 justify-content-center">
             <Col md={6} lg={4}>
               <Card className="p-4 shadow">
                 <h2 className="text-center mb-4">Sign In</h2>
                 <Form onSubmit={this.handleSubmit}>
                   <Form.Group className="mb-3" controlId="formEmail">
-                    <Form.Label><FaUser className="me-2" />Email address</Form.Label>
+                    <Form.Label>
+                      <FaUser className="me-2" />
+                      Email address
+                    </Form.Label>
                     <Form.Control
                       type="email"
                       placeholder="Enter email"
@@ -47,8 +54,11 @@ class SignIn extends Component {
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-4" controlId="formPassword">
-                    <Form.Label><FaLock className="me-2" />Password</Form.Label>
+                  <Form.Group className="mb-3" controlId="formPassword">
+                    <Form.Label>
+                      <FaLock className="me-2" />
+                      Password
+                    </Form.Label>
                     <Form.Control
                       type="password"
                       placeholder="Password"
@@ -58,6 +68,13 @@ class SignIn extends Component {
                       required
                     />
                   </Form.Group>
+
+                  {/* Forgot Password Link */}
+                  <div className="text-end mb-3">
+                    <Link to="/forgot-password" className="text-decoration-none">
+                      Forgot password?
+                    </Link>
+                  </div>
 
                   <Button variant="primary" type="submit" className="w-100">
                     Sign In
