@@ -1,14 +1,73 @@
 import { Component } from "react";
+import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
+import { FaEnvelope } from "react-icons/fa";
+import NavBar from "../components/Navbar.jsx";
 
-class SignUp extends Component {
-  state = {};
+class ForgotPassword extends Component {
+  state = {
+    email: "",
+    submitted: false,
+  };
+
+  handleChange = (e) => {
+    this.setState({ email: e.target.value });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    // TODO: Add actual password reset logic here
+    console.log("Reset password requested for:", this.state.email);
+    this.setState({ submitted: true });
+  };
+
   render() {
+    const { email, submitted } = this.state;
+
     return (
       <>
-        <h1>Sign Up</h1>
+        <NavBar />
+
+        <Container
+          className="d-flex justify-content-center align-items-center min-vh-100"
+          style={{ marginTop: "64px" }}
+        >
+          <Row className="w-100 justify-content-center">
+            <Col md={6} lg={4}>
+              <Card className="p-4 shadow">
+                <h2 className="text-center mb-4">Forgot Password</h2>
+
+                {submitted ? (
+                  <Alert variant="success">
+                    If the email is registered, a reset link will be sent.
+                  </Alert>
+                ) : (
+                  <Form onSubmit={this.handleSubmit}>
+                    <Form.Group className="mb-3" controlId="formEmail">
+                      <Form.Label>
+                        <FaEnvelope className="me-2" />
+                        Enter your email address
+                      </Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Enter email"
+                        value={email}
+                        onChange={this.handleChange}
+                        required
+                      />
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit" className="w-100">
+                      Send Reset Link
+                    </Button>
+                  </Form>
+                )}
+              </Card>
+            </Col>
+          </Row>
+        </Container>
       </>
     );
   }
 }
 
-export default SignUp;
+export default ForgotPassword;
