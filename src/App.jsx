@@ -1,14 +1,16 @@
-import "bootstrap/dist/css/bootstrap.css";
-import { BrowserRouter as Router } from "react-router-dom";
-import "./App.css";
-import AppRoutes from "./routes/AppRoutes.jsx";
+import { Routes, Route } from "react-router-dom";
+import SignIn from "../pages/SignIn";
+import ForgotPassword from "../pages/ForgotPassword";
+// Add more screens as needed
 
-function App() {
+function AppRoutes() {
   return (
-    <Router>
-      <AppRoutes />
-    </Router>
+    <Routes>
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      {/* Other routes */}
+    </Routes>
   );
 }
 
-export default App;
+export default AppRoutes;
