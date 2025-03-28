@@ -16,13 +16,16 @@ const PostCard = ({
   handleFavorite,
   handleBookmark,
   handleCompleted,
+  hideBookImage, // to hide image (posts in BookDetails.jsx)
 }) => {
   const navigate = useNavigate();
 
   return (
     <Card className="h-100 book-card border-0 shadow-lg">
       <div className="d-flex">
+        
         {/* Book cover with hover effect */}
+        {!hideBookImage && ( // to hide image (posts in BookDetails.jsx)
         <Card.Img
           src={post.book.cover}
           alt={post.book.title}
@@ -39,6 +42,7 @@ const PostCard = ({
           }
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         />
+        )}
 
         {/* Body content */}
         <div className="d-flex flex-column ms-3 w-100">
