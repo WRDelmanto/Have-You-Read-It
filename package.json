@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.2",
+    "nodemon": "^3.1.9",
     "query-string": "^9.1.1",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
