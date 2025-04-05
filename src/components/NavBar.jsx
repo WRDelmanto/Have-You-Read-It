@@ -51,6 +51,9 @@ const NavBar = () => {
 
   const handleSignOut = () => {
     console.log("Signing out...");
+
+    localStorage.removeItem("reader");
+    window.location.href = "/";
   };
 
   document.addEventListener("mousedown", handleClickOutsideSearchBox);

@@ -10,15 +10,41 @@ class SignIn extends Component {
     password: "",
   };
 
+  componentDidMount() {
+    if (localStorage.getItem("reader")) {
+      window.location.href = "/home";
+    }
+  }
+
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = this.state;
-    // TODO: Add your sign-in logic here
-    console.log("Sign-in submitted:", email, password);
+
+    try {
+      const response = await fetch("/api/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Signin failed.");
+        return;
+      }
+
+      localStorage.setItem("reader", JSON.stringify(data.accountReader));
+
+      window.location.href = "/home";
+    } catch (error) {
+      console.error("Error during signin:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   render() {
@@ -62,6 +88,7 @@ class SignIn extends Component {
                     <Form.Control
                       type="password"
                       placeholder="Password"
+                      autoComplete=""
                       name="password"
                       value={password}
                       onChange={this.handleChange}

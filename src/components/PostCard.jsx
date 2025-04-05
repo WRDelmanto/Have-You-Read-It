@@ -16,32 +16,32 @@ const PostCard = ({
   handleFavorite,
   handleBookmark,
   handleCompleted,
-  hideBookImage, // to hide image (posts in BookDetails.jsx)
+  shouldHideBook,
 }) => {
   const navigate = useNavigate();
 
   return (
     <Card className="h-100 book-card border-0 shadow-lg">
       <div className="d-flex">
-        
+
         {/* Book cover with hover effect */}
-        {!hideBookImage && ( // to hide image (posts in BookDetails.jsx)
-        <Card.Img
-          src={post.book.cover}
-          alt={post.book.title}
-          style={{
-            height: "250px",
-            objectFit: "contain",
-            width: "150px",
-            cursor: "pointer",
-            transition: "transform 0.3s ease-in-out",
-          }}
-          onClick={() => navigate(`/book/${post.book.bookId}`)}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.transform = "scale(1.05)")
-          }
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        />
+        {!shouldHideBook && (
+          <Card.Img
+            src={post.book.cover}
+            alt={post.book.title}
+            style={{
+              height: "250px",
+              objectFit: "contain",
+              width: "150px",
+              cursor: "pointer",
+              transition: "transform 0.3s ease-in-out",
+            }}
+            onClick={() => navigate(`/book/${post.book.bookId}`)}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          />
         )}
 
         {/* Body content */}
@@ -49,46 +49,50 @@ const PostCard = ({
           <div className="d-flex justify-content-between align-items-start">
             <div className="d-flex align-items-start flex-column">
               {/* Title */}
-              <Link
-                to={`/book/${post.book.bookId}`}
-                className="text-decoration-none"
-              >
-                <Card.Title
-                  className="h5 text-dark mt-1 mb-2"
-                  style={{
-                    transition: "transform 0.3s ease-in-out",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.transform = "scale(1.05)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "scale(1)")
-                  }
+              {!shouldHideBook && (
+                <Link
+                  to={`/book/${post.book.bookId}`}
+                  className="text-decoration-none"
                 >
-                  {post.book.title}
-                </Card.Title>
-              </Link>
+                  <Card.Title
+                    className="h5 text-dark mt-1 mb-2"
+                    style={{
+                      transition: "transform 0.3s ease-in-out",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.05)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                  >
+                    {post.book.title}
+                  </Card.Title>
+                </Link>
+              )}
 
               {/* Author */}
-              <Link
-                to={`/author/${post.book.authorId}`}
-                className="text-decoration-none"
-              >
-                <Card.Subtitle
-                  className="text-muted mb-4"
-                  style={{
-                    transition: "transform 0.3s ease-in-out",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.transform = "scale(1.05)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "scale(1)")
-                  }
+              {!shouldHideBook && (
+                <Link
+                  to={`/author/${post.book.authorId}`}
+                  className="text-decoration-none"
                 >
-                  {post.book.authorName}
-                </Card.Subtitle>
-              </Link>
+                  <Card.Subtitle
+                    className="text-muted mb-4"
+                    style={{
+                      transition: "transform 0.3s ease-in-out",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.05)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                  >
+                    {post.book.authorName}
+                  </Card.Subtitle>
+                </Link>
+              )}
 
               {/* Reader */}
               <div
@@ -106,7 +110,7 @@ const PostCard = ({
                 }}
               >
                 <Card.Img
-                  src={post.reader?.picture}
+                  src={post.reader?.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
                   alt={post.reader?.name}
                   style={{
                     height: "30px",
@@ -124,7 +128,7 @@ const PostCard = ({
                 {/* Title */}
                 <div className="h6 text-dark mb-1">{post.title}</div>
                 {/* Description */}
-                <div className="h6 text-muted mb-1"> {post.description}</div>
+                <div className="h6 text-muted mb-1" style={{ textAlign: "left" }}>{post.description}</div>
               </div>
             </div>
 
@@ -225,7 +229,7 @@ const PostCard = ({
               {post.comments.map((comment) => (
                 <div key={comment._Id} className="mt-2 text-muted">
                   <Card.Img
-                    src={comment.reader?.picture}
+                    src={comment.reader?.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
                     alt={comment.reader?.name}
                     onClick={() => navigate(`/reader/${comment.reader._Id}`)}
                     onMouseEnter={(e) =>

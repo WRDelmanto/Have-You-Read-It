@@ -17,6 +17,10 @@ class ForgotPassword extends Component {
     e.preventDefault();
     console.log("Reset link requested for:", this.state.email);
     this.setState({ submitted: true });
+
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 3000);
   };
 
   render() {

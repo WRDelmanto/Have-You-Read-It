@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row, Button } from "react-bootstrap";
-import {
-  FaBook,
-  FaBookmark,
-  FaHeart,
-  FaRegBookmark,
-  FaRegHeart,
-} from "react-icons/fa";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
-import { fetchPostsByBookId, fetchReaderById } from "../services/MockAPI.js";
-import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 import PostCard from "../components/PostCard";
+import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const BookDetails = () => {
   const { bookId } = useParams();
-  const [account_reader, setReader] = useState([]);
+  const [account_reader, setAccountReader] = useState([]);
   const [book, setBook] = useState([]);
   const [posts, setPosts] = useState([]);
   const [iconHovered, setIconHovered] = useState({
@@ -27,14 +19,15 @@ const BookDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const ACCOUNT_READER_ID = "754368128"; // For testing purposes
+    const reader = localStorage.getItem("reader");
 
-    const getReader = async () => {
-      const account_reader = await fetchReaderById(ACCOUNT_READER_ID);
-      setReader(account_reader);
+    if (!reader) {
+      navigate("/");
+      return;
+    }
 
-      // console.log("Account reader:", account_reader);
-    };
+    const accountReader = JSON.parse(reader);
+    setAccountReader(accountReader);
 
     const getBook = async () => {
       const book = await OpenLibraryAPI.getBookById(bookId);
@@ -44,14 +37,28 @@ const BookDetails = () => {
     };
 
     const getPosts = async () => {
-      const posts = await fetchPostsByBookId(bookId);
-      setPosts(posts);
+      try {
+        const response = await fetch(`/api/postsByBookId/${bookId}`);
+        const data = await response.json();
 
-      console.log("Posts:", posts); // This is the list of posts for the book
+        if (!response.ok) {
+          alert(data.error || "Failed to fetch posts.");
+          return;
+        }
+
+        const postsData = data.posts || [];
+
+        // console.log("Posts: ", postsData);
+
+        setPosts(postsData);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    getReader().then(getBook).then(getPosts);
-  }, []);
+    getBook().then(() => { getPosts() });
+  }, [navigate]);
 
   const handleFavorite = (bookID) => {
     if (account_reader.favoriteBooks.includes(bookID)) {
@@ -64,9 +71,9 @@ const BookDetails = () => {
     setReader({ ...account_reader });
     console.log(
       "Updated bookId: " +
-        bookID +
-        " to favorite: " +
-        account_reader.favoriteBooks.includes(bookID)
+      bookID +
+      " to favorite: " +
+      account_reader.favoriteBooks.includes(bookID)
     );
   };
 
@@ -81,9 +88,9 @@ const BookDetails = () => {
     setReader({ ...account_reader });
     console.log(
       "Updated bookId: " +
-        bookID +
-        " to bookmarked: " +
-        account_reader.bookmarkedBooks.includes(bookID)
+      bookID +
+      " to bookmarked: " +
+      account_reader.bookmarkedBooks.includes(bookID)
     );
   };
 
@@ -98,9 +105,9 @@ const BookDetails = () => {
     setReader({ ...account_reader });
     console.log(
       "Updated bookId: " +
-        bookID +
-        " to completed: " +
-        account_reader.completedBooks.includes(bookID)
+      bookID +
+      " to completed: " +
+      account_reader.completedBooks.includes(bookID)
     );
   };
 
@@ -120,138 +127,6 @@ const BookDetails = () => {
       <NavBar />
 
       {/* Body */}
-      {/* <Container className="mt-5">
-        <Card className="shadow-sm p-4 bg-white shadow-lg ">
-          <Row className="">
-            <Col md={3} className="text-center">
-              <Card.Img
-                src={book.cover}
-                alt={book.title}
-                className="img-fluid rounded"
-                style={{
-                  width: "300px",
-                  height: "500px",
-                  objectFit: "contain",
-                }}
-              />
-            </Col>
-
-            <Col md={9} className="text-begin">
-              <div className="text-end mb-3">
-                <button
-                  className="btn btn-link p-0 me-2"
-                  onClick={() => handleFavorite(book.bookId)}
-                  onMouseEnter={() => handleIconHover("favorite")}
-                  onMouseLeave={() => handleIconHover("favorite")}
-                >
-                  {account_reader?.favoriteBooks?.includes(book.bookId) ? (
-                    <FaHeart
-                      size={22}
-                      style={{
-                        color: "red",
-                        transition: "transform 0.3s",
-                        transform: iconHovered.favorite
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  ) : (
-                    <FaRegHeart
-                      size={22}
-                      style={{
-                        color: "red",
-                        transition: "transform 0.3s",
-                        transform: iconHovered.favorite
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  )}
-                </button>
-                <button
-                  className="btn btn-link p-0 me-2"
-                  onClick={() => handleBookmark(book.bookId)}
-                  onMouseEnter={() => handleIconHover("bookmarked")}
-                  onMouseLeave={() => handleIconHover("bookmarked")}
-                >
-                  {account_reader?.bookmarkedBooks?.includes(book.bookId) ? (
-                    <FaBookmark
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.bookmarked
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  ) : (
-                    <FaRegBookmark
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.bookmarked
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  )}
-                </button>
-                <button
-                  className="btn btn-link p-0"
-                  onClick={() => handleCompleted(book.bookId)}
-                  onMouseEnter={() => handleIconHover("completed")}
-                  onMouseLeave={() => handleIconHover("completed")}
-                >
-                  {account_reader?.completedBooks?.includes(book.bookId) ? (
-                    <FaBook
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.completed
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                        color: "green",
-                      }}
-                    />
-                  ) : (
-                    <FaBook
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.completed
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                        color: "white",
-                        stroke: "green",
-                        strokeWidth: "20px",
-                      }}
-                    />
-                  )}
-                </button>
-              </div>
-              <div className="text-start mt-4">
-                <h2 className="fw-bold">{book.title}</h2>
-                <p className="text-muted">
-                  <span className="fw-semibold text-primary">
-                    {book.authorName}
-                  </span>
-                </p>
-              </div>
-              <div
-                className="text-start mt-5"
-                style={{ borderTop: "1px solid #dcdcdc ", paddingTop: "10px" }}
-              >
-                <h5 className="fw-bold">Description</h5>
-                <p>
-                  {book.description ||
-                    "No description available for this book."}
-                </p>
-              </div>
-            </Col>
-            </Row>
-          </div>
-        </Card> */}
-
       <Container
         className="d-flex flex-column min-vh-100"
         style={{ marginTop: "64px", maxWidth: "100%" }}
@@ -280,99 +155,6 @@ const BookDetails = () => {
               />
             </Col>
 
-            {/* <Col md={9} className="text-begin">
-              <div className="text-end mb-3">
-                <button
-                  className="btn btn-link p-0 me-2"
-                  onClick={() => handleFavorite(book.bookId)}
-                  onMouseEnter={() => handleIconHover("favorite")}
-                  onMouseLeave={() => handleIconHover("favorite")}
-                > */}
-            {/* {account_reader?.favoriteBooks?.includes(book.bookId) ? (
-                    <FaHeart
-                      size={22}
-                      style={{
-                        color: "red",
-                        transition: "transform 0.3s",
-                        transform: iconHovered.favorite
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  ) : (
-                    <FaRegHeart
-                      size={22}
-                      style={{
-                        color: "red",
-                        transition: "transform 0.3s",
-                        transform: iconHovered.favorite
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  )}
-                </button>
-                <button
-                  className="btn btn-link p-0 me-2"
-                  onClick={() => handleBookmark(book.bookId)}
-                  onMouseEnter={() => handleIconHover("bookmarked")}
-                  onMouseLeave={() => handleIconHover("bookmarked")}
-                >
-                  {account_reader?.bookmarkedBooks?.includes(book.bookId) ? (
-                    <FaBookmark
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.bookmarked
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  ) : (
-                    <FaRegBookmark
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.bookmarked
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                      }}
-                    />
-                  )}
-                </button>
-                <button
-                  className="btn btn-link p-0"
-                  onClick={() => handleCompleted(book.bookId)}
-                  onMouseEnter={() => handleIconHover("completed")}
-                  onMouseLeave={() => handleIconHover("completed")}
-                >
-                  {account_reader?.completedBooks?.includes(book.bookId) ? (
-                    <FaBook
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.completed
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                        color: "green",
-                      }}
-                    />
-                  ) : (
-                    <FaBook
-                      size={22}
-                      style={{
-                        transition: "transform 0.3s",
-                        transform: iconHovered.completed
-                          ? "scale(1.2)"
-                          : "scale(1)",
-                        color: "white",
-                        stroke: "green",
-                        strokeWidth: "20px",
-                      }}
-                    />
-                  )}
-                </button> 
-              </div>*/}
             {/* Author name */}
             <Col md={6} className="text-start">
               <h2 className="fw-bold">{book.title}</h2>
@@ -397,17 +179,6 @@ const BookDetails = () => {
                 </span>
               </Link>
             </Col>
-            {/* <div
-                className="text-start mt-5"
-                style={{ borderTop: "1px solid #dcdcdc ", paddingTop: "10px" }}
-              >
-                <h5 className="fw-bold">Description</h5>
-                <p>
-                  {book.description ||
-                    "No description available for this book."}
-                </p>
-              </div>
-            </Col> */}
 
             {/* Button follow */}
             <Col md={3} className="text-center">
@@ -426,7 +197,7 @@ const BookDetails = () => {
               </h5>
               {posts.map((post) => (
                 <PostCard
-                  key={post._Id}
+                  key={post._id}
                   post={post}
                   isFavorite={account_reader.favoriteBooks.includes(
                     post.book.bookId
@@ -446,7 +217,7 @@ const BookDetails = () => {
                   handleCompleted={(bookID) =>
                     handleCompleted(bookID, post.book.title)
                   }
-                  hideBookImage={true} // to hide image
+                  shouldHideBook={true}
                 />
               ))}
             </Row>

@@ -5,6 +5,15 @@ const readerSchema = new mongoose.Schema({
     type: String,
     required: ["Please check your entry, no name specified"],
   },
+  email: {
+    type: String,
+    required: ["Please check your entry, no email specified"],
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: ["Please check your entry, no password specified"],
+  },
   picture: { type: String },
   bookmarkedBooks: [{ type: String }],
   favoriteBooks: [{ type: String }],

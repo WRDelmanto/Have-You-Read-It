@@ -15,18 +15,36 @@ class SignUp extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password, confirmPassword } = this.state;
 
-    // Example validation
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
 
-    // TODO: Replace this with actual sign-up logic
-    console.log("Sign up submitted:", { name, email, password });
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Signup failed.");
+        return;
+      }
+
+      localStorage.setItem("reader", JSON.stringify(data.accountReader));
+
+      window.location.href = "/home";
+    } catch (error) {
+      console.error("Error during signup:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   render() {
@@ -84,6 +102,7 @@ class SignUp extends Component {
                     <Form.Control
                       type="password"
                       placeholder="Password"
+                      autoComplete=""
                       name="password"
                       value={password}
                       onChange={this.handleChange}
@@ -99,6 +118,7 @@ class SignUp extends Component {
                     <Form.Control
                       type="password"
                       placeholder="Confirm your password"
+                      autoComplete=""
                       name="confirmPassword"
                       value={confirmPassword}
                       onChange={this.handleChange}

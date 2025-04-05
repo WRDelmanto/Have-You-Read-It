@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 import PostCard from "../components/PostCard";
 import { fetchPostsByReaderId, fetchReaderById } from "../services/MockAPI.js";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
-import { Link, useNavigate } from "react-router-dom";
 
 const ReaderDetails = () => {
   const { readerId } = useParams();
@@ -16,13 +15,22 @@ const ReaderDetails = () => {
   const [favoritedBooks, setFavoritedBooks] = useState([]);
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
   const [completedBooks, setCompletedBooks] = useState([]);
-  const ACCOUNT_READER_ID = "754368128"; // For testing purposes
   const navigate = useNavigate();
 
   useEffect(() => {
+    const reader = localStorage.getItem("reader");
+
+    if (!reader) {
+      navigate("/");
+      return;
+    }
+
+    const accountReader = JSON.parse(reader);
+    setAccountReader(accountReader);
+
     const fetchData = async () => {
       const [accountReader, reader, posts] = await Promise.all([
-        fetchReaderById(ACCOUNT_READER_ID),
+        fetchReaderById(accountReader._id),
         fetchReaderById(readerId),
         fetchPostsByReaderId(readerId),
       ]);
@@ -32,13 +40,7 @@ const ReaderDetails = () => {
       setPosts(posts);
     };
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     const fetchBooks = async () => {
-      if (!reader) return;
-
       // Avoid making unnecessary API calls
       const favoriteBooks = reader.favoriteBooks ?? [];
       const bookmarkedBooks = reader.bookmarkedBooks ?? [];
@@ -63,7 +65,9 @@ const ReaderDetails = () => {
     };
 
     fetchBooks();
-  }, [reader]);
+    fetchData();
+  }, [navigate]);
+
 
   const handleFollow = () => {
     if (!accountReader.following.readers) return;

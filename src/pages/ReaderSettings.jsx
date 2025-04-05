@@ -2,6 +2,13 @@ import { Component } from "react";
 
 class ReaderSettings extends Component {
   state = {};
+
+  componentDidMount() {
+    if (!localStorage.getItem("reader")) {
+      window.location.href = "/";
+    }
+  }
+
   render() {
     return (
       <>
