@@ -97,7 +97,7 @@ const PostCard = ({
               {/* Reader */}
               <div
                 className="d-flex flex-row mb-2"
-                onClick={() => navigate(`/reader/${post.reader._Id}`)}
+                onClick={() => navigate(`/reader/${post.reader._id}`)}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.transform = "scale(1.05)")
                 }
@@ -126,7 +126,7 @@ const PostCard = ({
 
               <div className="d-flex flex-column align-items-start">
                 {/* Title */}
-                <div className="h6 text-dark mb-1">{post.title}</div>
+                <div className="h6 text-dark mb-1" style={{ textAlign: "left" }}>{post.title}</div>
                 {/* Description */}
                 <div className="h6 text-muted mb-1" style={{ textAlign: "left" }}>{post.description}</div>
               </div>

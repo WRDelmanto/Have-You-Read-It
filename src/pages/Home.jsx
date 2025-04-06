@@ -99,7 +99,17 @@ const Home = () => {
         return;
       }
 
-      console.log("New post created: ", newPost);
+      console.log("New post created: ", data.post);
+
+      const postsResponse = await fetch(`/api/postsByReaderId/${accountReader._id}`);
+      const postsData = await postsResponse.json();
+
+      if (! postsResponse.ok) {
+        alert(postsData.error || "Failed to fetch posts.");
+        return;
+      }
+
+      setPosts(postsData.posts || []);
     } catch (error) {
       console.error("Error during post creation:", error);
       alert("Something went wrong. Please try again.");

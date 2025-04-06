@@ -4,7 +4,6 @@ import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 import PostCard from "../components/PostCard";
-import { fetchPostsByReaderId, fetchReaderById } from "../services/MockAPI.js";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const ReaderDetails = () => {
@@ -29,45 +28,60 @@ const ReaderDetails = () => {
     setAccountReader(accountReader);
 
     const fetchData = async () => {
-      const [accountReader, reader, posts] = await Promise.all([
-        fetchReaderById(accountReader._id),
-        fetchReaderById(readerId),
-        fetchPostsByReaderId(readerId),
-      ]);
+      try {
+        const readerResponse = await fetch(`/api/reader/${readerId}`);
+        const readerData = await readerResponse.json();
 
-      setAccountReader(accountReader);
-      setReader(reader);
-      setPosts(posts);
+        if (!readerResponse.ok) {
+          alert(readerData.error || "Failed to fetch reader data.");
+          return;
+        }
+
+        setReader(readerData.reader);
+        // console.log("Reader: ", readerData.reader);
+
+        const response = await fetch(`/api/postsByReaderId/${readerId}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || "Failed to fetch posts.");
+          return;
+        }
+
+        const postsData = data.posts || [];
+
+        // console.log("Posts: ", postsData);
+
+        setPosts(postsData);
+
+        const favoriteBooks = reader.favoriteBooks ?? [];
+        const bookmarkedBooks = reader.bookmarkedBooks ?? [];
+        const completedBooks = reader.completedBooks ?? [];
+
+        const [favoritedBooksList, bookmarkedBooksList, completedBooksList] =
+          await Promise.all([
+            Promise.all(
+              favoriteBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
+            ),
+            Promise.all(
+              bookmarkedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
+            ),
+            Promise.all(
+              completedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
+            ),
+          ]);
+
+        setFavoritedBooks(favoritedBooksList);
+        setBookmarkedBooks(bookmarkedBooksList);
+        setCompletedBooks(completedBooksList);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    const fetchBooks = async () => {
-      // Avoid making unnecessary API calls
-      const favoriteBooks = reader.favoriteBooks ?? [];
-      const bookmarkedBooks = reader.bookmarkedBooks ?? [];
-      const completedBooks = reader.completedBooks ?? [];
-
-      const [favoritedBooksList, bookmarkedBooksList, completedBooksList] =
-        await Promise.all([
-          Promise.all(
-            favoriteBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
-          ),
-          Promise.all(
-            bookmarkedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
-          ),
-          Promise.all(
-            completedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
-          ),
-        ]);
-
-      setFavoritedBooks(favoritedBooksList);
-      setBookmarkedBooks(bookmarkedBooksList);
-      setCompletedBooks(completedBooksList);
-    };
-
-    fetchBooks();
     fetchData();
   }, [navigate]);
-
 
   const handleFollow = () => {
     if (!accountReader.following.readers) return;
@@ -101,7 +115,7 @@ const ReaderDetails = () => {
                 <div className="d-flex align-items-center gap-4 mb-4">
                   <div>
                     <Card.Img
-                      src={reader.picture}
+                      src={reader.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
                       alt={reader.name}
                       className="img-fluid rounded-circle align-items-center"
                       style={{
@@ -217,7 +231,7 @@ const ReaderDetails = () => {
                 </div>
 
                 {/* Reader Posts */}
-                {posts.length > 0 && accountReader && (
+                {posts.length > 0 && (
                   <div
                     className="d-flex flex-column mt-1 gap-3"
                     style={{
@@ -228,7 +242,7 @@ const ReaderDetails = () => {
                     <h5 className="fw-bold">Posts</h5>
                     {posts.map((post) => (
                       <PostCard
-                        key={post._Id}
+                        key={post._id}
                         post={post}
                         isFavorite={accountReader.favoriteBooks.includes(
                           post.book.bookId

@@ -111,7 +111,6 @@ router.get("/api/postsByBookId/:bookId", async (req, res) => {
   try {
     const posts = await Post.find({ bookId }).sort({ timestamp: -1 });
 
-    // Enrich posts with book and reader data
     const enrichedPosts = await Promise.all(
       posts.map(async (postDoc) => {
         const post = postDoc.toObject();
@@ -125,6 +124,52 @@ router.get("/api/postsByBookId/:bookId", async (req, res) => {
   } catch (error) {
     console.error("Get posts error:", error);
     res.status(500).json({ error: "Error fetching posts" });
+  }
+});
+
+// Get Posts from Reader ID
+router.get("/api/postsFromReaderId/:accountReaderId", async (req, res) => {
+  const { accountReaderId } = req.params;
+
+  console.log("Received getPosts request for readerId:", accountReaderId);
+
+  try {
+    const posts = await Post.find({ readerId: accountReaderId }).sort({
+      timestamp: -1,
+    });
+
+    const enrichedPosts = await Promise.all(
+      posts.map(async (postDoc) => {
+        const post = postDoc.toObject();
+        const book = await OpenLibraryAPI.getBookById(post.bookId);
+        const postReader = await Reader.findById(post.readerId).lean();
+        return { ...post, book, reader: postReader };
+      })
+    );
+
+    res.status(200).json({ posts: enrichedPosts });
+  } catch (error) {
+    console.error("Get posts error:", error);
+    res.status(500).json({ error: "Error fetching posts" });
+  }
+});
+
+// Get Reader by ID
+router.get("/api/reader/:readerId", async (req, res) => {
+  const { readerId } = req.params;
+
+  console.log("Received getReader request for readerId:", readerId);
+
+  try {
+    const reader = await Reader.findById(readerId).lean();
+    if (!reader) {
+      return res.status(404).json({ error: "Reader not found" });
+    }
+
+    res.status(200).json({ reader });
+  } catch (error) {
+    console.error("Get reader error:", error);
+    res.status(500).json({ error: "Error fetching reader" });
   }
 });
 
