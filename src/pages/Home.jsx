@@ -46,7 +46,7 @@ const Home = () => {
     fetchData();
   }, [navigate]);
 
-  const handleFavorite = (bookID) => {
+  const handleFavorite = async (bookID) => {
     if (accountReader.favoriteBooks.includes(bookID)) {
       const index = accountReader.favoriteBooks.indexOf(bookID);
       accountReader.favoriteBooks.splice(index, 1);
@@ -55,10 +55,40 @@ const Home = () => {
     }
 
     setAccountReader({ ...accountReader });
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
     // console.log("Updated bookId: " + bookID + " to favorite: " + accountReader.favoriteBooks.includes(bookID));
   };
 
-  const handleBookmark = (bookID) => {
+  const handleBookmark = async (bookID) => {
     if (accountReader.bookmarkedBooks.includes(bookID)) {
       const index = accountReader.bookmarkedBooks.indexOf(bookID);
       accountReader.bookmarkedBooks.splice(index, 1);
@@ -67,10 +97,40 @@ const Home = () => {
     }
 
     setAccountReader({ ...accountReader });
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
     // console.log("Updated bookId: " + bookID + " to bookmarked: " + accountReader.bookmarkedBooks.includes(bookID));
   };
 
-  const handleCompleted = (bookID) => {
+  const handleCompleted = async (bookID) => {
     if (accountReader.completedBooks.includes(bookID)) {
       const index = accountReader.completedBooks.indexOf(bookID);
       accountReader.completedBooks.splice(index, 1);
@@ -79,6 +139,36 @@ const Home = () => {
     }
 
     setAccountReader({ ...accountReader });
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
     // console.log("Updated bookId: " + bookID + " to completed: " + accountReader.completedBooks.includes(bookID));
   };
 
@@ -104,7 +194,7 @@ const Home = () => {
       const postsResponse = await fetch(`/api/postsByReaderId/${accountReader._id}`);
       const postsData = await postsResponse.json();
 
-      if (! postsResponse.ok) {
+      if (!postsResponse.ok) {
         alert(postsData.error || "Failed to fetch posts.");
         return;
       }

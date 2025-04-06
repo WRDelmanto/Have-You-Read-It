@@ -6,9 +6,9 @@ import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const AuthorDetails = () => {
   const { authorId } = useParams();
+  const [accountReader, setAccountReader] = useState(null);
   const [author, setAuthor] = useState(null);
   const [books, setBooks] = useState([]);
-  const [isFollowing, setIsFollowing] = useState(false);
   const [posts, setPosts] = useState([]);
   const [visibleCount, setVisibleCount] = useState(4);
   const navigate = useNavigate();
@@ -17,8 +17,12 @@ const AuthorDetails = () => {
     const reader = localStorage.getItem("reader");
 
     if (!reader) {
-      navigate("/signin");
+      navigate("/");
+      return;
     }
+
+    const accountReader = JSON.parse(reader);
+    setAccountReader(accountReader);
 
     const fetchData = async () => {
       const author = await OpenLibraryAPI.getAuthorById(authorId);
@@ -31,8 +35,46 @@ const AuthorDetails = () => {
     fetchData();
   }, [navigate]);
 
-  const handleFollowButton = () => {
-    setIsFollowing(!isFollowing);
+  const handleFollowButton = async () => {
+    if (accountReader.following.authors.includes(authorId)) {
+      const index = accountReader.following.authors.indexOf(authorId);
+      accountReader.following.authors.splice(index, 1);
+    } else {
+      accountReader.following.authors.push(authorId);
+    }
+
+    setAccountReader({ ...accountReader });
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
+    // console.log("Updated bookId: " + bookID + " to favorite: " + accountReader.favoriteBooks.includes(bookID));
   };
 
   const visibleBooks = books.slice(0, visibleCount);
@@ -72,7 +114,7 @@ const AuthorDetails = () => {
               {/* Button follow */}
               <Col md={3} className="text-center">
                 <Button variant="primary" onClick={handleFollowButton}>
-                  {isFollowing ? "Following" : "Follow"}
+                  {accountReader.following.authors.includes(authorId) ? "Following" : "Follow"}
                 </Button>
               </Col>
             </Row>

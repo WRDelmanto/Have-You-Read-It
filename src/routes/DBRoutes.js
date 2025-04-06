@@ -173,4 +173,47 @@ router.get("/api/reader/:readerId", async (req, res) => {
   }
 });
 
+// Update Reader
+router.put("/api/updateReader/:readerId", async (req, res) => {
+  const { readerId } = req.params;
+  const {
+    name,
+    email,
+    password,
+    picture,
+    bookmarkedBooks,
+    favoriteBooks,
+    completedBooks,
+    following,
+  } = req.body;
+
+  console.log("Received updateReader request:", req.body);
+
+  try {
+    const updateData = {
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following,
+    };
+
+    const updatedReader = await Reader.findByIdAndUpdate(readerId, updateData, {
+      new: true,
+    });
+
+    if (!updatedReader) {
+      return res.status(404).json({ error: "Reader not found" });
+    }
+
+    res.status(200).json({ reader: updatedReader });
+  } catch (error) {
+    console.error("Update reader error:", error);
+    res.status(500).json({ error: "Error updating reader" });
+  }
+});
+
 export default router;
