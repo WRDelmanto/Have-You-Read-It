@@ -7,7 +7,7 @@ import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const BookDetails = () => {
   const { bookId } = useParams();
-  const [account_reader, setAccountReader] = useState([]);
+  const [accountReader, setAccountReader] = useState([]);
   const [book, setBook] = useState([]);
   const [posts, setPosts] = useState([]);
   const [iconHovered, setIconHovered] = useState({
@@ -60,55 +60,46 @@ const BookDetails = () => {
     getBook().then(() => { getPosts() });
   }, [navigate]);
 
-  const handleFavorite = (bookID) => {
-    if (account_reader.favoriteBooks.includes(bookID)) {
-      const index = account_reader.favoriteBooks.indexOf(bookID);
-      account_reader.favoriteBooks.splice(index, 1);
+  const handleFollowButton = async () => {
+    if (accountReader.following.books.includes(bookId)) {
+      const index = accountReader.following.books.indexOf(bookId);
+      accountReader.following.books.splice(index, 1);
     } else {
-      account_reader.favoriteBooks.push(bookID);
+      accountReader.following.books.push(bookId);
     }
 
-    setReader({ ...account_reader });
-    console.log(
-      "Updated bookId: " +
-      bookID +
-      " to favorite: " +
-      account_reader.favoriteBooks.includes(bookID)
-    );
-  };
+    setAccountReader({ ...accountReader });
 
-  const handleBookmark = (bookID) => {
-    if (account_reader.bookmarkedBooks.includes(bookID)) {
-      const index = account_reader.bookmarkedBooks.indexOf(bookID);
-      account_reader.bookmarkedBooks.splice(index, 1);
-    } else {
-      account_reader.bookmarkedBooks.push(bookID);
-    }
+    localStorage.setItem("reader", JSON.stringify(accountReader));
 
-    setReader({ ...account_reader });
-    console.log(
-      "Updated bookId: " +
-      bookID +
-      " to bookmarked: " +
-      account_reader.bookmarkedBooks.includes(bookID)
-    );
-  };
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
 
-  const handleCompleted = (bookID) => {
-    if (account_reader.completedBooks.includes(bookID)) {
-      const index = account_reader.completedBooks.indexOf(bookID);
-      account_reader.completedBooks.splice(index, 1);
-    } else {
-      account_reader.completedBooks.push(bookID);
-    }
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
 
-    setReader({ ...account_reader });
-    console.log(
-      "Updated bookId: " +
-      bookID +
-      " to completed: " +
-      account_reader.completedBooks.includes(bookID)
-    );
+    // console.log("Updated bookId: " + bookID + " to favorite: " + accountReader.favoriteBooks.includes(bookID));
   };
 
   const handleIconHover = (icon) => {
@@ -116,9 +107,6 @@ const BookDetails = () => {
       ...prevState,
       [icon]: !prevState[icon],
     }));
-  };
-  const handleFollowButton = () => {
-    setIsFollowing(!isFollowing);
   };
 
   return (
@@ -183,7 +171,7 @@ const BookDetails = () => {
             {/* Button follow */}
             <Col md={3} className="text-center">
               <Button variant="primary" onClick={handleFollowButton}>
-                {isFollowing ? "Following" : "Follow"}
+                {accountReader?.following?.books.includes(bookId) ? "Following" : "Follow"}
               </Button>
             </Col>
           </Row>
@@ -199,13 +187,13 @@ const BookDetails = () => {
                 <PostCard
                   key={post._id}
                   post={post}
-                  isFavorite={account_reader.favoriteBooks.includes(
+                  isFavorite={accountReader.favoriteBooks.includes(
                     post.book.bookId
                   )}
-                  isBookmarked={account_reader.bookmarkedBooks.includes(
+                  isBookmarked={accountReader.bookmarkedBooks.includes(
                     post.book.bookId
                   )}
-                  isCompleted={account_reader.completedBooks.includes(
+                  isCompleted={accountReader.completedBooks.includes(
                     post.book.bookId
                   )}
                   handleFavorite={(bookID) =>

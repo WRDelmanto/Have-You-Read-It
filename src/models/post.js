@@ -5,6 +5,10 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: ["Please check yout entry, no bookId specified"],
   },
+  authorId: {
+    type: String,
+    required: ["Please check yout entry, no authorId specified"],
+  },
   readerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Reader",

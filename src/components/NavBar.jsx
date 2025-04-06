@@ -1,18 +1,33 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Container, Form, Image, InputGroup, ListGroup, Navbar, NavDropdown } from "react-bootstrap";
 import { AiFillSetting } from "react-icons/ai";
 import { FaBook, FaBookReader, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import OpenLibraryAPI from "../services/OpenLibraryAPI";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  const ACCOUNT_READER_ID = "754368128"; // For testing purposes
+  const [accountReader, setAccountReader] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [booksResults, setBookResults] = useState([]);
   const [authorResult, setAuthorResults] = useState("");
   const [showResults, setShowResults] = useState(false);
   const searchBoxReference = useRef(null);
   const searchTimeout = useRef(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const reader = localStorage.getItem("reader");
+
+    if (!reader) {
+      navigate("/");
+      return;
+    }
+
+    const accountReader = JSON.parse(reader);
+    setAccountReader(accountReader);
+  }, [navigate]);
 
   const handleSearch = (event) => {
     const searchInput = event.target.value;
@@ -53,7 +68,7 @@ const NavBar = () => {
     console.log("Signing out...");
 
     localStorage.removeItem("reader");
-    window.location.href = "/";
+    navigate("/");
   };
 
   document.addEventListener("mousedown", handleClickOutsideSearchBox);
@@ -123,11 +138,11 @@ const NavBar = () => {
 
           {/* User Dropdown */}
           <NavDropdown title={<FaBookReader size={24} />}>
-            <NavDropdown.Item as={Link} to={`/reader/${ACCOUNT_READER_ID}`}>
+            <NavDropdown.Item as={Link} to={`/reader/${accountReader?._id}`}>
               <FaUser className="me-2" /> Profile
             </NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item as={Link} to={`/settings/${ACCOUNT_READER_ID}`}>
+            <NavDropdown.Item as={Link} to={`/settings/${accountReader?._id}`}>
               <AiFillSetting className="me-2" /> Settings
             </NavDropdown.Item>
             <NavDropdown.Divider />

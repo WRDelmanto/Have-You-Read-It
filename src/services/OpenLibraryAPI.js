@@ -42,7 +42,7 @@ const OpenLibraryAPI = {
   async getBooksByTitle(title) {
     try {
       let dynamicUrl = `${BASE_URL}?title=${title}`;
-      dynamicUrl += "&fields=key,author_name,title,cover_i";
+      dynamicUrl += "&fields=key,author_key,author_name,title,cover_i";
       dynamicUrl += "&limit=5";
 
       // console.log("Fetching books by title: ", dynamicUrl);
@@ -61,6 +61,7 @@ const OpenLibraryAPI = {
 
       return data.docs.map((book) => ({
         bookId: book.key.replace("/works/", "") || "",
+        authorId: book.author_key?.[0] || "",
         authorName: book.author_name?.[0] || "",
         title: book.title || "",
         cover: book.cover_i

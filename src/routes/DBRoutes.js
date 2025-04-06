@@ -46,13 +46,14 @@ router.post("/api/signin", async (req, res) => {
 
 // Create Post
 router.post("/api/createPost", async (req, res) => {
-  const { readerId, bookId, title, description } = req.body;
+  const { readerId, authorId, bookId, title, description } = req.body;
 
   console.log("Received createPost request:", req.body);
 
   try {
     const newPost = new Post({
       readerId,
+      authorId,
       bookId,
       title,
       description,
@@ -154,6 +155,33 @@ router.get("/api/postsFromReaderId/:accountReaderId", async (req, res) => {
   }
 });
 
+// Get Posts from Author ID
+router.get("/api/postsByAuthorId/:authorId", async (req, res) => {
+  const { authorId } = req.params;
+
+  console.log("Received getPosts request for authorId:", authorId);
+
+  try {
+    const posts = await Post.find({ authorId: authorId }).sort({
+      timestamp: -1,
+    });
+
+    const enrichedPosts = await Promise.all(
+      posts.map(async (postDoc) => {
+        const post = postDoc.toObject();
+        const book = await OpenLibraryAPI.getBookById(post.bookId);
+        const postReader = await Reader.findById(post.readerId).lean();
+        return { ...post, book, reader: postReader };
+      })
+    );
+
+    res.status(200).json({ posts: enrichedPosts });
+  } catch (error) {
+    console.error("Get posts error:", error);
+    res.status(500).json({ error: "Error fetching posts" });
+  }
+});
+
 // Get Reader by ID
 router.get("/api/reader/:readerId", async (req, res) => {
   const { readerId } = req.params;
@@ -186,6 +214,7 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
     completedBooks,
     following,
   } = req.body;
+  1;
 
   console.log("Received updateReader request:", req.body);
 

@@ -46,6 +46,7 @@ const CreatePost = ({ onPostCreated }) => {
 
         const newPost = new Post({
             bookId: selectedBook.bookId,
+            authorId: selectedBook.authorId,
             readerId: JSON.parse(localStorage.getItem("reader"))._id,
             title,
             description,
@@ -53,13 +54,15 @@ const CreatePost = ({ onPostCreated }) => {
 
         console.log("Creating post:", newPost);
 
-        onPostCreated(newPost);
+        await onPostCreated(newPost);
+
         setTitle("");
         setDescription("");
         setSelectedBook(null);
         setSearchQuery("");
         setIsSubmitting(false);
     };
+
 
     return (
         <Card className="p-4 mb-4 shadow-sm">

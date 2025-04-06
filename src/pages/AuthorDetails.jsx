@@ -30,6 +30,15 @@ const AuthorDetails = () => {
 
       const booksData = await OpenLibraryAPI.getBooksByAuthorName(author.authorName);
       setBooks(booksData);
+
+      const postsData = await fetch(`/api/postsByAuthorId/${authorId}`);
+      const postsJson = await postsData.json();
+
+      const posts = postsJson.posts || [];
+
+      // console.log("Posts: ", posts);
+
+      setPosts(posts);
     };
 
     fetchData();

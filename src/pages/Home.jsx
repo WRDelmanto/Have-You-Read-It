@@ -174,12 +174,12 @@ const Home = () => {
 
   const handlePostCreated = async (newPost) => {
     try {
-      const { bookId, readerId, title, description } = newPost;
+      const { bookId, authorId, readerId, title, description } = newPost;
 
       const response = await fetch("/api/createPost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookId, readerId, title, description }),
+        body: JSON.stringify({ bookId, authorId, readerId, title, description }),
       });
 
       const data = await response.json();
