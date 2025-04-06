@@ -128,13 +128,15 @@ const ReaderDetails = () => {
                   <div>
                     <h2 className="fw-bold">{reader.name}</h2>
                   </div>
-                  <div className="ms-auto">
-                    <Button variant="primary" onClick={handleFollow}>
-                      {accountReader.following.readers.includes(reader._Id)
-                        ? "Following"
-                        : "Follow"}
-                    </Button>
-                  </div>
+                  {accountReader._id !== reader._id && (
+                    <div className="ms-auto">
+                      <Button variant="primary" onClick={handleFollow}>
+                        {accountReader.following.readers.includes(reader._Id)
+                          ? "Following"
+                          : "Follow"}
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Favorite Books */}
