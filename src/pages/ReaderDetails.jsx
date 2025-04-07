@@ -83,18 +83,48 @@ const ReaderDetails = () => {
     fetchData();
   }, [navigate]);
 
-  const handleFollow = () => {
+  const handleFollow = async () => {
     if (!accountReader.following.readers) return;
 
-    if (accountReader.following.readers.includes(reader._Id)) {
-      const index = accountReader.following.readers.indexOf(reader._Id);
+    if (accountReader.following.readers.includes(reader._id)) {
+      const index = accountReader.following.readers.indexOf(reader._id);
       accountReader.following.readers.splice(index, 1);
     } else {
-      accountReader.following.readers.push(reader._Id);
+      accountReader.following.readers.push(reader._id);
     }
 
     setAccountReader({ ...accountReader });
-    // console.log("Updated readerId: " + reader._Id + " to favorite: " + accountReader.following.readers.includes(readerId));
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
+    // console.log("Updated readerId: " + reader._id + " to favorite: " + accountReader.following.readers.includes(readerId));
   };
 
   return (
@@ -131,7 +161,7 @@ const ReaderDetails = () => {
                   {accountReader._id !== reader._id && (
                     <div className="ms-auto">
                       <Button variant="primary" onClick={handleFollow}>
-                        {accountReader.following.readers.includes(reader._Id)
+                        {accountReader.following.readers.includes(reader._id)
                           ? "Following"
                           : "Follow"}
                       </Button>
