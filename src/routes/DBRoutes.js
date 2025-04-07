@@ -211,7 +211,10 @@ router.get("/api/readerName/:readerName", async (req, res) => {
   console.log("Received getReader request for readerName:", readerName);
 
   try {
-    const reader = await Reader.findOne({ name: readerName }).lean();
+    // check all using lower case and trim and if includes the name and not an exact match
+    const regex = new RegExp(readerName, "i");
+    const reader = await Reader.findOne({ name: regex }).lean();
+    // const reader = await Reader.findOne({ name: readerName }).lean();
     if (!reader) {
       return res.status(404).json({ error: "Reader not found" });
     }

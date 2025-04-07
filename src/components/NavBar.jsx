@@ -48,7 +48,7 @@ const NavBar = () => {
         const filteredBooks = await OpenLibraryAPI.getBooksByTitle(searchInput.replaceAll(" ", "+")) || [];
         setBookResults(filteredBooks);
 
-        const readerResponse = await fetch(`/api/readerName/${searchInput.replaceAll(" ", "+")}`) || "";
+        const readerResponse = await fetch(`/api/readerName/${searchInput}`) || "";
         const filteredReader = await readerResponse.json();
         setReaderResults(filteredReader.reader);
 
