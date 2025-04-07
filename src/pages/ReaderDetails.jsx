@@ -40,7 +40,7 @@ const ReaderDetails = () => {
         setReader(readerData.reader);
         // console.log("Reader: ", readerData.reader);
 
-        const response = await fetch(`/api/postsByReaderId/${readerId}`);
+        const response = await fetch(`/api/postsFromReaderId/${readerId}`);
         const data = await response.json();
 
         if (!response.ok) {
