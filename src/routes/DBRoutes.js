@@ -82,7 +82,10 @@ router.get("/api/postsByReaderId/:accountReaderId", async (req, res) => {
     const rawPosts = await Post.find({
       $or: [
         { bookId: { $in: reader.following.books } },
+        { authorId: { $in: reader.following.authors } },
         { readerId: { $in: reader.following.readers } },
+        { "comments.reader": accountReaderId },
+        { "comments.reader": { $in: reader.following.readers } },
         { readerId: accountReaderId },
       ],
     }).sort({ timestamp: -1 });
