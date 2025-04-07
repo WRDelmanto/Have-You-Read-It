@@ -74,6 +74,41 @@ const OpenLibraryAPI = {
     }
   },
 
+  async getAuthorByName(name) {
+    try {
+      let dynamicUrl = `${BASE_URL}?author=${name}`;
+      dynamicUrl += "&fields=key,author_name,author_key";
+      dynamicUrl += "&limit=1";
+
+      // console.log("Fetching author by name: ", dynamicUrl);
+
+      const response = await fetch(dynamicUrl);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch author");
+      }
+
+      const data = await response.json();
+
+      if (!data.docs || data.docs.length === 0) {
+        return null;
+      }
+
+      const author = data.docs[0];
+
+      return {
+        authorId: author.key.replace("/works/", "") || "",
+        authorName: author.author_name?.[0] || "",
+        authorImage: author.author_key[0]
+          ? `https://covers.openlibrary.org/a/olid/${author.author_key[0]}-M.jpg`
+          : "https://m.media-amazon.com/images/I/11Bh3jv+xvL.jpg",
+      };
+    } catch (error) {
+      console.error("Error fetching author: ", error);
+      return null;
+    }
+  },
+
   async getAuthorById(authorId) {
     try {
       const dynamicUrl = `https://openlibrary.org/authors/${authorId}.json`;

@@ -204,6 +204,25 @@ router.get("/api/reader/:readerId", async (req, res) => {
   }
 });
 
+// Get Reader by Name
+router.get("/api/readerName/:readerName", async (req, res) => {
+  const { readerName } = req.params;
+
+  console.log("Received getReader request for readerName:", readerName);
+
+  try {
+    const reader = await Reader.findOne({ name: readerName }).lean();
+    if (!reader) {
+      return res.status(404).json({ error: "Reader not found" });
+    }
+
+    res.status(200).json({ reader });
+  } catch (error) {
+    console.error("Get reader error:", error);
+    res.status(500).json({ error: "Error fetching reader" });
+  }
+});
+
 // Update Reader
 router.put("/api/updateReader/:readerId", async (req, res) => {
   const { readerId } = req.params;

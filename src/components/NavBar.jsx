@@ -11,6 +11,7 @@ const NavBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [booksResults, setBookResults] = useState([]);
   const [authorResult, setAuthorResults] = useState("");
+  const [readerResults, setReaderResults] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const searchBoxReference = useRef(null);
   const searchTimeout = useRef(null);
@@ -45,10 +46,15 @@ const NavBar = () => {
         setAuthorResults(filteredAuthor);
 
         const filteredBooks = await OpenLibraryAPI.getBooksByTitle(searchInput.replaceAll(" ", "+")) || [];
-
         setBookResults(filteredBooks);
-        setShowResults(filteredAuthor.length > 0 || filteredBooks.length > 0);
 
+        const readerResponse = await fetch(`/api/readerName/${searchInput.replaceAll(" ", "+")}`) || "";
+        const filteredReader = await readerResponse.json();
+        setReaderResults(filteredReader.reader);
+
+        setShowResults(filteredAuthor.length > 0 || filteredBooks.length > 0 || filteredReader.length > 0);
+
+        // console.log("Filtered author: ", filteredReader);
         // console.log("Filtered author:", filteredAuthor);
         // console.log("Filtered books:", filteredBooks);
       } else {
@@ -101,6 +107,26 @@ const NavBar = () => {
                 className="position-absolute w-100 bg-white shadow rounded mt-5"
                 style={{ zIndex: 1000 }}
               >
+                {readerResults && (
+                  <ListGroup.Item
+                    key={readerResults._id}
+                    as={Link}
+                    to={`/reader/${readerResults._id}`}
+                    className="d-flex align-items-center"
+                    action
+                  >
+                    <Image
+                      src={readerResults.profilePicture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
+                      roundedCircle
+                      width={40}
+                      height={40}
+                      className="me-3" />
+                    <div className="d-flex flex-column align-items-start">
+                      <strong>{readerResults.name}</strong>
+                      <div className="text-muted" style={{ fontSize: "12px" }}>{readerResults.username}</div>
+                    </div>
+                  </ListGroup.Item>
+                )}
                 {
                   authorResult && (
                     <ListGroup.Item
