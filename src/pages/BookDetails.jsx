@@ -10,12 +10,6 @@ const BookDetails = () => {
   const [accountReader, setAccountReader] = useState([]);
   const [book, setBook] = useState([]);
   const [posts, setPosts] = useState([]);
-  const [iconHovered, setIconHovered] = useState({
-    favorite: false,
-    bookmarked: false,
-    completed: false,
-  });
-  const [isFollowing, setIsFollowing] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {

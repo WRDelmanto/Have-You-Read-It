@@ -1,4 +1,5 @@
 import { Card } from "react-bootstrap";
+import { useEffect, useState } from "react";
 import {
   FaBook,
   FaBookmark,
@@ -8,17 +9,147 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-const PostCard = ({
-  post,
-  isFavorite,
-  isBookmarked,
-  isCompleted,
-  handleFavorite,
-  handleBookmark,
-  handleCompleted,
-  shouldHideBook,
-}) => {
+const PostCard = ({ post, shouldHideBook }) => {
+  const [accountReader, setAccountReader] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const reader = localStorage.getItem("reader");
+
+    if (!reader) {
+      navigate("/");
+      return;
+    }
+
+    const accountReader = JSON.parse(reader);
+    setAccountReader(accountReader);
+  }, [navigate]);
+
+  const handleFavorite = async (bookID) => {
+    if (accountReader.favoriteBooks.includes(bookID)) {
+      const index = accountReader.favoriteBooks.indexOf(bookID);
+      accountReader.favoriteBooks.splice(index, 1);
+    } else {
+      accountReader.favoriteBooks.push(bookID);
+    }
+
+    setAccountReader({ ...accountReader });
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
+    // console.log("Updated bookId: " + bookID + " to favorite: " + accountReader.favoriteBooks.includes(bookID));
+  };
+
+  const handleBookmark = async (bookID) => {
+    if (accountReader.bookmarkedBooks.includes(bookID)) {
+      const index = accountReader.bookmarkedBooks.indexOf(bookID);
+      accountReader.bookmarkedBooks.splice(index, 1);
+    } else {
+      accountReader.bookmarkedBooks.push(bookID);
+    }
+
+    setAccountReader({ ...accountReader });
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
+    // console.log("Updated bookId: " + bookID + " to bookmarked: " + accountReader.bookmarkedBooks.includes(bookID));
+  };
+
+  const handleCompleted = async (bookID) => {
+    if (accountReader.completedBooks.includes(bookID)) {
+      const index = accountReader.completedBooks.indexOf(bookID);
+      accountReader.completedBooks.splice(index, 1);
+    } else {
+      accountReader.completedBooks.push(bookID);
+    }
+
+    setAccountReader({ ...accountReader });
+
+    localStorage.setItem("reader", JSON.stringify(accountReader));
+
+    const {
+      _id,
+      name,
+      email,
+      password,
+      picture,
+      bookmarkedBooks,
+      favoriteBooks,
+      completedBooks,
+      following
+    } = accountReader;
+
+    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        picture,
+        bookmarkedBooks,
+        favoriteBooks,
+        completedBooks,
+        following
+      }),
+    });
+
+    // console.log("Updated bookId: " + bookID + " to completed: " + accountReader.completedBooks.includes(bookID));
+  };
 
   return (
     <Card className="h-100 book-card border-0 shadow-lg">
@@ -136,9 +267,7 @@ const PostCard = ({
             <div className="d-flex flex-row">
               <button
                 className="btn btn-link p-0 me-2"
-                onClick={() =>
-                  handleFavorite(post.book.bookId, post.book.title)
-                }
+                onClick={() => handleFavorite(post.book.bookId)}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.transform = "scale(1.2)")
                 }
@@ -146,7 +275,7 @@ const PostCard = ({
                   (e.currentTarget.style.transform = "scale(1)")
                 }
               >
-                {isFavorite ? (
+                {accountReader?.favoriteBooks.includes(post.book.bookId) ? (
                   <FaHeart
                     size={22}
                     style={{
@@ -174,7 +303,7 @@ const PostCard = ({
                   (e.currentTarget.style.transform = "scale(1)")
                 }
               >
-                {isBookmarked ? (
+                {accountReader?.bookmarkedBooks.includes(post.book.bookId) ? (
                   <FaBookmark
                     size={22}
                     style={{
@@ -200,7 +329,7 @@ const PostCard = ({
                   (e.currentTarget.style.transform = "scale(1)")
                 }
               >
-                {isCompleted ? (
+                {accountReader?.completedBooks.includes(post.book.bookId) ? (
                   <FaBook
                     size={22}
                     style={{

@@ -175,9 +175,6 @@ const AuthorDetails = () => {
                           >
                             {book.title}
                           </Card.Title>
-                          <Card.Text className="text-muted small">
-                            {/* {author?.authorName || "Unknown"} */}
-                          </Card.Text>
                         </Card.Body>
                       </Card>
                     </Col>
@@ -189,8 +186,7 @@ const AuthorDetails = () => {
                   <div className="text-center mt-3">
                     <Button
                       variant="info"
-                      onClick={() => setVisibleCount(visibleCount + 4)}
-                    >
+                      onClick={() => setVisibleCount(visibleCount + 4)}>
                       Read More
                     </Button>
                   </div>

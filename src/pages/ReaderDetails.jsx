@@ -276,24 +276,6 @@ const ReaderDetails = () => {
                       <PostCard
                         key={post._id}
                         post={post}
-                        isFavorite={accountReader.favoriteBooks.includes(
-                          post.book.bookId
-                        )}
-                        isBookmarked={accountReader.bookmarkedBooks.includes(
-                          post.book.bookId
-                        )}
-                        isCompleted={accountReader.completedBooks.includes(
-                          post.book.bookId
-                        )}
-                        handleFavorite={(bookID) =>
-                          handleFavorite(bookID, post.book.title)
-                        }
-                        handleBookmark={(bookID) =>
-                          handleBookmark(bookID, post.book.title)
-                        }
-                        handleCompleted={(bookID) =>
-                          handleCompleted(bookID, post.book.title)
-                        }
                       />
                     ))}
                   </div>
