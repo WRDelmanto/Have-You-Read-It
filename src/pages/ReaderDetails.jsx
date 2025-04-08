@@ -54,9 +54,9 @@ const ReaderDetails = () => {
 
         setPosts(postsData);
 
-        const favoriteBooks = reader.favoriteBooks ?? [];
-        const bookmarkedBooks = reader.bookmarkedBooks ?? [];
-        const completedBooks = reader.completedBooks ?? [];
+        const favoriteBooks = readerData.reader.favoriteBooks ?? [];
+        const bookmarkedBooks = readerData.reader.bookmarkedBooks ?? [];
+        const completedBooks = readerData.reader.completedBooks ?? [];
 
         const [favoritedBooksList, bookmarkedBooksList, completedBooksList] =
           await Promise.all([
@@ -64,7 +64,9 @@ const ReaderDetails = () => {
               favoriteBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
             ),
             Promise.all(
-              bookmarkedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
+              bookmarkedBooks.map((bookId) =>
+                OpenLibraryAPI.getBookById(bookId)
+              )
             ),
             Promise.all(
               completedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
@@ -74,7 +76,6 @@ const ReaderDetails = () => {
         setFavoritedBooks(favoritedBooksList);
         setBookmarkedBooks(bookmarkedBooksList);
         setCompletedBooks(completedBooksList);
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -106,23 +107,26 @@ const ReaderDetails = () => {
       bookmarkedBooks,
       favoriteBooks,
       completedBooks,
-      following
+      following,
     } = accountReader;
 
-    const updateResponse = await fetch(`/api/updateReader/${accountReader._id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        picture,
-        bookmarkedBooks,
-        favoriteBooks,
-        completedBooks,
-        following
-      }),
-    });
+    const updateResponse = await fetch(
+      `/api/updateReader/${accountReader._id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          picture,
+          bookmarkedBooks,
+          favoriteBooks,
+          completedBooks,
+          following,
+        }),
+      }
+    );
 
     // console.log("Updated readerId: " + reader._id + " to favorite: " + accountReader.following.readers.includes(readerId));
   };
@@ -145,7 +149,10 @@ const ReaderDetails = () => {
                 <div className="d-flex align-items-center gap-4 mb-4">
                   <div>
                     <Card.Img
-                      src={reader.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
+                      src={
+                        reader.picture ||
+                        "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"
+                      }
                       alt={reader.name}
                       className="img-fluid rounded-circle align-items-center"
                       style={{
@@ -187,14 +194,19 @@ const ReaderDetails = () => {
                     <div
                       key={book.bookId}
                       onClick={() => navigate(`/book/${book.bookId}`)}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.01)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
                       style={{
                         paddingTop: "6px",
                         paddingLeft: "40px",
                         cursor: "pointer",
                         transition: "transform 0.3s ease-in-out",
-                      }}>
+                      }}
+                    >
                       {book.title}
                     </div>
                   ))}
@@ -218,14 +230,19 @@ const ReaderDetails = () => {
                     <div
                       key={book.bookId}
                       onClick={() => navigate(`/book/${book.bookId}`)}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.01)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
                       style={{
                         paddingTop: "6px",
                         paddingLeft: "40px",
                         cursor: "pointer",
                         transition: "transform 0.3s ease-in-out",
-                      }}>
+                      }}
+                    >
                       {book.title}
                     </div>
                   ))}
@@ -249,14 +266,19 @@ const ReaderDetails = () => {
                     <div
                       key={book.bookId}
                       onClick={() => navigate(`/book/${book.bookId}`)}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.01)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
                       style={{
                         paddingTop: "6px",
                         paddingLeft: "40px",
                         cursor: "pointer",
                         transition: "transform 0.3s ease-in-out",
-                      }}>
+                      }}
+                    >
                       {book.title}
                     </div>
                   ))}
@@ -273,10 +295,7 @@ const ReaderDetails = () => {
                   >
                     <h5 className="fw-bold">Posts</h5>
                     {posts.map((post) => (
-                      <PostCard
-                        key={post._id}
-                        post={post}
-                      />
+                      <PostCard key={post._id} post={post} />
                     ))}
                   </div>
                 )}
