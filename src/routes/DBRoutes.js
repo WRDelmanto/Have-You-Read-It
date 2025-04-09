@@ -67,6 +67,25 @@ router.post("/api/createPost", async (req, res) => {
   }
 });
 
+// Delete Post
+router.delete("/api/deletePost/:postId", async (req, res) => {
+  const { postId } = req.params;
+
+  console.log("Received deletePost request for postId:", postId);
+
+  try {
+    const deletedPost = await Post.findByIdAndDelete(postId);
+    if (!deletedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("Delete post error:", error);
+    res.status(500).json({ error: "Error deleting post" });
+  }
+});
+
 // Get Posts by Reader ID
 router.get("/api/postsByReaderId/:accountReaderId", async (req, res) => {
   const { accountReaderId } = req.params;

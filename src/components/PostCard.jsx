@@ -1,5 +1,6 @@
 import { Card } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import { MdDeleteForever } from "react-icons/md";
 import {
   FaBook,
   FaBookmark,
@@ -150,6 +151,14 @@ const PostCard = ({ post, shouldHideBook }) => {
 
     // console.log("Updated bookId: " + bookID + " to completed: " + accountReader.completedBooks.includes(bookID));
   };
+
+  const HandleDelete = async (postId) => {
+    const deleteResponse = await fetch(`/api/deletePost/${postId}`, {
+      method: "DELETE",
+    });
+
+    console.log("Post deleted successfully:", deleteResponse);
+  }
 
   return (
     <Card className="h-100 book-card border-0 shadow-lg">
@@ -350,7 +359,30 @@ const PostCard = ({ post, shouldHideBook }) => {
                 )}
               </button>
             </div>
+
+            {/* Delete button */}
+            <button
+              className="btn btn-link p-0"
+              onClick={() => HandleDelete(post._id)}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.2)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
+            >
+              {accountReader?._id === post.reader._id && (
+                <MdDeleteForever
+                  size={22}
+                  style={{
+                    transition: "0.3s",
+                    color: "black",
+                  }}
+                />
+              )}
+            </button>
           </div>
+
           {/* Comments */}
           {post.comments.length > 0 && (
             <div className="d-flex flex-column mt-4 align-items-start">
@@ -383,7 +415,7 @@ const PostCard = ({ post, shouldHideBook }) => {
           )}
         </div>
       </div>
-    </Card>
+    </Card >
   );
 };
 
