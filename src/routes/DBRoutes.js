@@ -111,6 +111,35 @@ router.post("/api/addComment", async (req, res) => {
   }
 });
 
+// Delete Comment
+router.delete("/api/deleteComment", async (req, res) => {
+  const { postId, commentId } = req.body;
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const comment = post.comments.id(commentId);
+
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    post.comments = post.comments.filter(
+      (comment) => comment._id.toString() !== commentId
+    );
+
+    await post.save();
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    console.error("Delete comment error:", error);
+    res.status(500).json({ error: "Error deleting comment" });
+  }
+});
+
 // Get Posts by Reader ID
 router.get("/api/postsByReaderId/:accountReaderId", async (req, res) => {
   const { accountReaderId } = req.params;

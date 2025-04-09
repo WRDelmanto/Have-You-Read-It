@@ -186,6 +186,25 @@ const PostCard = ({ post, shouldHideBook }) => {
     console.log("Added comment:", newComment, "to postId:", postId);
   };
 
+  const handleDeleteComment = async (postId, commentId) => {
+    const response = await fetch("/api/deleteComment", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        postId: postId,
+        commentId: commentId
+      }),
+    });
+
+    if (response.ok) {
+      window.location.reload();
+    } else {
+      console.error("Failed to delete comment");
+    }
+  };
+
   return (
     <Card className="h-100 book-card border-0 shadow-lg">
       <div className="d-flex">
@@ -438,33 +457,41 @@ const PostCard = ({ post, shouldHideBook }) => {
             </div>
           </div>
 
-
           {/* Comments */}
           {post.comments.length > 0 && (
             <div className="d-flex flex-column mt-4 align-items-start">
               <Card.Subtitle className="text-muted">Comments:</Card.Subtitle>
               {post.comments.map((comment) => (
-                <div key={comment._id} className="mt-2 text-muted">
-                  <Card.Img
-                    src={comment.reader?.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
-                    alt={comment.reader?.name}
-                    onClick={() => navigate(`/reader/${comment.reader._id}`)}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.1)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                    style={{
-                      cursor: "pointer",
-                      height: "30px",
-                      objectFit: "contain",
-                      width: "30px",
-                      borderRadius: "50%",
-                      transition: "0.3s ease-in-out",
-                    }}
-                  />
-                  <span className="ms-2">{comment.text}</span> {/* Corrigido de comment.comment para comment.text */}
+                <div key={comment._id} className="mt-2 text-muted position-relative">
+                  <div className="d-flex align-items-center">
+                    <Card.Img
+                      src={comment.reader?.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
+                      alt={comment.reader?.name}
+                      onClick={() => navigate(`/reader/${comment.readerId}`)}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                      style={{
+                        cursor: "pointer",
+                        height: "30px",
+                        objectFit: "contain",
+                        width: "30px",
+                        borderRadius: "50%",
+                        transition: "0.3s ease-in-out",
+                      }}
+                    />
+                    <span className="ms-2">{comment.text}</span>
+                  </div>
+
+                  {/* Delete Button */}
+                  {comment.readerId === accountReader?._id && (
+                    <button
+                      className="btn btn-danger btn-sm position-absolute top-0 start-1 mt-1 me-1"
+                      onClick={() => handleDeleteComment(post._id, comment._id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <MdDeleteForever size={22} />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
