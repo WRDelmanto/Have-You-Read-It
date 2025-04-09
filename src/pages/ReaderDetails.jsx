@@ -142,8 +142,8 @@ const ReaderDetails = () => {
           className="d-flex flex-column min-vh-100"
           style={{ marginTop: "64px", maxWidth: "100%" }}
         >
-          <Card className="shadow-sm p-4 bg-white shadow-lg align-items-center">
-            <Row>
+          <Card className="shadow-sm p-4 bg-white shadow-lg align-items-center" >
+            <Row style={{ minWidth: "80%" }}>
               <Col md={12} className="text-start">
                 {/* Reader Info */}
                 <div className="d-flex align-items-center gap-4 mb-4">
