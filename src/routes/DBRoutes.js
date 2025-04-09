@@ -86,6 +86,31 @@ router.delete("/api/deletePost/:postId", async (req, res) => {
   }
 });
 
+// Add Comment to Post
+router.post("/api/addComment", async (req, res) => {
+  const { postId, readerId, text } = req.body;
+
+  console.log("Received addComment request:", req.body);
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    post.comments.push({
+      readerId: readerId,
+      text: text,
+    });
+    await post.save();
+
+    res.status(200).json({ message: "Comment added successfully" });
+  } catch (error) {
+    console.error("Add comment error:", error);
+    res.status(500).json({ error: "Error adding comment" });
+  }
+});
+
 // Get Posts by Reader ID
 router.get("/api/postsByReaderId/:accountReaderId", async (req, res) => {
   const { accountReaderId } = req.params;

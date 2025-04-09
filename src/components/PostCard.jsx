@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const PostCard = ({ post, shouldHideBook }) => {
   const [accountReader, setAccountReader] = useState(null);
+  const [newComment, setNewComment] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -153,12 +154,37 @@ const PostCard = ({ post, shouldHideBook }) => {
   };
 
   const HandleDelete = async (postId) => {
-    const deleteResponse = await fetch(`/api/deletePost/${postId}`, {
+    const response = await fetch(`/api/deletePost/${postId}`, {
       method: "DELETE",
     });
 
-    console.log("Post deleted successfully:", deleteResponse);
+    console.log("Post deleted successfully:", response);
   }
+
+  const handleAddComment = async (postId) => {
+    if (!newComment.trim()) return;
+
+    const response = await fetch("/api/addComment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        postId: postId,
+        readerId: accountReader._id,
+        text: newComment,
+      })
+    });
+
+    if (response.ok) {
+      setNewComment("");
+      window.location.reload();
+    } else {
+      console.error("Failed to add comment");
+    }
+
+    console.log("Added comment:", newComment, "to postId:", postId);
+  };
 
   return (
     <Card className="h-100 book-card border-0 shadow-lg">
@@ -388,6 +414,31 @@ const PostCard = ({ post, shouldHideBook }) => {
             </div>
           )}
 
+          {/* Add Comment */}
+          <div className="d-flex flex-column mt-3">
+            <label htmlFor={`comment-input-${post._id}`} className="form-label text-muted">
+              Add a comment:
+            </label>
+            <div className="d-flex">
+              <input
+                id={`comment-input-${post._id}`}
+                type="text"
+                className="form-control me-2"
+                placeholder="Write your comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <button
+                className="btn btn-primary"
+                onClick={() => handleAddComment(post._id)}
+                disabled={!newComment.trim()}
+              >
+                Post
+              </button>
+            </div>
+          </div>
+
+
           {/* Comments */}
           {post.comments.length > 0 && (
             <div className="d-flex flex-column mt-4 align-items-start">
@@ -413,7 +464,7 @@ const PostCard = ({ post, shouldHideBook }) => {
                       transition: "0.3s ease-in-out",
                     }}
                   />
-                  <span className="ms-2">{comment.text}</span>
+                  <span className="ms-2">{comment.text}</span> {/* Corrigido de comment.comment para comment.text */}
                 </div>
               ))}
             </div>
