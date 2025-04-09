@@ -3,6 +3,7 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
+import PostCard from "../components/PostCard.jsx";
 
 const AuthorDetails = () => {
   const { authorId } = useParams();
@@ -194,6 +195,14 @@ const AuthorDetails = () => {
               </Card>
             </div>
           </Card>
+
+          {/* Posts */}
+          {posts.map((post) => (
+            <PostCard
+              key={post._id}
+              post={post}
+            />
+          ))}
         </Container>
       )}
     </>
