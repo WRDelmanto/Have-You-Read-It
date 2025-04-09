@@ -359,19 +359,24 @@ const PostCard = ({ post, shouldHideBook }) => {
                 )}
               </button>
             </div>
+          </div>
 
-            {/* Delete button */}
-            <button
-              className="btn btn-link p-0"
-              onClick={() => HandleDelete(post._id)}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.2)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
-            >
-              {accountReader?._id === post.reader._id && (
+          {accountReader?._id === post.reader._id && (
+            <div className="ms-auto">
+              <button
+                className="btn btn-link p-0"
+                onClick={() => {
+                  HandleDelete(post._id)
+                  window.location.reload()
+                }
+                }
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.2)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
                 <MdDeleteForever
                   size={22}
                   style={{
@@ -379,20 +384,20 @@ const PostCard = ({ post, shouldHideBook }) => {
                     color: "black",
                   }}
                 />
-              )}
-            </button>
-          </div>
+              </button>
+            </div>
+          )}
 
           {/* Comments */}
           {post.comments.length > 0 && (
             <div className="d-flex flex-column mt-4 align-items-start">
               <Card.Subtitle className="text-muted">Comments:</Card.Subtitle>
               {post.comments.map((comment) => (
-                <div key={comment._Id} className="mt-2 text-muted">
+                <div key={comment._id} className="mt-2 text-muted">
                   <Card.Img
                     src={comment.reader?.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
                     alt={comment.reader?.name}
-                    onClick={() => navigate(`/reader/${comment.reader._Id}`)}
+                    onClick={() => navigate(`/reader/${comment.reader._id}`)}
                     onMouseEnter={(e) =>
                       (e.currentTarget.style.transform = "scale(1.1)")
                     }
