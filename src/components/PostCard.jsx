@@ -206,10 +206,10 @@ const PostCard = ({ post, shouldHideBook }) => {
               {!shouldHideBook && (
                 <Link
                   to={`/author/${post.book.authorId}`}
-                  className="text-decoration-none"
+                  className="text-decoration-none text-primary"
                 >
                   <Card.Subtitle
-                    className="text-muted mb-4"
+                    className="mb-4"
                     style={{
                       transition: "transform 0.3s ease-in-out",
                     }}
