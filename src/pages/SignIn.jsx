@@ -39,7 +39,6 @@ class SignIn extends Component {
       }
 
       localStorage.setItem("reader", JSON.stringify(data.accountReader));
-
       window.location.href = "/home";
     } catch (error) {
       console.error("Error during signin:", error);
@@ -52,65 +51,73 @@ class SignIn extends Component {
 
     return (
       <>
-        {/* NavBarSimplified */}
         <NavbarSimplified />
-
-        {/* Sign-In Form */}
-        <Container
-          className="d-flex justify-content-center align-items-center min-vh-100"
-          style={{ marginTop: "64px" }}
-        >
-          <Row className="w-100 justify-content-center">
-            <Col md={6} lg={4}>
-              <Card className="p-4 shadow">
-                <h2 className="text-center mb-4">Sign In</h2>
-                <Form onSubmit={this.handleSubmit}>
-                  <Form.Group className="mb-3" controlId="formEmail">
-                    <Form.Label>
-                      <FaUser className="me-2" />
-                      Email address
-                    </Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="Enter email"
-                      name="email"
-                      value={email}
-                      onChange={this.handleChange}
-                      required
-                    />
-                  </Form.Group>
-
-                  <Form.Group className="mb-3" controlId="formPassword">
-                    <Form.Label>
-                      <FaLock className="me-2" />
-                      Password
-                    </Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      autoComplete=""
-                      name="password"
-                      value={password}
-                      onChange={this.handleChange}
-                      required
-                    />
-                  </Form.Group>
-
-                  {/* Forgot Password Link */}
-                  <div className="text-end mb-3">
-                    <Link to="/forgot-password" className="text-decoration-none">
-                      Forgot password?
-                    </Link>
-                  </div>
-
-                  <Button variant="primary" type="submit" className="w-100">
-                    Sign In
-                  </Button>
-                </Form>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+        <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-light">
+          <Container>
+            <Row className="align-items-center justify-content-center">
+              <Col lg={6} className="mb-5 text-center text-lg-start">
+                <h1 className="display-4 fw-bold text-black d-flex align-items-center justify-content-center justify-content-lg-start gap-3">
+                  <img src="/icon.png" alt="App Icon" width="100" height="100" />
+                  HaveYouReadIt
+                </h1>
+                <p className="fs-4 text-secondary">
+                  HaveYouReadIt helps you connect and share with people who love reading as much as you do.
+                </p>
+              </Col>
+              <Col lg={5}>
+                <Card className="shadow-sm p-4">
+                  <h2 className="mb-4 text-center">Sign In</h2>
+                  <Form onSubmit={this.handleSubmit}>
+                    <Form.Group className="mb-3" controlId="formEmail">
+                      <Form.Label className="fw-semibold">
+                        <FaUser className="me-2" />
+                        Email address
+                      </Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Enter email"
+                        name="email"
+                        value={email}
+                        onChange={this.handleChange}
+                        required
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formPassword">
+                      <Form.Label className="fw-semibold">
+                        <FaLock className="me-2" />
+                        Password
+                      </Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Enter password"
+                        name="password"
+                        value={password}
+                        onChange={this.handleChange}
+                        required
+                      />
+                    </Form.Group>
+                    <div className="text-end mb-3">
+                      <Link to="/forgot-password" className="text-decoration-none">
+                        Forgot password?
+                      </Link>
+                    </div>
+                    <Button type="submit" className="w-100 btn btn-primary">
+                      Sign In
+                    </Button>
+                    <hr />
+                    <div className="d-grid mt-3">
+                      <Link to="/signup">
+                        <Button variant="success" className="w-100">
+                          Create new account
+                        </Button>
+                      </Link>
+                    </div>
+                  </Form>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+        </div>
       </>
     );
   }
