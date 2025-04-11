@@ -56,3 +56,4 @@ To start developing this plataform, you need to follow these steps:
 - [React Dom](https://www.npmjs.com/package/react-dom)
 - [React Icons](https://www.npmjs.com/package/react-icons)
 - [React Router Dom](https://www.npmjs.com/package/react-router-dom)
+- [Nodemon](https://www.npmjs.com/package/nodemon)
