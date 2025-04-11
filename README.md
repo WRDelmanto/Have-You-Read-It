@@ -48,6 +48,7 @@ To start developing this plataform, you need to follow these steps:
 ## Technical Details
 
 ### Dependencies
+- [Axios](https://www.npmjs.com/package/axios)
 - [Bootstrap](https://www.npmjs.com/package/bootstrap)
 - [Express](https://www.npmjs.com/package/express)
 - [Mongoose](https://www.npmjs.com/package/mongoose)
