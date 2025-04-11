@@ -44,3 +44,15 @@ To start developing this plataform, you need to follow these steps:
    ```
    npm run dev
    ```
+
+## Technical Details
+
+### Dependencies
+- [Bootstrap](https://www.npmjs.com/package/bootstrap)
+- [Express](https://www.npmjs.com/package/express)
+- [Mongoose](https://www.npmjs.com/package/mongoose)
+- [React](https://www.npmjs.com/package/react)
+- [React Bootstrap](https://www.npmjs.com/package/react-bootstrap)
+- [React Dom](https://www.npmjs.com/package/react-dom)
+- [React Icons](https://www.npmjs.com/package/react-icons)
+- [React Router Dom](https://www.npmjs.com/package/react-router-dom)
