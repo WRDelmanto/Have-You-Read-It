@@ -76,6 +76,7 @@ const CreatePost = ({ onPostCreated }) => {
                         placeholder="Type to search for a book..."
                         value={searchQuery}
                         onChange={handleSearch}
+                        autoComplete="off"
                     />
                     {booksResults.length > 0 && (
                         <ListGroup className="mt-2">
@@ -130,6 +131,7 @@ const CreatePost = ({ onPostCreated }) => {
                         placeholder="Enter post title..."
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        autoComplete="off"
                     />
                 </Form.Group>
 
@@ -141,6 +143,7 @@ const CreatePost = ({ onPostCreated }) => {
                         placeholder="What do you want to say about this book?"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        autoComplete="off"
                     />
                 </Form.Group>
 
