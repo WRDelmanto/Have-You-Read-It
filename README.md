@@ -23,7 +23,7 @@ To start developing this plataform, you need to follow these steps:
 1. Download and install
 - [Visual Studio Code](https://code.visualstudio.com/download)
 - [GitHub Desktop](https://desktop.github.com/)
-- [Node.js] (https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/en/)
 
 2. Clone the existing repository HaveYouReadIt
 
