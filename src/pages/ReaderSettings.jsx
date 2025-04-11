@@ -78,7 +78,7 @@ class ReaderSettings extends Component {
     return (
       <>
         <NavBarSimplified />
-        <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-light">
+        <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-white">
           <Container>
             <Row className="justify-content-center">
               <Col lg={6}>

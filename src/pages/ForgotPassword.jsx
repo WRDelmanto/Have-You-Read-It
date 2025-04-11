@@ -29,7 +29,7 @@ class ForgotPassword extends Component {
     return (
       <>
         <NavBarSimplified />
-        <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-light">
+        <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-white">
           <Container>
             <Row className="align-items-center justify-content-center">
               <Col lg={6} className="mb-5 text-center text-lg-start">
