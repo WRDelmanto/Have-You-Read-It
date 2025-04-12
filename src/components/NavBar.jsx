@@ -116,7 +116,7 @@ const NavBar = () => {
                     action
                   >
                     <Image
-                      src={readerResults.profilePicture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
+                      src={readerResults.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png"}
                       roundedCircle
                       width={40}
                       height={40}
