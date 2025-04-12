@@ -3,7 +3,6 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 import PostCard from "../components/PostCard";
-import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const BookDetails = () => {
   const { bookId } = useParams();
@@ -24,8 +23,10 @@ const BookDetails = () => {
     setAccountReader(accountReader);
 
     const getBook = async () => {
-      const book = await OpenLibraryAPI.getBookById(bookId);
-      setBook(book);
+      const response = await fetch(`/api/book/${bookId}`);
+      const data = await response.json();
+
+      setBook(data.book);
 
       // console.log("Book:", book);
     };

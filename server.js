@@ -12,6 +12,10 @@ const main = async () => {
   try {
     await mongoose.connect(uri);
     console.log("MongoDB Connected Successfully");
+
+    // For testing purposes only
+    // await mongoose.connection.db.collection("books").deleteMany({});
+    // await mongoose.connection.db.collection("authors").deleteMany({});
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
   }

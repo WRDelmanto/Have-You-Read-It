@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
-import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 import PostCard from "../components/PostCard.jsx";
 
 const AuthorDetails = () => {
@@ -26,11 +25,17 @@ const AuthorDetails = () => {
     setAccountReader(accountReader);
 
     const fetchData = async () => {
-      const author = await OpenLibraryAPI.getAuthorById(authorId);
+      const authorResponse = await fetch(`/api/author/${authorId}`);
+      const authorData = await authorResponse.json();
+      const author = authorData.author;
+      // console.log("Author: ", author);
       setAuthor(author);
 
-      const booksData = await OpenLibraryAPI.getBooksByAuthorName(author.authorName);
-      setBooks(booksData);
+      const booksResponse = await fetch(`/api/booksByAuthorName/${author.authorName}`);
+      const booksData = await booksResponse.json();
+      const books = booksData.books;
+      // console.log("books: ", books);
+      setBooks(books);
 
       const postsData = await fetch(`/api/postsByAuthorId/${authorId}`);
       const postsJson = await postsData.json();

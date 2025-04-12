@@ -4,7 +4,6 @@ import { FaBook, FaBookmark, FaHeart } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar.jsx";
 import PostCard from "../components/PostCard";
-import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const ReaderDetails = () => {
   const { readerId } = useParams();
@@ -58,19 +57,17 @@ const ReaderDetails = () => {
         const bookmarkedBooks = readerData.reader.bookmarkedBooks ?? [];
         const completedBooks = readerData.reader.completedBooks ?? [];
 
+        const fetchBookById = async (bookId) => {
+          const response = await fetch(`/api/book/${bookId}`);
+          const data = await response.json();
+          return data.book;
+        };
+
         const [favoritedBooksList, bookmarkedBooksList, completedBooksList] =
           await Promise.all([
-            Promise.all(
-              favoriteBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
-            ),
-            Promise.all(
-              bookmarkedBooks.map((bookId) =>
-                OpenLibraryAPI.getBookById(bookId)
-              )
-            ),
-            Promise.all(
-              completedBooks.map((bookId) => OpenLibraryAPI.getBookById(bookId))
-            ),
+            Promise.all(favoriteBooks.map(fetchBookById)),
+            Promise.all(bookmarkedBooks.map(fetchBookById)),
+            Promise.all(completedBooks.map(fetchBookById)),
           ]);
 
         setFavoritedBooks(favoritedBooksList);

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Card, Form, Image, ListGroup, Spinner } from "react-bootstrap";
-import OpenLibraryAPI from "../services/OpenLibraryAPI";
 import { Post } from "../models/post";
+import OpenLibraryAPI from "../services/OpenLibraryAPI";
 
 const CreatePost = ({ onPostCreated }) => {
     const [searchQuery, setSearchQuery] = useState("");

@@ -1,6 +1,8 @@
 import express from "express";
 import { Reader } from "../models/reader.js";
 import { Post } from "../models/post.js";
+import { Book } from "../models/book.js";
+import { Author } from "../models/author.js";
 import OpenLibraryAPI from "../services/OpenLibraryAPI.js";
 
 const router = express.Router();
@@ -145,8 +147,6 @@ router.delete("/api/deleteComment", async (req, res) => {
 router.get("/api/postsByReaderId/:accountReaderId", async (req, res) => {
   const { accountReaderId } = req.params;
 
-  console.log("Received getPosts request for readerId:", accountReaderId);
-
   try {
     const reader = await Reader.findById(accountReaderId);
     if (!reader) {
@@ -167,15 +167,28 @@ router.get("/api/postsByReaderId/:accountReaderId", async (req, res) => {
     const enrichedPosts = await Promise.all(
       rawPosts.map(async (postDoc) => {
         const post = postDoc.toObject();
-        const book = await OpenLibraryAPI.getBookById(post.bookId);
+
+        let book = await Book.findOne({ bookId: post.bookId }).lean();
+
+        if (!book) {
+          console.log(
+            `bookId: ${post.bookId}  not found in DB, fetching from OpenLibraryAPI`
+          );
+          const fetchedBook = await OpenLibraryAPI.getBookById(post.bookId);
+
+          const newBook = new Book(fetchedBook);
+          const saved = await newBook.save();
+          book = saved.toObject();
+        }
+
         const postReader = await Reader.findById(post.readerId).lean();
+
         return { ...post, book, reader: postReader };
       })
     );
 
     res.status(200).json({ posts: enrichedPosts });
   } catch (error) {
-    console.error("Get posts error:", error);
     res.status(500).json({ error: "Error fetching posts" });
   }
 });
@@ -192,7 +205,20 @@ router.get("/api/postsByBookId/:bookId", async (req, res) => {
     const enrichedPosts = await Promise.all(
       posts.map(async (postDoc) => {
         const post = postDoc.toObject();
-        const book = await OpenLibraryAPI.getBookById(post.bookId);
+
+        let book = await Book.findOne({ bookId: post.bookId }).lean();
+
+        if (!book) {
+          console.log(
+            `bookId: ${post.bookId}  not found in DB, fetching from OpenLibraryAPI`
+          );
+          const fetchedBook = await OpenLibraryAPI.getBookById(post.bookId);
+
+          const newBook = new Book(fetchedBook);
+          const saved = await newBook.save();
+          book = saved.toObject();
+        }
+
         const postReader = await Reader.findById(post.readerId).lean();
         return { ...post, book, reader: postReader };
       })
@@ -219,7 +245,20 @@ router.get("/api/postsFromReaderId/:accountReaderId", async (req, res) => {
     const enrichedPosts = await Promise.all(
       posts.map(async (postDoc) => {
         const post = postDoc.toObject();
-        const book = await OpenLibraryAPI.getBookById(post.bookId);
+
+        let book = await Book.findOne({ bookId: post.bookId }).lean();
+
+        if (!book) {
+          console.log(
+            `bookId: ${post.bookId}  not found in DB, fetching from OpenLibraryAPI`
+          );
+          const fetchedBook = await OpenLibraryAPI.getBookById(post.bookId);
+
+          const newBook = new Book(fetchedBook);
+          const saved = await newBook.save();
+          book = saved.toObject();
+        }
+
         const postReader = await Reader.findById(post.readerId).lean();
         return { ...post, book, reader: postReader };
       })
@@ -246,7 +285,20 @@ router.get("/api/postsByAuthorId/:authorId", async (req, res) => {
     const enrichedPosts = await Promise.all(
       posts.map(async (postDoc) => {
         const post = postDoc.toObject();
-        const book = await OpenLibraryAPI.getBookById(post.bookId);
+
+        let book = await Book.findOne({ bookId: post.bookId }).lean();
+
+        if (!book) {
+          console.log(
+            `bookId: ${post.bookId}  not found in DB, fetching from OpenLibraryAPI`
+          );
+          const fetchedBook = await OpenLibraryAPI.getBookById(post.bookId);
+
+          const newBook = new Book(fetchedBook);
+          const saved = await newBook.save();
+          book = saved.toObject();
+        }
+
         const postReader = await Reader.findById(post.readerId).lean();
         return { ...post, book, reader: postReader };
       })
@@ -343,5 +395,117 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
     res.status(500).json({ error: "Error updating reader" });
   }
 });
+
+// Get Book by ID
+router.get("/api/book/:bookId", async (req, res) => {
+  const { bookId } = req.params;
+
+  console.log("Received getBook request for bookId:", bookId);
+
+  try {
+    let book = await Book.findOne({ bookId }).lean();
+
+    if (!book) {
+      console.log(
+        `bookId: ${bookId}  not found in DB, fetching from OpenLibraryAPI`
+      );
+      const fetchedBook = await OpenLibraryAPI.getBookById(bookId);
+
+      const newBook = new Book(fetchedBook);
+      const saved = await newBook.save();
+      book = saved.toObject();
+    }
+
+    res.status(200).json({ book });
+  } catch (error) {
+    console.error("Get book error:", error);
+    res.status(500).json({ error: "Error fetching book" });
+  }
+});
+
+// Get Author by ID
+router.get("/api/author/:authorId", async (req, res) => {
+  const { authorId } = req.params;
+
+  console.log("Received getAuthor request for authorId:", authorId);
+
+  try {
+    let author = await Author.findOne({ authorId: authorId }).lean();
+
+    if (!author) {
+      console.log(
+        `authorId: ${authorId}  not found in DB, fetching from OpenLibraryAPI`
+      );
+      const fetchedAuthor = await OpenLibraryAPI.getAuthorById(authorId);
+
+      const newAuthor = new Author(fetchedAuthor);
+      const saved = await newAuthor.save();
+      author = saved.toObject();
+    }
+
+    res.status(200).json({ author });
+  } catch (error) {
+    console.error("Get author error:", error);
+    res.status(500).json({ error: "Error fetching author" });
+  }
+});
+
+// Get Books by Author Name
+router.get("/api/booksByAuthorName/:authorName", async (req, res) => {
+  const { authorName } = req.params;
+
+  console.log("Received getBooks request for authorName:", authorName);
+
+  try {
+    let books = await Book.find({
+      authorName: { $regex: new RegExp(`^${authorName}$`, "i") },
+    }).lean();
+
+    if (books.length === 0) {
+      console.log(
+        `authorName: ${authorName} not found in DB, fetching from OpenLibraryAPI`
+      );
+      const fetchedBooks = await OpenLibraryAPI.getBooksByAuthorName(
+        authorName
+      );
+
+      if (fetchedBooks?.length) {
+        const newBooks = await Book.insertMany(fetchedBooks);
+        books = newBooks.map((book) => book.toObject());
+      } else {
+        books = [];
+      }
+    }
+
+    res.status(200).json({ books });
+  } catch (error) {
+    console.error("Get books error:", error);
+    res.status(500).json({ error: "Error fetching books" });
+  }
+
+  // For testing purposes only
+  populateBooksByAuthorName(authorName);
+});
+
+// Populate Books by Author Name
+async function populateBooksByAuthorName(authorName) {
+  try {
+    console.log("Populating books by author name:", authorName);
+
+    const fetchedBooks = await OpenLibraryAPI.getBooksByAuthorName(authorName);
+
+    if (fetchedBooks?.length) {
+      for (const book of fetchedBooks) {
+        const exists = await Book.exists({ bookId: book.bookId });
+        if (!exists) {
+          const newBook = new Book(book);
+          await newBook.save();
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error populating books:", error);
+  }
+}
 
 export default router;
