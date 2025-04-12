@@ -119,17 +119,36 @@ const OpenLibraryAPI = {
         throw new Error("Failed to fetch author");
       }
 
-      const author = await response.json();
+      let author = await response.json();
+
+      if (!author.name) {
+        // Redirect by Open Library API
+        const newAuthorId = author.authors[0].author.key
+          .replace("/authors/", "")
+          .trim();
+
+        console.log("New Author ID: ", newAuthorId);
+
+        const secondaryResponse = await fetch(
+          `https://openlibrary.org/authors/${newAuthorId}.json`
+        );
+
+        if (!secondaryResponse.ok) {
+          throw new Error("Failed to fetch author");
+        }
+
+        author = await secondaryResponse.json();
+      }
 
       return {
         authorId: author.key.replace("/authors/", "") || "",
-        authorName: author.name || "",
-        authorImage: author.photos
-          ? `https://covers.openlibrary.org/a/olid/${authorId}-M.jpg`
-          : "https://m.media-amazon.com/images/I/11Bh3jv+xvL.jpg",
-        favoriteBooks: author.works || [],
-        bookmarkedBooks: [], // Assuming no data for bookmarkedBooks
-        completedBooks: [], // Assuming no data for completedBooks
+        authorName: author.name || author.authors[0].name || "",
+        authorImage:
+          (author.author_key?.[0] &&
+            `https://covers.openlibrary.org/a/olid/${author.author_key[0]}-M.jpg`) ||
+          (author.photos &&
+            `https://covers.openlibrary.org/a/olid/${authorId}-M.jpg`) ||
+          "https://m.media-amazon.com/images/I/11Bh3jv+xvL.jpg",
       };
     } catch (error) {
       console.error("Error fetching author: ", error);

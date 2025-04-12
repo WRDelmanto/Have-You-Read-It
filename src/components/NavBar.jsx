@@ -42,21 +42,21 @@ const NavBar = () => {
 
     searchTimeout.current = setTimeout(async () => {
       if (searchInput.length > 0) {
+        const readerResponse = await fetch(`/api/readerName/${searchInput}`);
+        const filteredReader = await readerResponse.json();
+        setReaderResults(filteredReader.reader);
+
         const filteredAuthor = await OpenLibraryAPI.getAuthorByName(searchInput.replaceAll(" ", "+")) || "";
         setAuthorResults(filteredAuthor);
 
         const filteredBooks = await OpenLibraryAPI.getBooksByTitle(searchInput.replaceAll(" ", "+")) || [];
         setBookResults(filteredBooks);
 
-        const readerResponse = await fetch(`/api/readerName/${searchInput}`) || "";
-        const filteredReader = await readerResponse.json();
-        setReaderResults(filteredReader.reader);
-
-        setShowResults(filteredAuthor.length > 0 || filteredBooks.length > 0 || filteredReader.length > 0);
-
-        // console.log("Filtered author: ", filteredReader);
+        // console.log("Filtered reader: ", filteredReader.reader);
         // console.log("Filtered author:", filteredAuthor);
         // console.log("Filtered books:", filteredBooks);
+
+        setShowResults(filteredAuthor.length > 0 || filteredBooks.length > 0 || filteredReader.length > 0);
       } else {
         setBookResults([]);
         setShowResults(false);
