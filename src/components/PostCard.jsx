@@ -477,7 +477,7 @@ const PostCard = ({ post, shouldHideBook }) => {
                       transition: "0.3s ease-in-out",
                     }}
                   />
-                  <span className="ms-2">{comment.text}</span>
+                  <span className="ms-2" style={{ textAlign: "start" }}>{comment.text}</span>
                 </div>
 
                 {/* Delete Button (aligned right) */}
