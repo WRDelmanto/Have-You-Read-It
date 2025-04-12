@@ -183,6 +183,15 @@ router.get("/api/postsByReaderId/:accountReaderId", async (req, res) => {
 
         const postReader = await Reader.findById(post.readerId).lean();
 
+        post.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const commentReader = await Reader.findById(
+              comment.readerId
+            ).lean();
+            return { ...comment, reader: commentReader };
+          })
+        );
+
         return { ...post, book, reader: postReader };
       })
     );
