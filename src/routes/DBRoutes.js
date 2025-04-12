@@ -228,6 +228,15 @@ router.get("/api/postsByBookId/:bookId", async (req, res) => {
           book = saved.toObject();
         }
 
+        post.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const commentReader = await Reader.findById(
+              comment.readerId
+            ).lean();
+            return { ...comment, reader: commentReader };
+          })
+        );
+
         const postReader = await Reader.findById(post.readerId).lean();
         return { ...post, book, reader: postReader };
       })
@@ -268,6 +277,15 @@ router.get("/api/postsFromReaderId/:accountReaderId", async (req, res) => {
           book = saved.toObject();
         }
 
+        post.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const commentReader = await Reader.findById(
+              comment.readerId
+            ).lean();
+            return { ...comment, reader: commentReader };
+          })
+        );
+
         const postReader = await Reader.findById(post.readerId).lean();
         return { ...post, book, reader: postReader };
       })
@@ -307,6 +325,15 @@ router.get("/api/postsByAuthorId/:authorId", async (req, res) => {
           const saved = await newBook.save();
           book = saved.toObject();
         }
+
+        post.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const commentReader = await Reader.findById(
+              comment.readerId
+            ).lean();
+            return { ...comment, reader: commentReader };
+          })
+        );
 
         const postReader = await Reader.findById(post.readerId).lean();
         return { ...post, book, reader: postReader };
