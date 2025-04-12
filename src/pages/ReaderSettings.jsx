@@ -13,7 +13,6 @@ class ReaderSettings extends Component {
 
   componentDidMount() {
     const reader = JSON.parse(localStorage.getItem("reader"));
-    const defaultPhoto = "/default-avatar.png";
     if (!reader) {
       window.location.href = "/";
       return;
@@ -22,7 +21,7 @@ class ReaderSettings extends Component {
     this.setState({
       name: reader.name || "",
       email: reader.email || "",
-      profilePhoto: reader.picture || defaultPhoto,
+      profilePhoto: reader.picture || "https://icons.veryicon.com/png/o/miscellaneous/bitisland-world/person-18.png",
     });
   }
 
