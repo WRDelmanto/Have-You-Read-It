@@ -111,6 +111,7 @@ const NavBar = () => {
                   <ListGroup.Item
                     key={readerResults._id}
                     as={Link}
+                    onClick={() => setShowResults(false)}
                     to={`/reader/${readerResults._id}`}
                     className="d-flex align-items-center"
                     action
@@ -132,6 +133,7 @@ const NavBar = () => {
                     <ListGroup.Item
                       key={authorResult.authorId}
                       as={Link}
+                      onClick={() => setShowResults(false)}
                       to={`/author/${authorResult.authorId}`}
                       className="d-flex align-items-center"
                       action
@@ -147,6 +149,7 @@ const NavBar = () => {
                   <ListGroup.Item
                     key={book.bookId}
                     as={Link}
+                    onClick={() => setShowResults(false)}
                     to={`/book/${book.bookId}`}
                     className="d-flex align-items-center"
                     action
