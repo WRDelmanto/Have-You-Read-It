@@ -53,7 +53,7 @@ class SignIn extends Component {
       <>
         <NavbarSimplified />
         <div className="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-white">
-         <Container>
+          <Container>
             <Row className="align-items-center justify-content-center">
               <Col lg={6} className="mb-5 text-center text-lg-start">
                 <h1 className="display-4 fw-bold text-black d-flex align-items-center justify-content-center justify-content-lg-start gap-3">

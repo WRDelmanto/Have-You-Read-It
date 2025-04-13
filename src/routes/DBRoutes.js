@@ -376,7 +376,7 @@ router.get("/api/readerName/:readerName", async (req, res) => {
     // check all using lower case and trim and if includes the name and not an exact match
     const regex = new RegExp(readerName, "i");
     const reader = await Reader.findOne({ name: regex }).lean();
-    // const reader = await Reader.findOne({ name: readerName }).lean();
+
     if (!reader) {
       return res.status(404).json({ error: "Reader not found" });
     }
@@ -393,7 +393,6 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
   const { readerId } = req.params;
   const {
     name,
-    displayName,
     email,
     password,
     picture,
@@ -408,7 +407,6 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
   try {
     const updateData = {
       name,
-      displayName,
       email,
       password,
       picture,
@@ -432,7 +430,6 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
     res.status(500).json({ error: "Error updating reader" });
   }
 });
-
 
 // Get Book by ID
 router.get("/api/book/:bookId", async (req, res) => {
