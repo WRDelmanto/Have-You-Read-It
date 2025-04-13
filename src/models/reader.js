@@ -5,6 +5,9 @@ const readerSchema = new mongoose.Schema({
     type: String,
     required: ["Please check your entry, no name specified"],
   },
+  displayName: {
+    type: String,
+  },
   email: {
     type: String,
     required: ["Please check your entry, no email specified"],
@@ -26,3 +29,13 @@ const readerSchema = new mongoose.Schema({
 });
 
 export const Reader = mongoose.model("Reader", readerSchema);
+export default Reader;
+export const createReader = async (readerData) => {
+  try {
+    const reader = new Reader(readerData);
+    await reader.save();
+    return reader;
+  } catch (error) {
+    throw error;
+  }
+};

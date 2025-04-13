@@ -393,6 +393,7 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
   const { readerId } = req.params;
   const {
     name,
+    displayName,
     email,
     password,
     picture,
@@ -401,13 +402,13 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
     completedBooks,
     following,
   } = req.body;
-  1;
 
   console.log("Received updateReader request:", req.body);
 
   try {
     const updateData = {
       name,
+      displayName,
       email,
       password,
       picture,
@@ -431,6 +432,7 @@ router.put("/api/updateReader/:readerId", async (req, res) => {
     res.status(500).json({ error: "Error updating reader" });
   }
 });
+
 
 // Get Book by ID
 router.get("/api/book/:bookId", async (req, res) => {

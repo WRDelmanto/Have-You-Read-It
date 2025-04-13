@@ -126,9 +126,17 @@ class SignUp extends Component {
                         required
                       />
                     </Form.Group>
-                    <Button type="submit" variant="primary" className="w-100">
-                      Sign Up
-                    </Button>
+                    <Button type="submit" variant="primary" className="w-100 mb-3">
+  Sign Up
+</Button>
+<Button
+  variant="outline-secondary"
+  className="w-100"
+  onClick={() => (window.location.href = "/signin")}
+>
+  Already have an account? Sign In
+</Button>
+
                   </Form>
                 </Card>
               </Col>

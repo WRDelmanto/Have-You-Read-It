@@ -305,7 +305,7 @@ const PostCard = ({ post, shouldHideBook }) => {
                   }}
                 />
                 <Card.Title className="h5 text-dark ms-2">
-                  {post.reader?.name || "Anonymous"}
+                {post.reader?.displayName || post.reader?.name || "Anonymous"}
                 </Card.Title>
               </div>
 

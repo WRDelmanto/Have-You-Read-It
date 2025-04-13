@@ -5,7 +5,10 @@ import DBRoutes from "./src/routes/DBRoutes.js";
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ limit: "5mb", extended: true }));
+app.use(express.static("public"));
+
 app.use(DBRoutes);
 
 const main = async () => {
