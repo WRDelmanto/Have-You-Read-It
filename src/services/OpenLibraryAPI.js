@@ -138,6 +138,7 @@ const OpenLibraryAPI = {
         }
 
         author = await secondaryResponse.json();
+        authorId = newAuthorId;
       }
 
       return {
