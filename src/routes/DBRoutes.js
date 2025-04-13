@@ -473,9 +473,18 @@ router.get("/api/author/:authorId", async (req, res) => {
       );
       const fetchedAuthor = await OpenLibraryAPI.getAuthorById(authorId);
 
-      const newAuthor = new Author(fetchedAuthor);
-      const saved = await newAuthor.save();
-      author = saved.toObject();
+      // Prevent duplication if newAuthorId found
+      let newAuthor = await Author.findOne({
+        authorId: fetchedAuthor.authorId,
+      }).lean();
+
+      if (newAuthor) {
+        author = newAuthor;
+      } else {
+        newAuthor = new Author(fetchedAuthor);
+        const saved = await newAuthor.save();
+        author = saved.toObject();
+      }
     }
 
     res.status(200).json({ author });
