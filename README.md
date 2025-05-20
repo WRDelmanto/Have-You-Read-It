@@ -14,7 +14,7 @@
 #### # ====================================
 
 ## About
-HaveYouReadIt is a social media platform designed for book lovers to share their reading experiences. Users can connect with others, track books they have read, mark their favorite books, and explore new recommendations through an integrated book API. The platform features a personalized feed where users can post photos, reviews, and thoughts about the books they are reading. Data will be stored using MongoDB to manage users' reading history and preferences.
+JuriDoc is an AI-powered legal automation platform designed for Brazilian lawyers, enabling the fast and secure creation of powers of attorney and fee agreements. By extracting client data from scanned ID documents using OCR, and filling pre-uploaded Word templates, JuriDoc streamlines legal document generation, integrates with digital signature platforms (like Clicksign and DocuSign), and organizes files by client and case type—delivering speed, legal accuracy, and scalability for modern law practices.
 
 ## Initial Setup (Windows)
 
