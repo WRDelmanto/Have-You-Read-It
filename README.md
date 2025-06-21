@@ -16,6 +16,14 @@
 ## About
 HaveYouReadIt is a social media platform designed for book lovers to share their reading experiences. Users can connect with others, track books they have read, mark their favorite books, and explore new recommendations through an integrated book API. The platform features a personalized feed where users can post photos, reviews, and thoughts about the books they are reading. Data will be stored using MongoDB to manage users' reading history and preferences.
 
+## Technical Stack
+
+Have-You-Read-It is a full-stack web application focused on tracking reading engagement and summarizing online content. It leverages modern web technologies to deliver real-time interactivity, scalable data storage, and intelligent feedback mechanisms.
+
+- **Frontend**: Vue.js — for reactive user interface and component-based design
+- **Backend**: Node.js with Express — handles API routing, logic, and session management
+- **Database**: MongoDB (via Mongoose) — for storing user activity, content data, and summaries
+
 ## Initial Setup (Windows)
 
 To start developing this plataform, you need to follow these steps:
